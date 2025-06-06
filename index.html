@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEONI QMS Defect Gauge</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>LEONI Wiring Systems QMS</h1>
+        <h2>VOLVO Project - Production Line Defect Status</h2>
+        <div id="gauge-container">
+            <div id="gauge"></div>
+            <div id="tooltip" class="hidden">
+                <div id="tooltip-content"></div>
+            </div>
+            <div id="highlight-container">
+                <div id="status-highlight">
+                    <div>Project: <span id="current-project">VOLVO</span> | Line: <span id="current-line">MDEP</span></div>
+                    <div>Status: <span id="current-status">Low</span> <span id="fun-comment">😊 All good!</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="metrics-container">
+            <h3>Top 3 Production Lines by Defects</h3>
+            <div class="metrics-grid">
+                <div class="metric-card high">
+                    <div class="metric-title">#1: Production Line</div>
+                    <div class="emoji">🥇</div>
+                    <div class="metric-value" id="low-defects">0</div>
+                </div>
+                <div class="metric-card medium">
+                    <div class="metric-title">#2: Production Line</div>
+                    <div class="emoji">🥈</div>
+                    <div class="metric-value" id="medium-defects">0</div>
+                </div>
+                <div class="metric-card low">
+                    <div class="metric-title">#3: Production Line</div>
+                    <div class="emoji">🥉</div>
+                    <div class="metric-value" id="high-defects">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="mockData.js"></script>
+    <script src="gauge.js"></script>
+</body>
+</html>
