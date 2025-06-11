@@ -42,15 +42,33 @@ function generateRandomValue(status) {
 // Gauge class for visualization
 class DefectGauge {
     constructor(containerId, config) {
+        // Check if D3.js is available
+        if (typeof d3 === 'undefined') {
+            console.error('D3.js library is not loaded. Please ensure D3.js is properly included.');
+            throw new Error('D3.js library is required for the gauge visualization.');
+        }
+        
         this.container = d3.select(containerId);
         this.config = config;
         this.currentDataIndex = 0;
         this.autoRotateTimer = null;
         
+        // Verify container exists
+        if (this.container.empty()) {
+            console.error(`Container with selector "${containerId}" not found.`);
+            throw new Error(`Container element "${containerId}" not found.`);
+        }
+        
         this.initializeGauge();
     }
     
     initializeGauge() {
+        // Clear loading indicator
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (loadingIndicator) {
+            loadingIndicator.remove();
+        }
+        
         const width = this.container.node().getBoundingClientRect().width;
         const height = this.container.node().getBoundingClientRect().height;
         
@@ -531,17 +549,138 @@ class DefectGauge {
     }
 }
 
-// Initialize gauge when DOM is fully loaded
+// Function to wait for D3.js to load
+function waitForD3(callback, timeout = 5000) {
+    const startTime = Date.now();
+    
+    function checkD3() {
+        if (typeof d3 !== 'undefined') {
+            callback();
+        } else if (Date.now() - startTime > timeout) {
+            console.error('D3.js failed to load within timeout period');
+            // Show fallback error message
+            const gaugeContainer = document.getElementById('gauge');
+            if (gaugeContainer) {
+                gaugeContainer.innerHTML = `
+                    <div style="text-align: center; padding: 50px; color: #e74c3c;">
+                        <h3>⚠️ Library Loading Error</h3>
+                        <p>D3.js visualization library failed to load.</p>
+                        <p style="font-size: 14px; opacity: 0.8;">Please check your internet connection and refresh the page.</p>
+                        <button onclick="window.location.reload()" style="
+                            margin-top: 15px;
+                            padding: 10px 20px;
+                            background: #3182ce;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        ">🔄 Refresh Page</button>
+                    </div>
+                `;
+            }
+        } else {
+            // Wait a bit and try again
+            setTimeout(checkD3, 50);
+        }
+    }
+    
+    checkD3();
+}
+
+// Function to initialize the application
+function initializeApp() {
+    try {
+        // Check if required elements exist
+        const gaugeContainer = document.getElementById('gauge');
+        if (!gaugeContainer) {
+            console.error('Gauge container element not found');
+            return;
+        }
+        
+        // Create gauge instance
+        const gauge = new DefectGauge("#gauge", config);
+        
+        // Show initial data
+        gauge.update(gauge.getCurrentData());
+        
+        // Update metrics initially
+        gauge.updateMetrics();
+        
+        // Start auto-rotation
+        gauge.startAutoRotate();
+        
+        // Add navigation functionality
+        const qrqcBtn = document.getElementById("qrqc-btn");
+        if (qrqcBtn) {
+            qrqcBtn.addEventListener("click", function() {
+                window.location.href = "Analysis/qrqc.html";
+            });
+        }
+        
+        const vigilanceBtn = document.getElementById("vigilance-btn");
+        if (vigilanceBtn) {
+            vigilanceBtn.addEventListener("click", function() {
+                window.location.href = "Vigilance_test/vigilance-test.html";
+            });
+        }
+        
+        const dashboardBtn = document.getElementById("dashboard-btn");
+        if (dashboardBtn) {
+            dashboardBtn.addEventListener("click", function() {
+                window.location.href = "graphs/dashboard.html";
+            });
+        }
+        
+        const adminBtn = document.getElementById("admin-btn");
+        if (adminBtn) {
+            adminBtn.addEventListener("click", function() {
+                window.location.href = "Admin/admin.html";
+            });
+        }
+        
+        const fiveSBtn = document.getElementById("5s-btn");
+        if (fiveSBtn) {
+            fiveSBtn.addEventListener("click", function() {
+                window.location.href = "5S/5s-checklist.html";
+            });
+        }
+        
+        const afpBtn = document.getElementById("afp-btn");
+        if (afpBtn) {
+            afpBtn.addEventListener("click", function() {
+                window.location.href = "AFP/afp-audit.html";
+            });
+        }
+        
+        console.log('LEONI QMS Gauge initialized successfully');
+        
+    } catch (error) {
+        console.error('Error initializing LEONI QMS Gauge:', error);
+        
+        // Show user-friendly error message
+        const gaugeContainer = document.getElementById('gauge');
+        if (gaugeContainer) {
+            gaugeContainer.innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #e74c3c;">
+                    <h3>⚠️ Loading Error</h3>
+                    <p>Unable to initialize the gauge visualization.</p>
+                    <p style="font-size: 14px; opacity: 0.8;">Please refresh the page or contact support.</p>
+                    <button onclick="window.location.reload()" style="
+                        margin-top: 15px;
+                        padding: 10px 20px;
+                        background: #3182ce;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">🔄 Refresh Page</button>
+                </div>
+            `;
+        }
+    }
+}
+
+// Initialize when DOM is loaded and D3.js is available
 document.addEventListener("DOMContentLoaded", function() {
-    // Create gauge instance
-    const gauge = new DefectGauge("#gauge", config);
-    
-    // Show initial data
-    gauge.update(gauge.getCurrentData());
-    
-    // Update metrics initially
-    gauge.updateMetrics();
-    
-    // Start auto-rotation
-    gauge.startAutoRotate();
+    waitForD3(initializeApp);
 });

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRQC Document - LEONI Quality Department</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c5282;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .svg-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QRQC Document Structure - LEONI Quality Department</h1>
+        <div class="svg-container">
+            <svg width="1200" height="1400" viewBox="0 0 1100 1400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background -->
+                <rect width="1100" height="1400" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+                
+                <!-- LEONI Header -->
+                <rect x="20" y="20" width="1060" height="80" fill="#1a365d" rx="8"/>
+                <text x="550" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">LEONI QUALITY DEPARTMENT</text>
+                <text x="550" y="75" font-family="Arial, sans-serif" font-size="18" fill="#cbd5e0" text-anchor="middle">QRQC - Quick Response Quality Control</text>
+                
+                <!-- Document Info Section -->
+                <rect x="20" y="120" width="1060" height="60" fill="#f7fafc" stroke="#e2e8f0" stroke-width="1" rx="4"/>
+                <text x="40" y="140" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#2d3748">Document Info:</text>
+                <text x="40" y="160" font-family="Arial, sans-serif" font-size="12" fill="#4a5568">Date: ________ | Defect ID: ________ | Product Line: ________ | Inspector: ________</text>
+                
+                <!-- CARACTÉRISATION SECTION -->
+                <rect x="20" y="200" width="1060" height="280" fill="#fff7ed" stroke="#f97316" stroke-width="2" rx="8"/>
+                <text x="40" y="225" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ea580c">1. CARACTÉRISATION</text>
+                
+                <!-- Caractérisation Grid Layout -->
+                <!-- Row 1: Defect Description (Full Width) -->
+                <rect x="40" y="240" width="1020" height="60" fill="#ffffff" stroke="#fb923c" stroke-width="1" rx="4"/>
+                <rect x="40" y="240" width="1020" height="30" fill="#fb923c" rx="4"/>
+                <text x="550" y="260" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">DEFECT DESCRIPTION</text>
+                <rect x="60" y="280" width="980" height="15" fill="#fef3f2" stroke="#fb923c" stroke-width="1" rx="2"/>
+                <text x="70" y="290" font-family="Arial, sans-serif" font-size="10" fill="#9a3412">Describe the defect in detail...</text>
+                
+                <!-- Row 2: Two columns -->
+                <rect x="40" y="310" width="510" height="60" fill="#ffffff" stroke="#fb923c" stroke-width="1" rx="4"/>
+                <rect x="40" y="310" width="510" height="30" fill="#fb923c" rx="4"/>
+                <text x="295" y="330" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">WHO DETECTED? (Auto-filled)</text>
+                <rect x="60" y="350" width="470" height="15" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1" rx="2"/>
+                <text x="70" y="360" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">[System User: Current Session]</text>
+                
+                <rect x="550" y="310" width="510" height="60" fill="#ffffff" stroke="#fb923c" stroke-width="1" rx="4"/>
+                <rect x="550" y="310" width="510" height="30" fill="#fb923c" rx="4"/>
+                <text x="805" y="330" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">WHICH POST?</text>
+                <rect x="570" y="350" width="470" height="15" fill="#fef3f2" stroke="#fb923c" stroke-width="1" rx="2"/>
+                <text x="580" y="360" font-family="Arial, sans-serif" font-size="10" fill="#9a3412">Specify the workstation/post...</text>
+                
+                <!-- Row 3: Two columns -->
+                <rect x="40" y="380" width="510" height="60" fill="#ffffff" stroke="#fb923c" stroke-width="1" rx="4"/>
+                <rect x="40" y="380" width="510" height="30" fill="#fb923c" rx="4"/>
+                <text x="295" y="400" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">WHY IT IS A PROBLEM?</text>
+                <rect x="60" y="420" width="470" height="15" fill="#fef3f2" stroke="#fb923c" stroke-width="1" rx="2"/>
+                <text x="70" y="430" font-family="Arial, sans-serif" font-size="10" fill="#9a3412">Explain the impact and consequences...</text>
+                
+                <rect x="550" y="380" width="510" height="60" fill="#ffffff" stroke="#fb923c" stroke-width="1" rx="4"/>
+                <rect x="550" y="380" width="510" height="30" fill="#fb923c" rx="4"/>
+                <text x="805" y="400" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle">HOW IT WAS DETECTED?</text>
+                <rect x="570" y="420" width="470" height="15" fill="#fef3f2" stroke="#fb923c" stroke-width="1" rx="2"/>
+                <text x="580" y="430" font-family="Arial, sans-serif" font-size="10" fill="#9a3412">Describe the detection method...</text>
+                
+                <!-- Main Content Area -->
+                <!-- ANALYSIS SECTION -->
+                <rect x="20" y="500" width="1060" height="320" fill="#edf2f7" stroke="#cbd5e0" stroke-width="2" rx="8"/>
+                <text x="40" y="525" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#2c5282">2. ANALYSIS</text>
+                
+                <!-- Why 1 Section -->
+                <rect x="40" y="540" width="500" height="260" fill="#ffffff" stroke="#a0aec0" stroke-width="1" rx="4"/>
+                <rect x="40" y="540" width="500" height="40" fill="#3182ce" rx="4"/>
+                <text x="290" y="565" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">WHY 1: We found this problem</text>
+                
+                <!-- Why 1 Text Fields -->
+                <rect x="60" y="600" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="70" y="620" font-family="Arial, sans-serif" font-size="12" fill="#718096">1. Root Cause Analysis Field 1</text>
+                
+                <rect x="60" y="645" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="70" y="665" font-family="Arial, sans-serif" font-size="12" fill="#718096">2. Root Cause Analysis Field 2</text>
+                
+                <rect x="60" y="690" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="70" y="710" font-family="Arial, sans-serif" font-size="12" fill="#718096">3. Root Cause Analysis Field 3</text>
+                
+                <rect x="60" y="735" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="70" y="755" font-family="Arial, sans-serif" font-size="12" fill="#718096">4. Root Cause Analysis Field 4</text>
+                
+                <!-- Why 2 Section -->
+                <rect x="560" y="540" width="500" height="260" fill="#ffffff" stroke="#a0aec0" stroke-width="1" rx="4"/>
+                <rect x="560" y="540" width="500" height="40" fill="#e53e3e" rx="4"/>
+                <text x="810" y="565" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">WHY 2: We haven't detected this problem</text>
+                
+                <!-- Why 2 Text Fields -->
+                <rect x="580" y="600" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="590" y="620" font-family="Arial, sans-serif" font-size="12" fill="#718096">1. Detection Failure Analysis Field 1</text>
+                
+                <rect x="580" y="645" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="590" y="665" font-family="Arial, sans-serif" font-size="12" fill="#718096">2. Detection Failure Analysis Field 2</text>
+                
+                <rect x="580" y="690" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="590" y="710" font-family="Arial, sans-serif" font-size="12" fill="#718096">3. Detection Failure Analysis Field 3</text>
+                
+                <rect x="580" y="735" width="460" height="35" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="590" y="755" font-family="Arial, sans-serif" font-size="12" fill="#718096">4. Detection Failure Analysis Field 4</text>                <!-- CORRECTIVE ACTIONS SECTION -->
+                <rect x="20" y="840" width="1060" height="240" fill="#f0fff4" stroke="#9ae6b4" stroke-width="2" rx="8"/>
+                <text x="40" y="865" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#276749">3. CORRECTIVE ACTIONS</text>
+                
+                <!-- Corrective Actions Table -->
+                <rect x="40" y="880" width="1020" height="180" fill="#ffffff" stroke="#a0aec0" stroke-width="1" rx="4"/>
+                
+                <!-- Table Header -->
+                <rect x="40" y="880" width="1020" height="40" fill="#38a169" rx="4"/>
+                <text x="550" y="905" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">CORRECTIVE ACTIONS TABLE</text>
+                
+                <!-- Column Headers -->
+                <rect x="40" y="920" width="340" height="30" fill="#e6fffa" stroke="#38a169" stroke-width="1"/>
+                <text x="210" y="940" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">TYPE</text>
+                
+                <rect x="380" y="920" width="340" height="30" fill="#e6fffa" stroke="#38a169" stroke-width="1"/>
+                <text x="550" y="940" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">PILOTE</text>
+                
+                <rect x="720" y="920" width="340" height="30" fill="#e6fffa" stroke="#38a169" stroke-width="1"/>
+                <text x="890" y="940" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#276749" text-anchor="middle">DÉLAI</text>
+                
+                <!-- Occurrence Row -->
+                <rect x="40" y="950" width="340" height="55" fill="#fff5f5" stroke="#38a169" stroke-width="1"/>
+                <text x="210" y="980" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#e53e3e" text-anchor="middle">OCCURRENCE</text>
+                
+                <rect x="380" y="950" width="340" height="55" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="390" y="965" width="320" height="25" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="395" y="980" font-family="Arial, sans-serif" font-size="11" fill="#718096">Responsable...</text>
+                
+                <rect x="720" y="950" width="340" height="55" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="730" y="965" width="320" height="25" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="735" y="980" font-family="Arial, sans-serif" font-size="11" fill="#718096">Date limite...</text>
+                
+                <!-- Non-Detection Row -->
+                <rect x="40" y="1005" width="340" height="55" fill="#fffaf0" stroke="#38a169" stroke-width="1"/>
+                <text x="210" y="1030" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#d69e2e" text-anchor="middle">NON-</text>
+                <text x="210" y="1045" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#d69e2e" text-anchor="middle">DETECTION</text>
+                
+                <rect x="380" y="1005" width="340" height="55" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="390" y="1020" width="320" height="25" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="395" y="1035" font-family="Arial, sans-serif" font-size="11" fill="#718096">Responsable...</text>
+                
+                <rect x="720" y="1005" width="340" height="55" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="730" y="1020" width="320" height="25" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                <text x="735" y="1035" font-family="Arial, sans-serif" font-size="11" fill="#718096">Date limite...</text>
+                
+                <!-- VÉRIFICATION SECTION -->
+                <rect x="20" y="1100" width="1060" height="280" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2" rx="8"/>
+                <text x="40" y="1125" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#6b46c1">4. VÉRIFICATION</text>
+                
+                <!-- Subtitle -->
+                <text x="40" y="1150" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#553c9a">Results of 5 successive teams</text>
+                
+                <!-- Vérification Table -->
+                <rect x="40" y="1160" width="1020" height="200" fill="#ffffff" stroke="#a0aec0" stroke-width="1" rx="4"/>
+                
+                <!-- Table Header -->
+                <rect x="40" y="1160" width="1020" height="40" fill="#8b5cf6" rx="4"/>
+                <text x="550" y="1185" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">VERIFICATION TRACKING TABLE</text>
+                
+                <!-- Column Headers -->
+                <rect x="40" y="1200" width="255" height="30" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6b46c1" text-anchor="middle">Team</text>
+                
+                <rect x="295" y="1200" width="255" height="30" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="422" y="1220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6b46c1" text-anchor="middle">Date</text>
+                
+                <rect x="550" y="1200" width="255" height="30" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="677" y="1220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6b46c1" text-anchor="middle">Occurrence</text>
+                
+                <rect x="805" y="1200" width="255" height="30" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="932" y="1220" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#6b46c1" text-anchor="middle">Epoch of Occurrence</text>
+                
+                <!-- Team 1 Row -->
+                <rect x="40" y="1230" width="255" height="26" fill="#f9fafb" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1248" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#553c9a" text-anchor="middle">Team 1</text>
+                
+                <rect x="295" y="1230" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="305" y="1235" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="550" y="1230" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="560" y="1235" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="805" y="1230" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="815" y="1235" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <!-- Team 2 Row -->
+                <rect x="40" y="1256" width="255" height="26" fill="#f9fafb" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1274" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#553c9a" text-anchor="middle">Team 2</text>
+                
+                <rect x="295" y="1256" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="305" y="1261" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="550" y="1256" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="560" y="1261" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="805" y="1256" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="815" y="1261" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <!-- Team 3 Row -->
+                <rect x="40" y="1282" width="255" height="26" fill="#f9fafb" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1300" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#553c9a" text-anchor="middle">Team 3</text>
+                
+                <rect x="295" y="1282" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="305" y="1287" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="550" y="1282" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="560" y="1287" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="805" y="1282" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="815" y="1287" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <!-- Team 4 Row -->
+                <rect x="40" y="1308" width="255" height="26" fill="#f9fafb" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1326" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#553c9a" text-anchor="middle">Team 4</text>
+                
+                <rect x="295" y="1308" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="305" y="1313" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="550" y="1308" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="560" y="1313" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="805" y="1308" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="815" y="1313" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <!-- Team 5 Row -->
+                <rect x="40" y="1334" width="255" height="26" fill="#f9fafb" stroke="#8b5cf6" stroke-width="1"/>
+                <text x="167" y="1352" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#553c9a" text-anchor="middle">Team 5</text>
+                
+                <rect x="295" y="1334" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="305" y="1339" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="550" y="1334" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="560" y="1339" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <rect x="805" y="1334" width="255" height="26" fill="#ffffff" stroke="#cbd5e0" stroke-width="1"/>
+                <rect x="815" y="1339" width="235" height="16" fill="#f7fafc" stroke="#cbd5e0" stroke-width="1" rx="2"/>
+                
+                <!-- Visual Connectors -->
+                <line x1="540" y1="360" x2="560" y2="360" stroke="#cbd5e0" stroke-width="2" stroke-dasharray="5,5"/>
+                
+                <!-- Icons for Visual Enhancement -->
+                <!-- Analysis Icon -->
+                <circle cx="275" cy="220" r="15" fill="#3182ce" opacity="0.2"/>
+                <text x="275" y="224" font-family="Arial, sans-serif" font-size="16" fill="#3182ce" text-anchor="middle">🔍</text>
+                
+                <!-- Action Icon -->
+                <circle cx="200" cy="520" r="15" fill="#38a169" opacity="0.2"/>
+                <text x="200" y="524" font-family="Arial, sans-serif" font-size="16" fill="#38a169" text-anchor="middle">📋</text>
+            </svg>
+        </div>
+        <!-- Navigation Button -->
+        <div style="text-align: center; margin-top: 20px; display: flex; gap: 15px; justify-content: center;">
+            <button onclick="window.location.href='../index.html'" style="
+                background: linear-gradient(135deg, #005691, #3182ce);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 86, 145, 0.3);
+            ">
+                ⬅️ Back to Gauge Dashboard
+            </button>
+            <button onclick="window.location.href='../Vigilance_test/vigilance-test.html'" style="
+                background: linear-gradient(135deg, #059669, #22c55e);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+            ">
+                👁️ Vigilance Test
+            </button>
+            <button onclick="window.location.href='../graphs/dashboard.html'" style="
+                background: linear-gradient(135deg, #7c3aed, #a855f7);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+            ">
+                📊 Quality Dashboard
+            </button>
+            <button onclick="window.location.href='../5S/5s-checklist.html'" style="
+                background: linear-gradient(135deg, #805ad5, #6b46c1);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(128, 90, 213, 0.3);
+            ">
+                🏭 5S Checklist
+            </button>
+            <button onclick="window.location.href='../AFP/afp-audit.html'" style="
+                background: linear-gradient(135deg, #6366f1, #4f46e5);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+            ">
+                📋 AFP Audit
+            </button>
+            <button onclick="window.location.href='../Admin/admin.html'" style="
+                background: linear-gradient(135deg, #dc2626, #ef4444);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+            ">
+                👥 Admin
+            </button>
+        </div>
+        
+        <!-- Legend/Notes -->
+        <div style="margin-top: 30px; padding: 20px; background-color: #f7fafc; border-radius: 8px; border-left: 4px solid #3182ce;">
+            <h3 style="color: #2c5282; margin-top: 0;">QRQC Structure Notes:</h3>
+            <ul style="color: #4a5568; line-height: 1.6;">
+                <li><strong>Caractérisation Section (Orange):</strong> Initial defect characterization with 5 key questions</li>
+                <li><strong>• Defect Description:</strong> Full-width text field for detailed defect description</li>
+                <li><strong>• Who Detected:</strong> Auto-filled with current user session (read-only)</li>
+                <li><strong>• Which Post:</strong> Text field to specify the workstation/post</li>
+                <li><strong>• Why it is a Problem:</strong> Text field to explain impact and consequences</li>
+                <li><strong>• How it was Detected:</strong> Text field to describe the detection method</li>
+                <li><strong>Analysis Section (Blue/Red):</strong> Two "Why" questions with 4 text fields each for thorough root cause analysis</li>
+                <li><strong>Why 1 (Blue):</strong> Focus on problem identification and root cause</li>
+                <li><strong>Why 2 (Red):</strong> Focus on detection failure analysis</li>
+                <li><strong>Corrective Actions Table (Green):</strong> Structured 3-column table with Type, Pilote, and Délai</li>
+                <li><strong>Occurrence Row (Red):</strong> Actions to prevent problem recurrence with responsible person and deadline</li>
+                <li><strong>Non-Detection Row (Orange):</strong> Actions to improve detection methods with responsible person and deadline</li>
+                <li><strong>Vérification Section (Purple):</strong> Verification tracking table for 5 successive teams</li>
+                <li><strong>• Team Column:</strong> Team identifier (Team 1 through Team 5)</li>
+                <li><strong>• Date Column:</strong> Date when verification was performed by each team</li>
+                <li><strong>• Occurrence Column:</strong> Whether the defect occurred again for this team</li>
+                <li><strong>• Epoch of Occurrence:</strong> Time period when occurrence was detected</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

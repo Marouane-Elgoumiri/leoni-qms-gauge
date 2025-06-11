@@ -182,6 +182,43 @@ h2 {
     display: inline-block;
 }
 
+/* Navigation Styling */
+#navigation-container {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav-button {
+    background: linear-gradient(135deg, #005691, #3182ce);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 86, 145, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    min-width: 160px;
+}
+
+.nav-button:hover {
+    background: linear-gradient(135deg, #004080, #2c5282);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 86, 145, 0.4);
+}
+
+.nav-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 86, 145, 0.3);
+}
+
 /* Metrics Container Styling */
 #metrics-container {
     margin-top: 80px;

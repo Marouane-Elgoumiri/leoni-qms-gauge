@@ -5,23 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEONI QMS Defect Gauge</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Load D3.js with fallback -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Check if D3 loaded, if not try alternative CDN
+        if (typeof d3 === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"><\/script>');
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>LEONI Wiring Systems QMS</h1>
         <h2>VOLVO Project - Production Line Defect Status</h2>
         <div id="gauge-container">
-            <div id="gauge"></div>
+            <div id="gauge">
+                <!-- Loading indicator -->
+                <div id="loading-indicator" style="
+                    text-align: center; 
+                    padding: 100px 50px;
+                    color: #666;
+                ">
+                    <div style="font-size: 24px; margin-bottom: 15px;">⏳</div>
+                    <h3>Loading LEONI QMS Gauge...</h3>
+                    <p style="opacity: 0.7;">Initializing visualization components</p>
+                </div>
+            </div>
             <div id="tooltip" class="hidden">
                 <div id="tooltip-content"></div>
             </div>
+            
             <div id="highlight-container">
                 <div id="status-highlight">
                     <div>Project: <span id="current-project">VOLVO</span> | Line: <span id="current-line">MDEP</span></div>
                     <div>Status: <span id="current-status">Low</span> <span id="fun-comment">😊 All good!</span></div>
                 </div>
             </div>
+            
         </div>
         
         <div id="metrics-container">
@@ -37,11 +57,531 @@
                     <div class="emoji">🥈</div>
                     <div class="metric-value" id="medium-defects">0</div>
                 </div>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
                 <div class="metric-card low">
                     <div class="metric-title">#3: Production Line</div>
                     <div class="emoji">🥉</div>
                     <div class="metric-value" id="high-defects">0</div>
                 </div>
+            </div>
+            <div id="navigation-container">
+                <button id="qrqc-btn" class="nav-button">
+                    📋 Open QRQC Analysis
+                </button>
+                <button id="vigilance-btn" class="nav-button">
+                    👁️ Vigilance Test
+                </button>
+                <button id="dashboard-btn" class="nav-button">
+                    📊 Quality Dashboard
+                </button>
+                <button id="5s-btn" class="nav-button">
+                    🏭 5S Checklist
+                </button>
+                <button id="afp-btn" class="nav-button">
+                    📋 AFP Audit
+                </button>
+                <button id="admin-btn" class="nav-button">
+                    👥 Admin
+                </button>
             </div>
         </div>
     </div>
