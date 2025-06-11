@@ -13,7 +13,7 @@ A real-time production line defect monitoring dashboard for LEONI Wiring Systems
 
 ## Demo
 
-Visit the live demo: [LEONI QMS Defect Gauge](https://your-username.github.io/leoni-qms-gauge)
+Visit the live demo: [LEONI QMS Defect Gauge](https://marouane-elgoumiri.github.io/leoni-qms-gauge/)
 
 ## Technology Stack
 
