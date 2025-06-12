@@ -10,6 +10,7 @@ Thumbs.db
 # Editor files
 .vscode/
 .idea/
+graphs/combined.html
 *.swp
 *.swo
 *~
