@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5S Data Debug</title>
+</head>
+<body>
+    <h1>5S Data Debug Test</h1>
+    <div id="debug-output"></div>
+
+    <script src="5s-data.js"></script>
+    <script>
+        console.log('=== 5S DATA DEBUG ===');
+        console.log('fiveSCriteria loaded:', typeof fiveSCriteria !== 'undefined');
+        console.log('categoryInfo loaded:', typeof categoryInfo !== 'undefined');
+        console.log('weeklyScores loaded:', typeof weeklyScores !== 'undefined');
+        
+        if (typeof fiveSCriteria !== 'undefined') {
+            console.log('fiveSCriteria keys:', Object.keys(fiveSCriteria));
+            console.log('Total criteria counts:');
+            Object.keys(fiveSCriteria).forEach(key => {
+                console.log(`  ${key}: ${fiveSCriteria[key].length} criteria`);
+            });
+        }
+        
+        if (typeof categoryInfo !== 'undefined') {
+            console.log('categoryInfo keys:', Object.keys(categoryInfo));
+        }
+        
+        // Display in page
+        const output = document.getElementById('debug-output');
+        output.innerHTML = `
+            <h2>Data Status:</h2>
+            <p><strong>fiveSCriteria:</strong> ${typeof fiveSCriteria !== 'undefined' ? 'LOADED' : 'NOT LOADED'}</p>
+            <p><strong>categoryInfo:</strong> ${typeof categoryInfo !== 'undefined' ? 'LOADED' : 'NOT LOADED'}</p>
+            <p><strong>weeklyScores:</strong> ${typeof weeklyScores !== 'undefined' ? 'LOADED' : 'NOT LOADED'}</p>
+            ${typeof fiveSCriteria !== 'undefined' ? `
+                <h3>Categories:</h3>
+                <ul>
+                    ${Object.keys(fiveSCriteria).map(key => 
+                        `<li><strong>${key}:</strong> ${fiveSCriteria[key].length} criteria</li>`
+                    ).join('')}
+                </ul>
+                <h3>First Criterion from Each Category:</h3>
+                <ul>
+                    ${Object.keys(fiveSCriteria).map(key => 
+                        `<li><strong>${key}:</strong> ${fiveSCriteria[key][0]}</li>`
+                    ).join('')}
+                </ul>
+            ` : ''}
+        `;
+    </script>
+</body>
+</html>

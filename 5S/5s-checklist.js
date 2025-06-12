@@ -7,6 +7,7 @@ class FiveSManager {
     }
 
     init() {
+        this.ensureDataStructure();
         this.renderCategories();
         this.setupEventListeners();
         this.updateScoreDashboard();
@@ -54,6 +55,22 @@ class FiveSManager {
 
     renderCategories() {
         const container = document.getElementById('categoriesContainer');
+        
+        if (!container) {
+            console.error('categoriesContainer element not found!');
+            return;
+        }
+        
+        if (typeof fiveSCriteria === 'undefined') {
+            console.error('fiveSCriteria is not defined!');
+            return;
+        }
+        
+        if (typeof categoryInfo === 'undefined') {
+            console.error('categoryInfo is not defined!');
+            return;
+        }
+        
         container.innerHTML = '';
 
         Object.keys(fiveSCriteria).forEach(categoryKey => {
@@ -77,17 +94,17 @@ class FiveSManager {
                             </div>
                             <div class="criterion-controls">
                                 <button class="status-btn status-ok ${this.getButtonState(categoryKey, index, 'ok')}" 
-                                        onclick="fiveSManager.setCriterionStatus('${categoryKey}', ${index}, 'ok')"
+                                        data-category="${categoryKey}" data-index="${index}" data-status="ok"
                                         title="OK">
                                     ✓
                                 </button>
                                 <button class="status-btn status-not-ok ${this.getButtonState(categoryKey, index, 'not-ok')}" 
-                                        onclick="fiveSManager.setCriterionStatus('${categoryKey}', ${index}, 'not-ok')"
+                                        data-category="${categoryKey}" data-index="${index}" data-status="not-ok"
                                         title="Not OK">
                                     ✗
                                 </button>
                                 <button class="status-btn status-na ${this.getButtonState(categoryKey, index, 'na')}" 
-                                        onclick="fiveSManager.setCriterionStatus('${categoryKey}', ${index}, 'na')"
+                                        data-category="${categoryKey}" data-index="${index}" data-status="na"
                                         title="Not Applicable">
                                     —
                                 </button>
@@ -99,14 +116,44 @@ class FiveSManager {
             
             container.appendChild(categoryCard);
         });
+
+        // Add event listeners to all status buttons
+        this.setupStatusButtonListeners();
+    }
+
+    setupStatusButtonListeners() {
+        const statusButtons = document.querySelectorAll('.status-btn');
+        statusButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const category = e.target.dataset.category;
+                const index = parseInt(e.target.dataset.index);
+                const status = e.target.dataset.status;
+                this.setCriterionStatus(category, index, status);
+            });
+        });
     }
 
     getButtonState(category, index, status) {
+        // Safety check to ensure data structure exists
+        if (!weeklyScores[this.currentDay] || 
+            !weeklyScores[this.currentDay][category] || 
+            weeklyScores[this.currentDay][category][index] === undefined) {
+            return '';
+        }
+        
         const currentStatus = weeklyScores[this.currentDay][category][index];
         return currentStatus === status ? 'active' : '';
     }
 
     setCriterionStatus(category, index, status) {
+        // Ensure data structure exists
+        if (!weeklyScores[this.currentDay]) {
+            weeklyScores[this.currentDay] = {};
+        }
+        if (!weeklyScores[this.currentDay][category]) {
+            weeklyScores[this.currentDay][category] = {};
+        }
+        
         // Update the data
         weeklyScores[this.currentDay][category][index] = status;
         
@@ -156,18 +203,31 @@ class FiveSManager {
     }
 
     calculateDayScore(day) {
+        // Safety check for data structure
+        if (!weeklyScores[day]) {
+            return {
+                score: 0,
+                ok: 0,
+                notOk: 0,
+                na: 0,
+                total: 0
+            };
+        }
+        
         const dayData = weeklyScores[day];
         let totalOk = 0;
         let totalNotOk = 0;
         let totalNA = 0;
         
         Object.keys(dayData).forEach(category => {
-            Object.keys(dayData[category]).forEach(index => {
-                const status = dayData[category][index];
-                if (status === 'ok') totalOk++;
-                else if (status === 'not-ok') totalNotOk++;
-                else if (status === 'na') totalNA++;
-            });
+            if (dayData[category]) {
+                Object.keys(dayData[category]).forEach(index => {
+                    const status = dayData[category][index];
+                    if (status === 'ok') totalOk++;
+                    else if (status === 'not-ok') totalNotOk++;
+                    else if (status === 'na') totalNA++;
+                });
+            }
         });
         
         // Calculate score: T = (A - NotA) / (A + B) * 100
@@ -185,6 +245,17 @@ class FiveSManager {
     }
 
     calculateCategoryScore(category, day) {
+        // Safety check for data structure
+        if (!weeklyScores[day] || !weeklyScores[day][category]) {
+            return {
+                score: 0,
+                ok: 0,
+                notOk: 0,
+                na: 0,
+                total: 0
+            };
+        }
+        
         const categoryData = weeklyScores[day][category];
         let ok = 0;
         let notOk = 0;
@@ -337,10 +408,12 @@ class FiveSManager {
             const savedData = localStorage.getItem('leoni_5s_data');
             if (savedData) {
                 weeklyScores = JSON.parse(savedData);
-                this.renderCategories();
+                // Don't re-render categories here - just update the UI state
                 this.updateScoreDashboard();
                 this.updateProgressCircles();
                 this.updateWeeklyChart();
+                // Update button states to reflect loaded data
+                this.updateButtonStates();
             }
         } catch (error) {
             console.error('Error loading saved data:', error);
@@ -450,6 +523,52 @@ class FiveSManager {
             notification.style.transform = 'translateX(400px)';
             setTimeout(() => document.body.removeChild(notification), 300);
         }, 3000);
+    }
+
+    updateButtonStates() {
+        // Update button states based on current data without re-rendering
+        Object.keys(fiveSCriteria).forEach(categoryKey => {
+            fiveSCriteria[categoryKey].forEach((criterion, index) => {
+                const criterionItem = document.querySelector(
+                    `[data-category="${categoryKey}"][data-index="${index}"]`
+                );
+                
+                if (criterionItem) {
+                    // Reset all buttons
+                    criterionItem.querySelectorAll('.status-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activate the correct button based on saved data
+                    const currentStatus = weeklyScores[this.currentDay]?.[categoryKey]?.[index];
+                    if (currentStatus) {
+                        const targetBtn = criterionItem.querySelector(`.status-${currentStatus}`);
+                        if (targetBtn) {
+                            targetBtn.classList.add('active');
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    // Ensure weeklyScores data structure is properly initialized
+    ensureDataStructure() {
+        Object.keys(weeklyScores).forEach(day => {
+            if (!weeklyScores[day]) {
+                weeklyScores[day] = {};
+            }
+            Object.keys(fiveSCriteria).forEach(category => {
+                if (!weeklyScores[day][category]) {
+                    weeklyScores[day][category] = {};
+                }
+                fiveSCriteria[category].forEach((criterion, index) => {
+                    if (weeklyScores[day][category][index] === undefined) {
+                        weeklyScores[day][category][index] = null; // null = not assessed
+                    }
+                });
+            });
+        });
     }
 }
 

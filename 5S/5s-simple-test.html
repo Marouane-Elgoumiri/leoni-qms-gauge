@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5S Simple Test</title>
+    <style>
+        .category-card {
+            border: 2px solid #ccc;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .criterion-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .status-btn {
+            margin: 0 2px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .status-ok { background: #28a745; color: white; }
+        .status-not-ok { background: #dc3545; color: white; }
+        .status-na { background: #6c757d; color: white; }
+    </style>
+</head>
+<body>
+    <h1>5S Simple Test</h1>
+    <div id="categoriesContainer">
+        <!-- Categories will be loaded here -->
+    </div>
+
+    <script src="5s-data.js"></script>
+    <script>
+        console.log('Starting simple test...');
+        console.log('fiveSCriteria:', typeof fiveSCriteria !== 'undefined');
+        console.log('categoryInfo:', typeof categoryInfo !== 'undefined');
+        
+        function renderSimpleCategories() {
+            const container = document.getElementById('categoriesContainer');
+            
+            if (typeof fiveSCriteria === 'undefined') {
+                container.innerHTML = '<p style="color: red;">ERROR: fiveSCriteria not loaded!</p>';
+                return;
+            }
+            
+            Object.keys(fiveSCriteria).forEach(categoryKey => {
+                const category = fiveSCriteria[categoryKey];
+                const categoryData = categoryInfo[categoryKey];
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-card';
+                categoryDiv.innerHTML = `
+                    <h3>${categoryData.icon} ${categoryData.name}</h3>
+                    <p>${categoryData.description}</p>
+                    <div class="criteria-list">
+                        ${category.slice(0, 3).map((criterion, index) => `
+                            <div class="criterion-item">
+                                <span><strong>${index + 1}.</strong> ${criterion}</span>
+                                <div>
+                                    <button class="status-btn status-ok" onclick="alert('OK clicked for ${categoryKey} ${index}')">✓</button>
+                                    <button class="status-btn status-not-ok" onclick="alert('NOT OK clicked for ${categoryKey} ${index}')">✗</button>
+                                    <button class="status-btn status-na" onclick="alert('N/A clicked for ${categoryKey} ${index}')">—</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                        ${category.length > 3 ? `<p><em>... and ${category.length - 3} more criteria</em></p>` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(categoryDiv);
+            });
+        }
+        
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready, rendering categories...');
+            renderSimpleCategories();
+        });
+    </script>
+</body>
+</html>

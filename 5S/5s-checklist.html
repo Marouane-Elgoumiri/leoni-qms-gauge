@@ -149,6 +149,12 @@
         .seiso { background: linear-gradient(135deg, #3182ce, #2c5282); }
         .seiketsu { background: linear-gradient(135deg, #38a169, #2f855a); }
         .shitsuke { background: linear-gradient(135deg, #805ad5, #6b46c1); }
+        
+        /* LEONI Production Area Styles */
+        .prebloc { background: linear-gradient(135deg, #e53e3e, #c53030); }
+        .assemblage { background: linear-gradient(135deg, #dd6b20, #c05621); }
+        .test_electrique { background: linear-gradient(135deg, #3182ce, #2c5282); }
+        .controle_final { background: linear-gradient(135deg, #38a169, #2f855a); }
 
         .criteria-list {
             padding: 20px;
@@ -460,23 +466,23 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🏭 5S Checklist System</h1>
-            <p>LEONI Quality Management - Workplace Organization Assessment</p>
+            <h1>🏭 Système de Contrôle 5S LEONI</h1>
+            <p>Évaluation de l'Organisation des Zones de Production</p>
         </div>
 
         <div class="content">
             <!-- Day Selector -->
             <div class="day-selector">
-                <h3 style="margin-bottom: 15px; color: #2d3748;">📅 Select Assessment Day</h3>
+                <h3 style="margin-bottom: 15px; color: #2d3748;">📅 Sélectionner le Jour d'Évaluation</h3>
                 <div class="day-tabs">
-                    <button class="day-tab active" data-day="monday">Monday</button>
-                    <button class="day-tab" data-day="tuesday">Tuesday</button>
-                    <button class="day-tab" data-day="wednesday">Wednesday</button>
-                    <button class="day-tab" data-day="thursday">Thursday</button>
-                    <button class="day-tab" data-day="friday">Friday</button>
-                    <button class="day-tab" data-day="saturday">Saturday</button>
+                    <button class="day-tab active" data-day="monday">Lundi</button>
+                    <button class="day-tab" data-day="tuesday">Mardi</button>
+                    <button class="day-tab" data-day="wednesday">Mercredi</button>
+                    <button class="day-tab" data-day="thursday">Jeudi</button>
+                    <button class="day-tab" data-day="friday">Vendredi</button>
+                    <button class="day-tab" data-day="saturday">Samedi</button>
                 </div>
-                <p style="color: #4a5568; font-size: 14px;">Current Day: <span id="currentDay" style="font-weight: bold; color: #3182ce;">Monday</span></p>
+                <p style="color: #4a5568; font-size: 14px;">Jour actuel: <span id="currentDay" style="font-weight: bold; color: #3182ce;">Lundi</span></p>
             </div>
 
             <!-- Score Dashboard -->
@@ -501,62 +507,51 @@
 
             <!-- Progress Visualization -->
             <div class="progress-section">
-                <div class="progress-title">5S Categories Progress</div>
+                <div class="progress-title">Progression des Zones de Production LEONI</div>
                 <div class="progress-bars">
                     <div class="progress-item">
                         <div class="progress-circle">
                             <svg width="100" height="100">
                                 <circle class="progress-bg" cx="50" cy="50" r="40"></circle>
-                                <circle class="progress-fill seiri-progress" cx="50" cy="50" r="40" 
+                                <circle class="progress-fill prebloc-progress" cx="50" cy="50" r="40" 
                                         stroke="#e53e3e" stroke-dasharray="0 251.2"></circle>
                             </svg>
-                            <div class="progress-text" id="seiriProgress">0%</div>
+                            <div class="progress-text" id="preblocProgress">0%</div>
                         </div>
-                        <div style="font-weight: bold; color: #e53e3e;">Seiri (Sort)</div>
+                        <div style="font-weight: bold; color: #e53e3e;">PRÉBLOC</div>
                     </div>
                     <div class="progress-item">
                         <div class="progress-circle">
                             <svg width="100" height="100">
                                 <circle class="progress-bg" cx="50" cy="50" r="40"></circle>
-                                <circle class="progress-fill seiton-progress" cx="50" cy="50" r="40" 
+                                <circle class="progress-fill assemblage-progress" cx="50" cy="50" r="40" 
                                         stroke="#dd6b20" stroke-dasharray="0 251.2"></circle>
                             </svg>
-                            <div class="progress-text" id="seitonProgress">0%</div>
+                            <div class="progress-text" id="assemblageProgress">0%</div>
                         </div>
-                        <div style="font-weight: bold; color: #dd6b20;">Seiton (Set in Order)</div>
+                        <div style="font-weight: bold; color: #dd6b20;">ASSEMBLAGE DYNAMIQUE</div>
                     </div>
                     <div class="progress-item">
                         <div class="progress-circle">
                             <svg width="100" height="100">
                                 <circle class="progress-bg" cx="50" cy="50" r="40"></circle>
-                                <circle class="progress-fill seiso-progress" cx="50" cy="50" r="40" 
+                                <circle class="progress-fill test_electrique-progress" cx="50" cy="50" r="40" 
                                         stroke="#3182ce" stroke-dasharray="0 251.2"></circle>
                             </svg>
-                            <div class="progress-text" id="seisoProgress">0%</div>
+                            <div class="progress-text" id="test_electriqueProgress">0%</div>
                         </div>
-                        <div style="font-weight: bold; color: #3182ce;">Seiso (Shine)</div>
+                        <div style="font-weight: bold; color: #3182ce;">TEST ÉLECTRIQUE</div>
                     </div>
                     <div class="progress-item">
                         <div class="progress-circle">
                             <svg width="100" height="100">
                                 <circle class="progress-bg" cx="50" cy="50" r="40"></circle>
-                                <circle class="progress-fill seiketsu-progress" cx="50" cy="50" r="40" 
+                                <circle class="progress-fill controle_final-progress" cx="50" cy="50" r="40" 
                                         stroke="#38a169" stroke-dasharray="0 251.2"></circle>
                             </svg>
-                            <div class="progress-text" id="seiketsuProgress">0%</div>
+                            <div class="progress-text" id="controle_finalProgress">0%</div>
                         </div>
-                        <div style="font-weight: bold; color: #38a169;">Seiketsu (Standardize)</div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-circle">
-                            <svg width="100" height="100">
-                                <circle class="progress-bg" cx="50" cy="50" r="40"></circle>
-                                <circle class="progress-fill shitsuke-progress" cx="50" cy="50" r="40" 
-                                        stroke="#805ad5" stroke-dasharray="0 251.2"></circle>
-                            </svg>
-                            <div class="progress-text" id="shitsukeProgress">0%</div>
-                        </div>
-                        <div style="font-weight: bold; color: #805ad5;">Shitsuke (Sustain)</div>
+                        <div style="font-weight: bold; color: #38a169;">CONTRÔLE FINAL</div>
                     </div>
                 </div>
             </div>
@@ -568,7 +563,7 @@
 
             <!-- Weekly Overview Chart -->
             <div class="weekly-overview">
-                <div class="weekly-title">📈 Weekly 5S Score Trend</div>
+                <div class="weekly-title">📈 Évolution Hebdomadaire des Scores 5S</div>
                 <div class="weekly-chart">
                     <canvas id="weeklyChart"></canvas>
                 </div>
@@ -577,13 +572,13 @@
             <!-- Actions -->
             <div class="actions">
                 <button class="action-btn btn-save" onclick="saveAssessment()">
-                    💾 Save Assessment
+                    💾 Sauvegarder l'Évaluation
                 </button>
                 <button class="action-btn btn-reset" onclick="resetDay()">
-                    🔄 Reset Day
+                    🔄 Réinitialiser le Jour
                 </button>
                 <button class="action-btn btn-export" onclick="exportData()">
-                    📊 Export Report
+                    📊 Exporter le Rapport
                 </button>
             </div>
 
