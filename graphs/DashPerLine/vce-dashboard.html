@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCE Production Line Dashboard - LEONI Quality</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #1a365d, #2d3748);
+            color: white;
+            padding: 25px 35px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header-info p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-indicator {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-online {
+            background: #10b981;
+            color: white;
+        }
+
+        .last-update {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Main Dashboard Grid */
+        .dashboard-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* KPI Overview Cards - 5 per line, centered */
+        .kpi-overview {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Charts Layout - Two sections side by side */
+        .charts-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            opacity: 0.1;
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+        }
+
+        .kpi-card.excellent { border-left-color: #10b981; }
+        .kpi-card.good { border-left-color: #3b82f6; }
+        .kpi-card.warning { border-left-color: #f59e0b; }
+        .kpi-card.critical { border-left-color: #ef4444; }
+
+        .kpi-card.excellent::before { background: #10b981; }
+        .kpi-card.good::before { background: #3b82f6; }
+        .kpi-card.warning::before { background: #f59e0b; }
+        .kpi-card.critical::before { background: #ef4444; }
+
+        .kpi-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .kpi-icon {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trend-up { color: #10b981; }
+        .trend-down { color: #ef4444; }
+        .trend-stable { color: #64748b; }
+
+        /* Chart Sections */
+        .chart-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-chart {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            color: #374151;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-chart:hover, .btn-chart.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Table styling */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .defects-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .defects-list th,
+        .defects-list td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .defects-list th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        .defects-list tr:hover {
+            background: #f8fafc;
+        }
+
+        .severity-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .severity-high { background: #fee2e2; color: #dc2626; }
+        .severity-medium { background: #fef3c7; color: #d97706; }
+        .severity-low { background: #dcfce7; color: #16a34a; }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-home { background: linear-gradient(135deg, #005691, #3182ce); }
+        .nav-overview { background: linear-gradient(135deg, #059669, #10b981); }
+        .nav-5s { background: linear-gradient(135deg, #805ad5, #6b46c1); }
+        .nav-afp { background: linear-gradient(135deg, #ea580c, #f97316); }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .charts-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
+            
+            .kpi-overview {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .kpi-overview {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .kpi-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .charts-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Auto-refresh indicator */
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-info">
+                <h1><i class="fas fa-industry"></i> VCE Production Line</h1>
+                <p>VOLVO - Cable Engine Production Line | Real-time Quality Monitoring</p>
+            </div>
+            <div class="header-status">
+                <div class="status-indicator status-online">
+                    <i class="fas fa-circle"></i> ONLINE
+                </div>
+                <div class="last-update">
+                    Last Update: <span id="lastUpdate">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto-refresh indicator -->
+        <div class="refresh-indicator">
+            <div class="refresh-dot"></div>
+            Auto-refreshing every 30s
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- KPI Overview Cards -->
+            <div class="kpi-overview">
+                <div class="kpi-card excellent" id="defectRateCard">
+                    <div class="kpi-icon">🎯</div>
+                    <div class="kpi-title">Defect Rate (PPM)</div>
+                    <div class="kpi-value" id="defectRate">--</div>
+                    <div class="kpi-trend trend-down" id="defectTrend">
+                        <i class="fas fa-arrow-down"></i> <span>-2.3%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card excellent" id="fpyCard">
+                    <div class="kpi-icon">✅</div>
+                    <div class="kpi-title">First Pass Yield</div>
+                    <div class="kpi-value" id="firstPassYield">--</div>
+                    <div class="kpi-trend trend-up" id="fpyTrend">
+                        <i class="fas fa-arrow-up"></i> <span>+1.2%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card good" id="rftCard">
+                    <div class="kpi-icon">🏆</div>
+                    <div class="kpi-title">Right First Time</div>
+                    <div class="kpi-value" id="rightFirstTime">--</div>
+                    <div class="kpi-trend trend-stable" id="rftTrend">
+                        <i class="fas fa-minus"></i> <span>0.1%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card warning" id="reworkCard">
+                    <div class="kpi-icon">🔄</div>
+                    <div class="kpi-title">Rework Rate</div>
+                    <div class="kpi-value" id="reworkRate">--</div>
+                    <div class="kpi-trend trend-down" id="reworkTrend">
+                        <i class="fas fa-arrow-down"></i> <span>-0.8%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card good" id="cpkCard">
+                    <div class="kpi-icon">📊</div>
+                    <div class="kpi-title">Process Capability (Cpk)</div>
+                    <div class="kpi-value" id="processCapability">--</div>
+                    <div class="kpi-trend trend-up" id="cpkTrend">
+                        <i class="fas fa-arrow-up"></i> <span>+0.05</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card excellent" id="customerCard">
+                    <div class="kpi-icon">👥</div>
+                    <div class="kpi-title">Customer Complaints</div>
+                    <div class="kpi-value" id="customerComplaints">--</div>
+                    <div class="kpi-trend trend-down" id="customerTrend">
+                        <i class="fas fa-arrow-down"></i> <span>-1 PPM</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card good" id="audit5sCard">
+                    <div class="kpi-icon">🏭</div>
+                    <div class="kpi-title">5S Audit Score</div>
+                    <div class="kpi-value" id="audit5S">--</div>
+                    <div class="kpi-trend trend-up" id="audit5sTrend">
+                        <i class="fas fa-arrow-up"></i> <span>+2%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card good" id="auditAfpCard">
+                    <div class="kpi-icon">📋</div>
+                    <div class="kpi-title">AFP Audit Score</div>
+                    <div class="kpi-value" id="auditAFP">--</div>
+                    <div class="kpi-trend trend-stable" id="auditAfpTrend">
+                        <i class="fas fa-minus"></i> <span>-0.5%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card good" id="lineEfficiencyCard">
+                    <div class="kpi-icon">⚡</div>
+                    <div class="kpi-title">Line Efficiency</div>
+                    <div class="kpi-value" id="lineEfficiency">--</div>
+                    <div class="kpi-trend trend-up" id="efficiencyTrend">
+                        <i class="fas fa-arrow-up"></i> <span>+1.8%</span>
+                    </div>
+                </div>
+
+                <div class="kpi-card warning" id="scrapCard">
+                    <div class="kpi-icon">🗑️</div>
+                    <div class="kpi-title">Scrap Rate</div>
+                    <div class="kpi-value" id="scrapRate">--</div>
+                    <div class="kpi-trend trend-down" id="scrapTrend">
+                        <i class="fas fa-arrow-down"></i> <span>-0.3%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Layout - Two sections side by side -->
+            <div class="charts-layout">
+                <!-- Current Defects Details Table -->
+                <div class="chart-section defects-table">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Current Defects Details</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="defects-list">
+                            <thead>
+                                <tr>
+                                    <th>Defect Type</th>
+                                    <th>Count</th>
+                                    <th>Severity</th>
+                                    <th>PPM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="defectsTableBody">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Defects Analysis Chart -->
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Defect Analysis - Top 5</h3>
+                        <div class="chart-controls">
+                            <button class="btn-chart active" data-period="today">Today</button>
+                            <button class="btn-chart" data-period="week">Week</button>
+                            <button class="btn-chart" data-period="month">Month</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="defectsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="../../index.html" class="nav-btn nav-home">
+                <i class="fas fa-home"></i> Main Dashboard
+            </a>
+            <a href="../dashboard.html" class="nav-btn nav-overview">
+                <i class="fas fa-chart-bar"></i> Quality Overview
+            </a>
+            <a href="../../5S/5s-checklist.html" class="nav-btn nav-5s">
+                <i class="fas fa-industry"></i> 5S Checklist
+            </a>
+            <a href="../../AFP/afp-audit.html" class="nav-btn nav-afp">
+                <i class="fas fa-clipboard-check"></i> AFP Audit
+            </a>
+        </div>
+    </div>
+
+    <script src="vce-mockData.js"></script>
+    <script src="vce-dashboard.js"></script>
+</body>
+</html>

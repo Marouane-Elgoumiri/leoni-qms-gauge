@@ -10,9 +10,8 @@ class AFPManager {
             },
             results: {},
             scores: {
-                visual: { completed: 0, total: 15, correct: 0 },
-                electric: { completed: 0, total: 38, correct: 0 },
-                conformity: { completed: 0, total: 2, correct: 0 }
+                assemblage_planche: { completed: 0, total: 50, correct: 0, nonCorrect: 0 },
+                controle_finition: { completed: 0, total: 53, correct: 0, nonCorrect: 0 }
             }
         };
 
@@ -149,7 +148,8 @@ class AFPManager {
 
         const completed = this.getCategoryCompleted(category.id);
         const correct = this.getCategoryCorrect(category.id);
-        const score = category.checkpoints.length > 0 ? Math.round((correct / category.checkpoints.length) * 100) : 0;
+        const totalCheckpoints = this.getCategoryTotal(category);
+        const score = this.calculateCategoryScore(category.id); // Use dynamic calculation
 
         section.innerHTML = `
             <div class="category-header" style="background: linear-gradient(135deg, ${category.color}, ${this.darkenColor(category.color, 20)})" 
@@ -163,8 +163,8 @@ class AFPManager {
                 </div>
                 <div class="category-stats">
                     <div class="stat-item">
-                        <span class="stat-value">${completed}/${category.checkpoints.length}</span>
-                        <span class="stat-label">Completed</span>
+                        <span class="stat-value">${completed}/${totalCheckpoints}</span>
+                        <span class="stat-label">Complété</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-value">${score}%</span>
@@ -186,35 +186,53 @@ class AFPManager {
     }
 
     renderCheckpoints(category) {
-        return category.checkpoints.map(checkpoint => {
-            const result = this.auditData.results[checkpoint.id] || { correct: false, nonCorrect: false, details: '' };
-            
-            return `
-                <div class="checkpoint-item">
-                    <div>
-                        <div class="checkpoint-text">${checkpoint.text}</div>
-                        <div class="checkpoint-id">${checkpoint.id.toUpperCase()}</div>
+        let checkpointsHtml = '';
+        
+        category.subcategories.forEach(subcategory => {
+            checkpointsHtml += `
+                <div class="subcategory-section">
+                    <h4 class="subcategory-title">${subcategory.name}</h4>
+                    <div class="subcategory-checkpoints">
+                        ${subcategory.checkpoints.map(checkpoint => {
+                            const result = this.auditData.results[checkpoint.id] || { correct: false, nonCorrect: false, details: '' };
+                            return `
+                                <div class="checkpoint-item" data-checkpoint="${checkpoint.id}">
+                                    <div class="checkpoint-main">
+                                        <div class="checkpoint-text">
+                                            <span class="checkpoint-id">${checkpoint.id.toUpperCase()}</span>
+                                            ${checkpoint.text}
+                                        </div>
+                                    </div>
+                                    <div class="checkpoint-controls">
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-option checkbox-correct">
+                                                <input type="checkbox" 
+                                                       ${result.correct ? 'checked' : ''} 
+                                                       onchange="afpManager.updateCheckpoint('${checkpoint.id}', 'correct', this.checked)">
+                                                <span>✓ Conforme</span>
+                                            </label>
+                                            <label class="checkbox-option checkbox-incorrect">
+                                                <input type="checkbox" 
+                                                       ${result.nonCorrect ? 'checked' : ''} 
+                                                       onchange="afpManager.updateCheckpoint('${checkpoint.id}', 'nonCorrect', this.checked)">
+                                                <span>✗ Non Conforme</span>
+                                            </label>
+                                        </div>
+                                        <div class="details-section">
+                                            <textarea class="details-input" 
+                                                      placeholder="Détails sur anomalies relevées / Actions correctives..."
+                                                      onchange="afpManager.updateCheckpointDetails('${checkpoint.id}', this.value)">${result.details}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
-                    <div class="checkbox-group">
-                        <label class="checkbox-option checkbox-correct">
-                            <input type="checkbox" name="${checkpoint.id}-result" value="correct" 
-                                   ${result.correct ? 'checked' : ''}
-                                   onchange="afpManager.updateCheckpoint('${checkpoint.id}', 'correct', this.checked)">
-                            <span><i class="fas fa-check"></i> Correct</span>
-                        </label>
-                        <label class="checkbox-option checkbox-incorrect">
-                            <input type="checkbox" name="${checkpoint.id}-result" value="non-correct" 
-                                   ${result.nonCorrect ? 'checked' : ''}
-                                   onchange="afpManager.updateCheckpoint('${checkpoint.id}', 'nonCorrect', this.checked)">
-                            <span><i class="fas fa-times"></i> Non Correct</span>
-                        </label>
-                    </div>
-                    <textarea class="details-input" 
-                              placeholder="Enter details about defects or observations..."
-                              onchange="afpManager.updateDetails('${checkpoint.id}', this.value)">${result.details}</textarea>
                 </div>
             `;
-        }).join('');
+        });
+        
+        return checkpointsHtml;
     }
 
     toggleCategory(index) {
@@ -249,10 +267,11 @@ class AFPManager {
 
         this.updateProgress();
         this.renderProgressDashboard();
+        this.updateCategoryHeaders(); // Add this line to update category headers
         this.saveToLocalStorage();
     }
 
-    updateDetails(checkpointId, details) {
+    updateCheckpointDetails(checkpointId, details) {
         if (!this.auditData.results[checkpointId]) {
             this.auditData.results[checkpointId] = { correct: false, nonCorrect: false, details: '' };
         }
@@ -266,44 +285,107 @@ class AFPManager {
             if (categoryData) {
                 categoryData.completed = this.getCategoryCompleted(category.id);
                 categoryData.correct = this.getCategoryCorrect(category.id);
+                categoryData.nonCorrect = this.getCategoryNonCorrect(category.id);
             }
         });
+    }
+
+    updateCategoryHeaders() {
+        AFP_AUDIT_DATA.categories.forEach((category, index) => {
+            const categoryHeader = document.querySelector(`#category-content-${index}`).previousElementSibling;
+            const statsElements = categoryHeader.querySelectorAll('.stat-value');
+            
+            if (statsElements.length >= 2) {
+                const completed = this.getCategoryCompleted(category.id);
+                const totalCheckpoints = this.getCategoryTotal(category);
+                const score = this.calculateCategoryScore(category.id);
+                
+                // Update completed stat
+                statsElements[0].textContent = `${completed}/${totalCheckpoints}`;
+                // Update score stat
+                statsElements[1].textContent = `${score}%`;
+            }
+        });
+    }
+
+    getCategoryTotal(category) {
+        return category.subcategories.reduce((total, subcategory) => 
+            total + subcategory.checkpoints.length, 0);
     }
 
     getCategoryCompleted(categoryId) {
         const category = AFP_AUDIT_DATA.categories.find(c => c.id === categoryId);
         if (!category) return 0;
 
-        return category.checkpoints.filter(checkpoint => {
-            const result = this.auditData.results[checkpoint.id];
-            return result && (result.correct || result.nonCorrect);
-        }).length;
+        let completed = 0;
+        category.subcategories.forEach(subcategory => {
+            subcategory.checkpoints.forEach(checkpoint => {
+                const result = this.auditData.results[checkpoint.id];
+                if (result && (result.correct || result.nonCorrect)) {
+                    completed++;
+                }
+            });
+        });
+        return completed;
     }
 
     getCategoryCorrect(categoryId) {
         const category = AFP_AUDIT_DATA.categories.find(c => c.id === categoryId);
         if (!category) return 0;
 
-        return category.checkpoints.filter(checkpoint => {
-            const result = this.auditData.results[checkpoint.id];
-            return result && result.correct;
-        }).length;
+        let correct = 0;
+        category.subcategories.forEach(subcategory => {
+            subcategory.checkpoints.forEach(checkpoint => {
+                const result = this.auditData.results[checkpoint.id];
+                if (result && result.correct) {
+                    correct++;
+                }
+            });
+        });
+        return correct;
+    }
+
+    getCategoryNonCorrect(categoryId) {
+        const category = AFP_AUDIT_DATA.categories.find(c => c.id === categoryId);
+        if (!category) return 0;
+
+        let nonCorrect = 0;
+        category.subcategories.forEach(subcategory => {
+            subcategory.checkpoints.forEach(checkpoint => {
+                const result = this.auditData.results[checkpoint.id];
+                if (result && result.nonCorrect) {
+                    nonCorrect++;
+                }
+            });
+        });
+        return nonCorrect;
     }
 
     calculateCategoryScore(categoryId) {
         const category = AFP_AUDIT_DATA.categories.find(c => c.id === categoryId);
-        if (!category || category.checkpoints.length === 0) return 0;
+        if (!category) return 0;
 
         const correct = this.getCategoryCorrect(categoryId);
-        return Math.round((correct / category.checkpoints.length) * 100);
+        const nonCorrect = this.getCategoryNonCorrect(categoryId);
+        const totalAnswered = correct + nonCorrect;
+        
+        if (totalAnswered === 0) return 0;
+
+        return Math.round((correct / totalAnswered) * 100);
     }
 
     calculateOverallScore() {
-        const totalCheckpoints = AFP_AUDIT_DATA.categories.reduce((sum, cat) => sum + cat.checkpoints.length, 0);
-        if (totalCheckpoints === 0) return 0;
-
-        const totalCorrect = AFP_AUDIT_DATA.categories.reduce((sum, cat) => sum + this.getCategoryCorrect(cat.id), 0);
-        return Math.round((totalCorrect / totalCheckpoints) * 100);
+        const totalCorrect = AFP_AUDIT_DATA.categories.reduce((sum, cat) => 
+            sum + this.getCategoryCorrect(cat.id), 0);
+        
+        const totalNonCorrect = AFP_AUDIT_DATA.categories.reduce((sum, cat) => 
+            sum + this.getCategoryNonCorrect(cat.id), 0);
+        
+        const totalAnswered = totalCorrect + totalNonCorrect;
+        
+        if (totalAnswered === 0) return 0;
+        
+        return Math.round((totalCorrect / totalAnswered) * 100);
     }
 
     setupEventListeners() {

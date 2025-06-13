@@ -240,18 +240,45 @@
         }
 
         .category-content.active {
-            max-height: 2000px;
+            max-height: none; /* Remove height limit for better scrolling */
+            overflow-y: auto;
+            max-height: 80vh; /* Limit to viewport height to enable scrolling */
         }
 
         .checkpoints-container {
             padding: 0 25px 25px;
+            max-height: none;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            /* Enhanced scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .checkpoints-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .checkpoints-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .checkpoints-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .checkpoints-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         .checkpoint-item {
             display: grid;
-            grid-template-columns: 1fr auto 300px;
+            grid-template-columns: 1fr auto;
             gap: 20px;
-            align-items: center;
+            align-items: start;
             padding: 15px;
             border: 2px solid #f1f5f9;
             border-radius: 10px;
@@ -265,9 +292,23 @@
             background: #f8fafc;
         }
 
+        .checkpoint-main {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .checkpoint-text {
             font-weight: 500;
             color: #374151;
+            line-height: 1.5;
+        }
+
+        .checkpoint-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 300px;
         }
 
         .checkpoint-id {
@@ -424,6 +465,10 @@
                 gap: 15px;
             }
 
+            .checkpoint-controls {
+                min-width: auto;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -431,6 +476,53 @@
             .progress-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .checkbox-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .category-content.active {
+                max-height: 70vh; /* Responsive height for mobile */
+                overflow-y: auto;
+            }
+
+            .checkpoints-container {
+                padding: 0 15px 15px;
+                max-height: 65vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a365d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background: #2d3748;
+            transform: translateY(-2px);
         }
 
         /* Loading Animation */
@@ -458,6 +550,30 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Subcategory Sections */
+        .subcategory-section {
+            margin-bottom: 30px;
+        }
+
+        .subcategory-title {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: #1e293b;
+            padding: 12px 20px;
+            margin: 0 0 15px 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .subcategory-checkpoints {
+            padding-left: 15px;
+        }
+
+        .details-section {
+            margin-top: 10px;
         }
     </style>
 </head>

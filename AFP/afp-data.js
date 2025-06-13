@@ -1,110 +1,240 @@
-// AFP Audit Data Structure - 56 checkpoints across 3 categories
+// LEONI AFP Audit Data Structure - 100 checkpoints across 2 main audit forms
 const AFP_AUDIT_DATA = {
     categories: [
         {
-            id: 'visual',
-            name: 'Visual Control',
-            emoji: '👁️',
+            id: 'assemblage_planche',
+            name: 'ASSEMBLAGE SUR PLANCHE / ENRUBANNEUSE',
+            emoji: '🔧',
             color: '#0ea5e9',
-            description: 'Visual inspection and control points',
-            checkpoints: [
-                { id: 'v01', text: 'Workspace cleanliness and organization' },
-                { id: 'v02', text: 'Tool placement and identification' },
-                { id: 'v03', text: 'Product identification labels' },
-                { id: 'v04', text: 'Visual management boards updated' },
-                { id: 'v05', text: 'Safety equipment visible and accessible' },
-                { id: 'v06', text: 'Work instructions displayed and current' },
-                { id: 'v07', text: 'Quality standards posted' },
-                { id: 'v08', text: 'Non-conforming product segregation' },
-                { id: 'v09', text: 'Component inventory levels marked' },
-                { id: 'v10', text: 'Operator certification displayed' },
-                { id: 'v11', text: 'Environmental conditions monitoring' },
-                { id: 'v12', text: 'Emergency procedures visible' },
-                { id: 'v13', text: 'Maintenance schedule displayed' },
-                { id: 'v14', text: 'Quality alerts and notifications' },
-                { id: 'v15', text: 'Traceability documentation visible' }
+            description: 'Assembly on board and taping processes audit',
+            subcategories: [
+                {
+                    name: 'ASSEMBLAGE GÉNÉRAL',
+                    checkpoints: [
+                        { id: 'ap01', text: 'Plan d\'action audit précédent' },
+                        { id: 'ap02', text: 'Propreté du poste' },
+                        { id: 'ap03', text: 'Rangement du poste: composants, outillage' },
+                        { id: 'ap04', text: 'Respecter le mode opératoire utilisation outil GAF' },
+                        { id: 'ap05', text: 'Utilisation outil GAF pour petites et grosses sections' },
+                        { id: 'ap06', text: 'Éléments de sécurité' },
+                        { id: 'ap07', text: 'Présence Fiche KSK dans chariot' },
+                        { id: 'ap08', text: 'Validation de la planche : présence indice' },
+                        { id: 'ap09', text: 'État des figurines, instructions, fourchettes' },
+                        { id: 'ap10', text: 'Présence et conformité des pions et des capuchons' },
+                        { id: 'ap11', text: 'Respect Traitement des non-conforme' },
+                        { id: 'ap12', text: 'Implantation de la planche: ergonomique, fonctionnelle' },
+                        { id: 'ap13', text: 'État des chariots: propreté, roue, treuil' },
+                        { id: 'ap14', text: 'Rangement des fils sur chariot, protégés' },
+                        { id: 'ap15', text: 'Protection des fils aux pieds des opérateurs' },
+                        { id: 'ap16', text: 'Vérification de la présence du sigle de sécurité sur les Figurines' },
+                        { id: 'ap17', text: 'Éclairage' },
+                        { id: 'ap18', text: 'Respect du "pousser, tirer"' },
+                        { id: 'ap19', text: 'Présence des désenficheurs' },
+                        { id: 'ap20', text: 'État des désenficheurs' },
+                        { id: 'ap21', text: 'Mode opératoire enrubannage (respect pas et longueur)' },
+                        { id: 'ap22', text: 'Identification Poste "0 rework"' },
+                        { id: 'ap23', text: 'Respect des indications sur planche' },
+                        { id: 'ap24', text: 'Protection des faisceaux sur chariot / rack' },
+                        { id: 'ap25', text: 'Qualification de l\'opérateur' },
+                        { id: 'ap26', text: 'Étalonnage des pistolets de serrage' }
+                    ]
+                },
+                {
+                    name: 'CONFORMITÉ DU PRODUIT',
+                    checkpoints: [
+                        { id: 'ap27', text: 'Conformité des faisceaux' },
+                        { id: 'ap28', text: 'Conformité des fils: isolant non altéré' }
+                    ]
+                },
+                {
+                    name: 'TEST AGRAFES',
+                    checkpoints: [
+                        { id: 'ap29', text: 'Propreté et organisation du poste' },
+                        { id: 'ap30', text: 'Protection des extrémités des faisceaux sur chariot' },
+                        { id: 'ap31', text: 'Qualification de l\'opérateur' },
+                        { id: 'ap32', text: 'Validation qualité de la planche' },
+                        { id: 'ap33', text: 'État des figurines, instructions, fourchettes' },
+                        { id: 'ap34', text: 'État des contreparties, détecteurs' },
+                        { id: 'ap35', text: 'Fonctionnement des contreparties, détecteurs, réglage' },
+                        { id: 'ap36', text: 'Maintenance des contreparties, détecteurs' },
+                        { id: 'ap37', text: 'Maintenance des imprimantes' }
+                    ]
+                },
+                {
+                    name: 'OK DMS / ZERO REWORK',
+                    checkpoints: [
+                        { id: 'ap38', text: 'Enregistrements / cohérence du OK Démarrage' },
+                        { id: 'ap39', text: 'Connaissance des réparations interdites' },
+                        { id: 'ap40', text: 'Instructions des réparations autorisées' },
+                        { id: 'ap41', text: 'Enregistrement des réparations' }
+                    ]
+                },
+                {
+                    name: 'DOCUMENTS AU POSTE',
+                    checkpoints: [
+                        { id: 'ap42', text: 'Présence des instructions aux postes' },
+                        { id: 'ap43', text: 'Utilisation du format définit par le système Qualité' },
+                        { id: 'ap44', text: 'Les instructions sont signées par les personnes concernées' },
+                        { id: 'ap45', text: 'Les instructions sont claires et lisibles' },
+                        { id: 'ap46', text: 'Les instructions sont bien rangées' },
+                        { id: 'ap47', text: 'Le contenu des instructions est conforme aux tâches réalisées' },
+                        { id: 'ap48', text: 'Le contenu des instructions est connu par le personnel' },
+                        { id: 'ap49', text: 'Les instructions sont appliquées' },
+                        { id: 'ap50', text: 'Les instructions ont évolué suite à la modification du produit et/ou du process' }
+                    ]
+                }
             ]
         },
         {
-            id: 'electric',
-            name: 'Electric Control',
-            emoji: '⚡',
+            id: 'controle_finition',
+            name: 'CONTRÔLE, FINITION, CONDITIONNEMENT',
+            emoji: '🔍',
             color: '#f59e0b',
-            description: 'Electrical testing and control procedures',
-            checkpoints: [
-                { id: 'e01', text: 'Continuity test equipment calibration' },
-                { id: 'e02', text: 'Insulation resistance testing' },
-                { id: 'e03', text: 'Wire gauge verification' },
-                { id: 'e04', text: 'Connection torque specifications' },
-                { id: 'e05', text: 'Terminal crimping quality' },
-                { id: 'e06', text: 'Connector sealing integrity' },
-                { id: 'e07', text: 'Cable routing compliance' },
-                { id: 'e08', text: 'Grounding verification' },
-                { id: 'e09', text: 'Voltage drop testing' },
-                { id: 'e10', text: 'Signal integrity verification' },
-                { id: 'e11', text: 'EMC compliance testing' },
-                { id: 'e12', text: 'Temperature cycling test' },
-                { id: 'e13', text: 'Vibration test compliance' },
-                { id: 'e14', text: 'Pull force testing' },
-                { id: 'e15', text: 'Bend radius verification' },
-                { id: 'e16', text: 'Shielding effectiveness' },
-                { id: 'e17', text: 'Contact resistance measurement' },
-                { id: 'e18', text: 'Dielectric strength testing' },
-                { id: 'e19', text: 'Environmental sealing' },
-                { id: 'e20', text: 'Connector mating force' },
-                { id: 'e21', text: 'Wire color coding verification' },
-                { id: 'e22', text: 'Circuit protection testing' },
-                { id: 'e23', text: 'Load current verification' },
-                { id: 'e24', text: 'Short circuit protection' },
-                { id: 'e25', text: 'Ground fault detection' },
-                { id: 'e26', text: 'Polarity verification' },
-                { id: 'e27', text: 'High voltage testing' },
-                { id: 'e28', text: 'Functional testing' },
-                { id: 'e29', text: 'Performance parameter validation' },
-                { id: 'e30', text: 'Automated test equipment status' },
-                { id: 'e31', text: 'Test data recording accuracy' },
-                { id: 'e32', text: 'Calibration certificate validity' },
-                { id: 'e33', text: 'Test sequence compliance' },
-                { id: 'e34', text: 'Measurement uncertainty evaluation' },
-                { id: 'e35', text: 'Test environment conditions' },
-                { id: 'e36', text: 'Equipment maintenance status' },
-                { id: 'e37', text: 'Safety interlock verification' },
-                { id: 'e38', text: 'Test result documentation' }
-            ]
-        },
-        {
-            id: 'conformity',
-            name: 'Product Conformity',
-            emoji: '✅',
-            color: '#22c55e',
-            description: 'Final product conformity verification',
-            checkpoints: [
-                { id: 'c01', text: 'Final product specification compliance' },
-                { id: 'c02', text: 'Customer requirements verification' }
+            description: 'Control, finishing and packaging processes audit',
+            subcategories: [
+                {
+                    name: 'CONTRÔLE VISUEL',
+                    checkpoints: [
+                        { id: 'cf01', text: 'Plan d\'action audit précédent' },
+                        { id: 'cf02', text: 'Propreté et organisation du poste' },
+                        { id: 'cf03', text: 'Organisation des flux' },
+                        { id: 'cf04', text: 'Marquage des zones au sol' },
+                        { id: 'cf05', text: 'Protection des extrémités sur chariot / racks' },
+                        { id: 'cf06', text: 'Contenu fiche de points particuliers à contrôler' },
+                        { id: 'cf07', text: 'Présence et pertinence de la panoplie de défauts' },
+                        { id: 'cf08', text: 'Respect Traitement des non-conforme' },
+                        { id: 'cf09', text: 'Bible des défauts dernière version' },
+                        { id: 'cf10', text: 'Respect de la fiche de points particuliers à contrôler' },
+                        { id: 'cf11', text: 'Enregistrement des défauts' },
+                        { id: 'cf12', text: 'Tampon sur étiquette d\'identification' },
+                        { id: 'cf13', text: 'Validation des pièces non conformes' },
+                        { id: 'cf14', text: 'Éclairage' },
+                        { id: 'cf15', text: 'Connaissance des principaux défauts' },
+                        { id: 'cf16', text: 'Qualification de l\'opérateur' }
+                    ]
+                },
+                {
+                    name: 'CONTRÔLE ÉLECTRIQUE',
+                    checkpoints: [
+                        { id: 'cf17', text: 'Présence des faisceaux témoins' },
+                        { id: 'cf18', text: 'Validation de la planche / BOL (visa Qualité sur la fiche de validation)' },
+                        { id: 'cf19', text: 'Validation de la carte de test' },
+                        { id: 'cf20', text: 'Fonctionnement des contreparties, détecteurs, réglage' },
+                        { id: 'cf21', text: 'Maintenance des contreparties, détecteurs' },
+                        { id: 'cf22', text: 'Maintenance des imprimantes thermiques' },
+                        { id: 'cf23', text: 'Présence des désenficheurs' },
+                        { id: 'cf24', text: 'État des désenficheurs' },
+                        { id: 'cf25', text: 'Lisibilité de l\'étiquette d\'identification' },
+                        { id: 'cf26', text: 'Cohérence étiquette identification/ KSK' },
+                        { id: 'cf27', text: 'Étalonnage de pistolets' },
+                        { id: 'cf28', text: 'Présence document au poste' },
+                        { id: 'cf29', text: 'Respect Traitement des non-conforme' },
+                        { id: 'cf30', text: 'Bible de défauts' },
+                        { id: 'cf31', text: 'Enregistrement des défauts' }
+                    ]
+                },
+                {
+                    name: 'FINITION',
+                    checkpoints: [
+                        { id: 'cf32', text: 'Rangement du poste: composants, outillage' },
+                        { id: 'cf33', text: 'Présence et pertinence des documents au poste' },
+                        { id: 'cf34', text: 'Respect des indications sur planche' }
+                    ]
+                },
+                {
+                    name: 'CONDITIONNEMENT',
+                    checkpoints: [
+                        { id: 'cf35', text: 'Document pour sous conditionnement (pliage, poche)' },
+                        { id: 'cf36', text: 'Respect du sous conditionnement' },
+                        { id: 'cf37', text: 'État des cartons, nefabs, gefbox' },
+                        { id: 'cf38', text: 'Rangement des faisceaux dans contenant' },
+                        { id: 'cf39', text: 'État lecteur code à barre' },
+                        { id: 'cf40', text: 'Lisibilité étiquette lecteur code à barre' }
+                    ]
+                },
+                {
+                    name: 'OK DMS / ZERO REWORK',
+                    checkpoints: [
+                        { id: 'cf41', text: 'Enregistrements / cohérence du OK Démarrage' },
+                        { id: 'cf42', text: 'Connaissance des réparations interdites' },
+                        { id: 'cf43', text: 'Instructions des réparations autorisées' },
+                        { id: 'cf44', text: 'Enregistrement des réparations' }
+                    ]
+                },
+                {
+                    name: 'DOCUMENTS AU POSTE',
+                    checkpoints: [
+                        { id: 'cf45', text: 'Présence des instructions aux postes' },
+                        { id: 'cf46', text: 'Utilisation du format définit par le système Qualité' },
+                        { id: 'cf47', text: 'Les instructions sont signées par les personnes concernées' },
+                        { id: 'cf48', text: 'Les instructions sont claires et lisibles' },
+                        { id: 'cf49', text: 'Les instructions sont bien rangées' },
+                        { id: 'cf50', text: 'Le contenu des instructions est conforme aux tâches réalisées' },
+                        { id: 'cf51', text: 'Le contenu des instructions est connu par le personnel' },
+                        { id: 'cf52', text: 'Les instructions sont appliquées' },
+                        { id: 'cf53', text: 'Les instructions ont évolué suite à la modification du produit et/ou du process' }
+                    ]
+                }
             ]
         }
+    ]
+};
+
+// Form options for dropdowns
+const FORM_OPTIONS = {
+    auditors: [
+        'Jean Dupont',
+        'Marie Martin',
+        'Pierre Durand',
+        'Sophie Lefebvre',
+        'Michel Bernard',
+        'Claire Moreau',
+        'Antoine Petit',
+        'Nathalie Robert'
+    ],
+    sectors: [
+        'ASSEMBLAGE',
+        'CONTRÔLE QUALITÉ',
+        'FINITION',
+        'CONDITIONNEMENT',
+        'TEST ÉLECTRIQUE',
+        'PRÉBLOC',
+        'LOGISTIQUE'
+    ],
+    vehicleFamilies: [
+        'Peugeot 308',
+        'Peugeot 508',
+        'Citroën C4',
+        'Citroën C5',
+        'Opel Astra',
+        'Opel Insignia',
+        'Fiat Tipo',
+        'Fiat 500L'
     ]
 };
 
 // Sample audit data for demonstration
 const SAMPLE_AUDIT_DATA = {
     documentInfo: {
-        date: '2025-06-11',
-        auditor: 'Sarah Martinez',
-        sector: 'VOLVO MDEP Production Line 3',
-        vehicleFamily: 'VOLVO XC90 - Premium Harness Assembly'
+        date: '2024-12-13',
+        auditor: 'Jean Dupont',
+        sector: 'ASSEMBLAGE',
+        vehicleFamily: 'Peugeot 308'
     },
     results: {
-        'v01': { correct: true, nonCorrect: false, details: '' },
-        'v02': { correct: false, nonCorrect: true, details: 'Tools not properly organized on workbench 2' },
-        'v03': { correct: true, nonCorrect: false, details: '' },
-        'v04': { correct: true, nonCorrect: false, details: '' },
-        'v05': { correct: false, nonCorrect: true, details: 'Safety glasses missing at station 4' },
-        'e01': { correct: true, nonCorrect: false, details: '' },
-        'e02': { correct: false, nonCorrect: true, details: 'Equipment needs recalibration - due 2025-06-15' },
-        'e15': { correct: true, nonCorrect: false, details: '' },
-        'c01': { correct: true, nonCorrect: false, details: '' },
-        'c02': { correct: true, nonCorrect: false, details: '' }
+        // Assemblage sur planche samples
+        'ap01': { correct: true, nonCorrect: false, details: 'Plan d\'action suivi correctement' },
+        'ap02': { correct: true, nonCorrect: false, details: 'Poste propre et organisé' },
+        'ap03': { correct: false, nonCorrect: true, details: 'Outils mal rangés, amélioration nécessaire' },
+        'ap04': { correct: true, nonCorrect: false, details: 'Mode opératoire GAF respecté' },
+        'ap05': { correct: true, nonCorrect: false, details: 'Outil GAF utilisé correctement' },
+        
+        // Contrôle finition samples
+        'cf01': { correct: true, nonCorrect: false, details: 'Plan d\'action en cours' },
+        'cf02': { correct: true, nonCorrect: false, details: 'Organisation conforme' },
+        'cf03': { correct: false, nonCorrect: true, details: 'Flux à améliorer' },
+        'cf04': { correct: true, nonCorrect: false, details: 'Marquage au sol visible' },
+        'cf05': { correct: true, nonCorrect: false, details: 'Protections en place' }
     }
 };
 
@@ -156,37 +286,6 @@ const HISTORICAL_AUDIT_DATA = [
         conformityScore: 90
     }
 ];
-
-// Predefined options for form fields
-const FORM_OPTIONS = {
-    auditors: [
-        'Sarah Martinez',
-        'Jean Dubois', 
-        'Maria Lopez',
-        'Omar Hassan',
-        'Ahmed Ben Ali',
-        'Lisa Anderson',
-        'Mohamed Khadri'
-    ],
-    sectors: [
-        'VOLVO MDEP Production Line 1',
-        'VOLVO MDEP Production Line 2', 
-        'VOLVO MDEP Production Line 3',
-        'VOLVO HDEP C1 Assembly',
-        'VOLVO VCE Manufacturing',
-        'BMW Series Assembly',
-        'AUDI Premium Line'
-    ],
-    vehicleFamilies: [
-        'VOLVO XC90 - Premium Harness Assembly',
-        'VOLVO XC60 - Standard Harness',
-        'VOLVO S90 - Luxury Wire Harness',
-        'BMW X5 - Performance Wiring',
-        'BMW 3 Series - Standard Assembly',
-        'AUDI Q7 - Premium Electronics',
-        'AUDI A4 - Standard Harness'
-    ]
-};
 
 // Export data for use in other modules
 if (typeof module !== 'undefined' && module.exports) {

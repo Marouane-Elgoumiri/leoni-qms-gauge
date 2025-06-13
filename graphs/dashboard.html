@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quality Dashboard - LEONI Quality Department</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -181,30 +182,106 @@
             margin-top: 15px;
         }
 
+        /* Enhanced Navigation */
         .navigation {
-            text-align: center;
-            margin-top: 30px;
             display: flex;
             gap: 15px;
             justify-content: center;
+            margin: 40px 0 30px 0;
+            flex-wrap: wrap;
+            padding: 0 20px;
         }
 
-        .nav-button {
-            background: linear-gradient(135deg, #005691, #3182ce);
-            color: white;
+        .nav-btn {
+            padding: 14px 22px;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(128, 90, 213, 0.3);
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .nav-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(128, 90, 213, 0.4);
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Navigation Button Color Schemes */
+        .nav-home { 
+            background: linear-gradient(135deg, #005691, #3182ce); 
+        }
+        .nav-lines { 
+            background: linear-gradient(135deg, #059669, #10b981); 
+        }
+        .nav-qrqc { 
+            background: linear-gradient(135deg, #ea580c, #f97316); 
+        }
+        .nav-vigilance { 
+            background: linear-gradient(135deg, #7c3aed, #a855f7); 
+        }
+        .nav-5s { 
+            background: linear-gradient(135deg, #805ad5, #6b46c1); 
+        }
+        .nav-afp { 
+            background: linear-gradient(135deg, #0891b2, #06b6d4); 
+        }
+        .nav-admin { 
+            background: linear-gradient(135deg, #dc2626, #ef4444); 
+        }
+        .nav-leps { 
+            background: linear-gradient(135deg, #16a34a, #22c55e); 
+        }
+
+        /* Navigation Section Headers */
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-section h4 {
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .nav-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            .navigation {
+                margin: 30px 0 20px 0;
+                padding: 0 10px;
+            }
+            
+            .nav-btn {
+                min-width: 140px;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+            
+            .nav-group {
+                gap: 8px;
+            }
         }
 
         .large-card {
@@ -302,26 +379,52 @@
             </div>
         </div>
 
-        <!-- Navigation -->
+        <!-- Enhanced Navigation -->
         <div class="navigation">
-            <button class="nav-button" onclick="window.location.href='../index.html'">
-                ⬅️ Back to Gauge Dashboard
-            </button>
-            <button class="nav-button" onclick="window.location.href='../Analysis/qrqc.html'">
-                📋 QRQC Analysis
-            </button>
-            <button class="nav-button" onclick="window.location.href='../Vigilance_test/vigilance-test.html'">
-                👁️ Vigilance Test
-            </button>
-            <button class="nav-button" onclick="window.location.href='../5S/5s-checklist.html'">
-                🏭 5S Checklist
-            </button>
-            <button class="nav-button" onclick="window.location.href='../AFP/afp-audit.html'">
-                📋 AFP Audit
-            </button>
-            <button class="nav-button" onclick="window.location.href='../Admin/admin.html'">
-                👥 Admin
-            </button>
+            <!-- Main Navigation Section -->
+            <div class="nav-section">
+                <h4>🏠 Main Navigation</h4>
+                <div class="nav-group">
+                    <a href="../index.html" class="nav-btn nav-home">
+                        <i class="fas fa-home"></i> Main Dashboard
+                    </a>
+                    <a href="DashPerLine/vce-dashboard.html" class="nav-btn nav-lines">
+                        <i class="fas fa-industry"></i> VCE Line Dashboard
+                    </a>
+                    <a href="../LEPS/production-dashboard.html" class="nav-btn nav-leps">
+                        <i class="fas fa-chart-line"></i> LEPS Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quality Tools Section -->
+            <div class="nav-section">
+                <h4>🔧 Quality Tools</h4>
+                <div class="nav-group">
+                    <a href="../5S/5s-checklist.html" class="nav-btn nav-5s">
+                        <i class="fas fa-broom"></i> 5S Checklist
+                    </a>
+                    <a href="../AFP/afp-audit.html" class="nav-btn nav-afp">
+                        <i class="fas fa-clipboard-check"></i> AFP Audit
+                    </a>
+                    <a href="../Analysis/qrqc.html" class="nav-btn nav-qrqc">
+                        <i class="fas fa-search-plus"></i> QRQC Analysis
+                    </a>
+                </div>
+            </div>
+
+            <!-- Assessment & Management Section -->
+            <div class="nav-section">
+                <h4>👁️ Assessment & Management</h4>
+                <div class="nav-group">
+                    <a href="../Vigilance_test/vigilance-test.html" class="nav-btn nav-vigilance">
+                        <i class="fas fa-eye"></i> Vigilance Test
+                    </a>
+                    <a href="../Admin/admin.html" class="nav-btn nav-admin">
+                        <i class="fas fa-users-cog"></i> Admin Panel
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
