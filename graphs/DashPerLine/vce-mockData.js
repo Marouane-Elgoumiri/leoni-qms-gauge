@@ -25,11 +25,11 @@ const vceData = {
             trend: "up",
             trendValue: 1.2
         },
-        rightFirstTime: {
-            value: (Math.random() * 4 + 95).toFixed(1), // 95-99%
-            target: 96.0,
-            trend: "stable",
-            trendValue: 0.1
+        defectCount: {
+            value: Math.floor(Math.random() * 20) + 25, // 25-45 total defects
+            target: 30,
+            trend: "down",
+            trendValue: -3
         },
         reworkRate: {
             value: (Math.random() * 2 + 1).toFixed(1), // 1-3%
@@ -158,7 +158,7 @@ const vceData = {
     trendData: {
         defectRate: [15, 12, 18, 14, 10, 8, 11],
         firstPassYield: [97.2, 98.1, 96.8, 97.9, 98.5, 98.8, 98.2],
-        rightFirstTime: [95.1, 96.2, 94.8, 96.5, 97.1, 97.8, 96.9],
+        defectCount: [35, 28, 42, 31, 25, 22, 29],
         efficiency: [92.3, 93.8, 94.2, 93.5, 94.8, 95.2, 94.6]
     },
 
@@ -190,7 +190,7 @@ const vceData = {
     targets: {
         defectRate: { excellent: 10, good: 15, warning: 25 },
         firstPassYield: { excellent: 98, good: 95, warning: 90 },
-        rightFirstTime: { excellent: 96, good: 93, warning: 88 },
+        defectCount: { excellent: 20, good: 30, warning: 45 },
         reworkRate: { excellent: 2, good: 4, warning: 6 },
         processCapability: { excellent: 1.67, good: 1.33, warning: 1.0 },
         customerComplaints: { excellent: 3, good: 5, warning: 10 },
@@ -206,7 +206,7 @@ const vceData = {
         if (!targets) return 'good';
         
         // For metrics where lower is better (defects, rework, complaints, scrap)
-        const lowerIsBetter = ['defectRate', 'reworkRate', 'customerComplaints', 'scrapRate'];
+        const lowerIsBetter = ['defectRate', 'defectCount', 'reworkRate', 'customerComplaints', 'scrapRate'];
         
         if (lowerIsBetter.includes(kpiName)) {
             if (value <= targets.excellent) return 'excellent';

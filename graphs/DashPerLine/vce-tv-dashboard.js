@@ -1,8 +1,12 @@
-// VCE Production Line Dashboard - LEONI Quality System
-class VCEDashboard {
+// VCE TV Production Dashboard - LEONI Quality System
+class VCETVDashboard {
     constructor() {
         this.defectsChart = null;
-        this.currentPeriod = 'today';
+        this.currentPage = 0;
+        this.totalPages = 2;
+        this.pageInterval = 10000; // 10 seconds
+        this.pageTimer = null;
+        this.progressTimer = null;
         this.autoRefreshInterval = null;
         this.init();
     }
@@ -10,7 +14,7 @@ class VCEDashboard {
     init() {
         this.loadInitialData();
         this.setupCharts();
-        this.setupEventListeners();
+        this.startPageRotation();
         this.startAutoRefresh();
         this.updateLastUpdateTime();
     }
@@ -47,7 +51,7 @@ class VCEDashboard {
                 } else if (kpiName === 'defectRate' || kpiName === 'customerComplaints') {
                     valueElement.textContent = `${value} PPM`;
                 } else if (kpiName === 'defectCount') {
-                    valueElement.textContent = `${value}`;
+                    valueElement.textContent = value;
                 } else {
                     valueElement.textContent = `${value}%`;
                 }
@@ -100,7 +104,7 @@ class VCEDashboard {
 
         const icon = trendElement.querySelector('i');
         const span = trendElement.querySelector('span');
-        
+
         // Remove existing trend classes
         trendElement.classList.remove('trend-up', 'trend-down', 'trend-stable');
         
@@ -141,9 +145,9 @@ class VCEDashboard {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${defect.name}</td>
-                <td>${defect.count}</td>
+                <td><strong>${defect.count}</strong></td>
                 <td><span class="severity-badge severity-${defect.severity}">${defect.severity.toUpperCase()}</span></td>
-                <td>${defect.ppm}</td>
+                <td><strong>${defect.ppm}</strong></td>
             `;
             tbody.appendChild(row);
         });
@@ -160,7 +164,13 @@ class VCEDashboard {
         
         const labels = vceData.topDefects.map(defect => defect.name);
         const data = vceData.topDefects.map(defect => defect.count);
-        const colors = vceData.colorSchemes.defects;
+        const colors = [
+            '#ef4444', // Red for high severity
+            '#f59e0b', // Orange for medium severity
+            '#10b981', // Green for low severity
+            '#3b82f6', // Blue for info
+            '#8b5cf6'  // Purple for other
+        ];
 
         this.defectsChart = new Chart(ctx, {
             type: 'bar',
@@ -171,8 +181,8 @@ class VCEDashboard {
                     data: data,
                     backgroundColor: colors,
                     borderColor: colors.map(color => color + 'CC'),
-                    borderWidth: 2,
-                    borderRadius: 8,
+                    borderWidth: 3,
+                    borderRadius: 12,
                     borderSkipped: false,
                 }]
             },
@@ -187,18 +197,30 @@ class VCEDashboard {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         titleColor: '#fff',
                         bodyColor: '#fff',
-                        cornerRadius: 8,
-                        displayColors: false
+                        cornerRadius: 12,
+                        displayColors: false,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: '#f1f5f9'
+                            color: 'rgba(148, 163, 184, 0.3)',
+                            lineWidth: 2
                         },
                         ticks: {
-                            color: '#64748b'
+                            color: '#64748b',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
                         }
                     },
                     x: {
@@ -207,58 +229,111 @@ class VCEDashboard {
                         },
                         ticks: {
                             color: '#64748b',
+                            font: {
+                                size: 11,
+                                weight: 'bold'
+                            },
                             maxRotation: 45
                         }
                     }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
                 }
             }
         });
     }
 
-    // Setup event listeners
-    setupEventListeners() {
-        // Chart period controls
-        document.querySelectorAll('[data-period]').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const period = e.target.dataset.period;
-                this.changePeriod(period);
-            });
+    // Page rotation system
+    startPageRotation() {
+        // Update progress bar
+        this.updateProgressBar();
+        
+        // Set up page rotation timer
+        this.pageTimer = setInterval(() => {
+            this.switchToNextPage();
+        }, this.pageInterval);
+    }
+
+    switchToNextPage() {
+        const currentPageElement = document.getElementById(`page${this.currentPage + 1}`);
+        const nextPageIndex = (this.currentPage + 1) % this.totalPages;
+        const nextPageElement = document.getElementById(`page${nextPageIndex + 1}`);
+
+        // Update page indicators
+        this.updatePageIndicators(nextPageIndex);
+
+        // Animate page transition
+        currentPageElement.classList.remove('active');
+        currentPageElement.classList.add('slide-out-left');
+
+        setTimeout(() => {
+            nextPageElement.classList.add('active');
+            nextPageElement.classList.remove('slide-in-right');
+            
+            // Reset previous page
+            currentPageElement.classList.remove('slide-out-left');
+            currentPageElement.classList.add('slide-in-right');
+        }, 400);
+
+        this.currentPage = nextPageIndex;
+        this.updateProgressBar();
+    }
+
+    updatePageIndicators(activePage) {
+        const indicators = document.querySelectorAll('.indicator-dot');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === activePage);
         });
     }
 
-    // Change chart period
-    changePeriod(period) {
-        this.currentPeriod = period;
+    updateProgressBar() {
+        const progressBar = document.getElementById('progressBar');
+        let progress = 0;
         
-        // Update button states
-        document.querySelectorAll('[data-period]').forEach(button => {
-            button.classList.remove('active');
-        });
-        document.querySelector(`[data-period="${period}"]`).classList.add('active');
+        // Reset progress bar
+        progressBar.style.width = '0%';
         
-        // Update defects chart (simulate different period data)
-        this.updateDefectsChart();
-    }
-
-    // Update defects chart for different periods
-    updateDefectsChart() {
-        // Simulate different data for different periods
-        let multiplier = 1;
-        switch(this.currentPeriod) {
-            case 'today':
-                multiplier = 1;
-                break;
-            case 'week':
-                multiplier = 7;
-                break;
-            case 'month':
-                multiplier = 30;
-                break;
+        // Clear existing progress timer
+        if (this.progressTimer) {
+            clearInterval(this.progressTimer);
         }
         
-        const newData = vceData.topDefects.map(defect => defect.count * multiplier);
-        this.defectsChart.data.datasets[0].data = newData;
-        this.defectsChart.update('active');
+        // Animate progress bar over 10 seconds
+        this.progressTimer = setInterval(() => {
+            progress += 1;
+            progressBar.style.width = `${progress}%`;
+            
+            if (progress >= 100) {
+                clearInterval(this.progressTimer);
+                progress = 0;
+            }
+        }, this.pageInterval / 100);
+    }
+
+    // Auto-refresh data
+    startAutoRefresh() {
+        this.autoRefreshInterval = setInterval(() => {
+            this.refreshData();
+        }, 30000); // 30 seconds
+    }
+
+    refreshData() {
+        // Generate new variations
+        vceData.generateVariation();
+        
+        // Update displays
+        this.updateKPICards();
+        this.updateDefectsTable();
+        this.updateLastUpdateTime();
+        
+        // Update chart if on charts page
+        if (this.currentPage === 1 && this.defectsChart) {
+            const newData = vceData.topDefects.map(defect => defect.count);
+            this.defectsChart.data.datasets[0].data = newData;
+            this.defectsChart.update('none');
+        }
     }
 
     // Update last update time
@@ -267,81 +342,51 @@ class VCEDashboard {
         const timeString = now.toLocaleTimeString('en-US', { 
             hour12: false, 
             hour: '2-digit', 
-            minute: '2-digit'
+            minute: '2-digit' 
         });
         document.getElementById('lastUpdate').textContent = timeString;
     }
 
-    // Start auto-refresh functionality
-    startAutoRefresh() {
-        this.autoRefreshInterval = setInterval(() => {
-            this.refreshData();
-        }, 30000); // Refresh every 30 seconds
-    }
-
-    // Refresh data with small variations
-    refreshData() {
-        // Generate small variations in data
-        vceData.generateVariation();
-        
-        // Update displays
-        this.updateKPICards();
-        this.updateDefectsTable();
-        this.updateLastUpdateTime();
-        
-        // Add subtle animation to indicate refresh
-        this.animateRefresh();
-    }
-
-    // Add refresh animation
-    animateRefresh() {
-        const cards = document.querySelectorAll('.kpi-card');
-        cards.forEach(card => {
-            card.style.transform = 'scale(1.02)';
-            setTimeout(() => {
-                card.style.transform = 'scale(1)';
-            }, 200);
-        });
-    }
-
-    // Stop auto-refresh (for cleanup)
-    stopAutoRefresh() {
-        if (this.autoRefreshInterval) {
-            clearInterval(this.autoRefreshInterval);
-            this.autoRefreshInterval = null;
-        }
-    }
-
-    // Method to export current data (for debugging/admin)
-    exportData() {
-        const exportData = {
-            timestamp: new Date().toISOString(),
-            lineInfo: vceData.lineInfo,
-            currentKPIs: vceData.qualityKPIs,
-            defects: vceData.topDefects,
-            comparisons: vceData.volvoLines
-        };
-        
-        console.log('VCE Dashboard Export:', exportData);
-        return exportData;
+    // Cleanup method
+    destroy() {
+        if (this.pageTimer) clearInterval(this.pageTimer);
+        if (this.progressTimer) clearInterval(this.progressTimer);
+        if (this.autoRefreshInterval) clearInterval(this.autoRefreshInterval);
+        if (this.defectsChart) this.defectsChart.destroy();
     }
 }
 
-// Initialize dashboard when page loads
+// Initialize dashboard when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.vceDashboard = new VCEDashboard();
+    window.vceTVDashboard = new VCETVDashboard();
 });
 
-// Handle page visibility change to pause/resume auto-refresh
+// Handle page visibility changes
 document.addEventListener('visibilitychange', () => {
-    if (window.vceDashboard) {
-        if (document.hidden) {
-            window.vceDashboard.stopAutoRefresh();
-        } else {
-            window.vceDashboard.startAutoRefresh();
+    if (document.hidden) {
+        // Pause timers when page is hidden
+        if (window.vceTVDashboard) {
+            clearInterval(window.vceTVDashboard.pageTimer);
+            clearInterval(window.vceTVDashboard.progressTimer);
+        }
+    } else {
+        // Resume timers when page becomes visible
+        if (window.vceTVDashboard) {
+            window.vceTVDashboard.startPageRotation();
         }
     }
 });
 
-// Export for global access
-window.VCEDashboard = VCEDashboard;
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (window.vceTVDashboard && window.vceTVDashboard.defectsChart) {
+        window.vceTVDashboard.defectsChart.resize();
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (window.vceTVDashboard) {
+        window.vceTVDashboard.destroy();
+    }
+});
