@@ -150,10 +150,13 @@ class VCETVDashboard {
         const tbody = document.getElementById('defectsTableBody');
         tbody.innerHTML = '';
         
-        vceData.topDefects.forEach(defect => {
+        vceData.topDefects.forEach((defect, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${defect.name}</td>
+                <td class="defect-name-cell">
+                    <span class="defect-color-indicator defect-color-${index}"></span>
+                    ${defect.name}
+                </td>
                 <td><strong>${defect.count}</strong></td>
                 <td><span class="severity-badge severity-${defect.severity}">${defect.severity.toUpperCase()}</span></td>
                 <td><strong>${defect.ppm}</strong></td>

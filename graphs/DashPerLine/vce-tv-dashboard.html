@@ -180,8 +180,8 @@
         }
 
         .kpi-title {
-            font-size: 1rem;
-            color: #64748b;
+            font-size: 1.8rem;
+            color: #000000;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -192,7 +192,7 @@
         .kpi-value {
             font-size: 3rem;
             font-weight: 900;
-            color: #1e293b;
+            color: #243756;
             text-align: center;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -207,23 +207,16 @@
             font-weight: 700;
         }
 
-        .trend-up { color: #10b981; }
-        .trend-down { color: #ef4444; }
-        .trend-stable { color: #64748b; }
+        .trend-up { color: #069620; }
+        .trend-down { color: #ff0000; }
+        .trend-stable { color: #444f60; }
 
         /* Page 2 - Charts */
         .charts-page {
             gap: 30px;
         }
 
-        .page-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 30px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+        
 
         .charts-grid {
             display: grid;
@@ -317,6 +310,28 @@
             background: linear-gradient(135deg, #dcfce7, #bbf7d0); 
             color: #16a34a; 
             border: 2px solid #10b981;
+        }
+
+        /* Defect Type Color Indicators - Match Chart Colors */
+        .defect-color-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .defect-color-0 { background-color: #ef4444; } /* Red */
+        .defect-color-1 { background-color: #f59e0b; } /* Orange */
+        .defect-color-2 { background-color: #10b981; } /* Green */
+        .defect-color-3 { background-color: #3b82f6; } /* Blue */
+        .defect-color-4 { background-color: #8b5cf6; } /* Purple */
+
+        .defect-name-cell {
+            display: flex;
+            align-items: center;
         }
 
         /* Auto-refresh indicator */
