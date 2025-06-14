@@ -9,7 +9,7 @@ const config = {
     maxValue: 100,
     transitionDuration: 750,
     autoRotateInterval: 5000, // 5 seconds
-    width: 1600, // Increased from 800
+    width: 1700, // Increased from 800
     height: 700,  // Increased from 400
     arcInset: 5,  // Increased slightly for better proportions
     arcWidth: 80, // Increased from 80
@@ -80,7 +80,7 @@ class DefectGauge {
             .attr("width", width)
             .attr("height", height)
             .append("g")
-            .attr("transform", `translate(${width / 2}, ${height / 2})`);
+            .attr("transform", `translate(${width / 2}, ${height / 1.5})`);
         
         // Create gauge arcs
         this.createGaugeArcs();

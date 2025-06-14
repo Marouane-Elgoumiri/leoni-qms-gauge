@@ -322,8 +322,8 @@
         /* Auto-refresh indicator */
         .refresh-indicator {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 45px;
+            right: 290px;
             background: rgba(255, 255, 255, 0.9);
             padding: 10px 15px;
             border-radius: 25px;
@@ -384,6 +384,110 @@
             transition: width 0.1s ease;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
         }
+
+        /* Page 3 - Gauge */
+        .gauge-page {
+            justify-content: center;
+            align-items: center;
+            gap: 10px;  /* Increased gap between gauge and cards */
+        }
+
+        /* GAUGE CONTAINER - KEY SIZE PARAMETER */
+        .gauge-container {
+            width: 100%;
+            max-width: 1200px;  /* Increased from 800px - controls max gauge container width */
+            height: 600px;      /* Increased from 500px - controls gauge container height */
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* GAUGE INFO CARDS - BIGGER CARDS */
+        .gauge-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;          /* Increased from 20px - more space between cards */
+            width: 90%;         /* Increased from 80% - cards take more width */
+            max-width: 1200px;  /* Increased from 800px - matches gauge container */
+        }
+
+        .gauge-info-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+            padding: 35px;      /* Increased from 20px - bigger internal padding */
+            border-radius: 20px; /* Increased from 15px - more rounded corners */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
+            backdrop-filter: blur(10px);
+            color: #1e293b;
+            text-align: center;
+            min-height: 140px;  /* Added minimum height for consistency */
+        }
+
+        .gauge-info-title {
+            font-size: 1.1rem;  /* Increased from 0.9rem - bigger title text */
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px; /* Increased from 10px - more space */
+        }
+
+        .gauge-info-value {
+            font-size: 2.4rem;  /* Increased from 1.8rem - bigger value text */
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 8px;  /* Increased from 5px - more space */
+        }
+
+        .gauge-info-subtitle {
+            font-size: 1rem;    /* Increased from 0.8rem - bigger subtitle text */
+            color: #64748b;
+        }
+
+        /* Gauge SVG Styles */
+        .gauge-arc {
+            stroke-width: 2;
+        }
+
+        .gauge-center {
+            fill: #2d3748;
+            stroke: #4a5568;
+            stroke-width: 2;
+        }
+
+        .needle {
+            fill: #2d3748;
+            stroke: #1a202c;
+            stroke-width: 1;
+        }
+
+        .gauge-value-display {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            fill: #2d3748;
+        }
+
+        .gauge-tick {
+            stroke: #4a5568;
+            stroke-width: 2;
+        }
+
+        .gauge-tick-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            fill: #2d3748;
+        }
+
+        .gauge-status-label {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: bold;
+            fill: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -415,6 +519,7 @@
         <div class="page-indicator">
             <div class="indicator-dot active" data-page="0"></div>
             <div class="indicator-dot" data-page="1"></div>
+            <div class="indicator-dot" data-page="2"></div>
         </div>
 
         <!-- Progress Bar -->
@@ -519,7 +624,7 @@
 
             <!-- Page 2: Charts and Defects Analysis -->
             <div class="page charts-page" id="page2">
-                <div class="page-title">📊 Quality Analysis & Defects Monitoring</div>
+                
                 <div class="charts-grid">
                     <!-- Current Defects Details Table -->
                     <div class="chart-section defects-table">
@@ -550,9 +655,38 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Page 3: Quality Gauge -->
+            <div class="page gauge-page" id="page3">
+                
+                <!-- Main Gauge -->
+                <div class="gauge-container" id="gaugeContainer">
+                    <!-- Gauge will be rendered here by D3.js -->
+                </div>
+
+                <!-- Gauge Information Cards -->
+                <div class="gauge-info">
+                    <div class="gauge-info-card">
+                        <div class="gauge-info-title">Current Status</div>
+                        <div class="gauge-info-value" id="currentStatus">Excellent</div>
+                        <div class="gauge-info-subtitle">Quality Level</div>
+                    </div>
+                    <div class="gauge-info-card">
+                        <div class="gauge-info-title">Production Line</div>
+                        <div class="gauge-info-value" id="currentLine">VCE</div>
+                        <div class="gauge-info-subtitle">Active Line</div>
+                    </div>
+                    <div class="gauge-info-card">
+                        <div class="gauge-info-title">Defect Rate</div>
+                        <div class="gauge-info-value" id="currentDefectRate">8 PPM</div>
+                        <div class="gauge-info-subtitle">Current Rate</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="vce-mockData.js"></script>
     <script src="vce-tv-dashboard.js"></script>
 </body>
