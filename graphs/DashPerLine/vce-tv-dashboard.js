@@ -520,7 +520,7 @@ class VCETVDashboard {
 
         // Update status elements
         const statusElement = document.getElementById('currentStatus');
-        const lineElement = document.getElementById('currentLine');
+        const defectCountElement = document.getElementById('currentDefectCount');
         const defectRateElement = document.getElementById('currentDefectRate');
 
         if (statusElement) {
@@ -528,8 +528,10 @@ class VCETVDashboard {
             statusElement.style.color = statusColor;
         }
 
-        if (lineElement) {
-            lineElement.textContent = 'VCE';
+        if (defectCountElement) {
+            // Calculate total defect count from vceData
+            const totalDefects = vceData.topDefects.reduce((sum, defect) => sum + defect.count, 0);
+            defectCountElement.textContent = totalDefects;
         }
 
         if (defectRateElement) {
