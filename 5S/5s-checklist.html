@@ -293,6 +293,138 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
+        /* Ecart Table Styles */
+        .ecart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .ecart-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #e53e3e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ecart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .ecart-table th {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ecart-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        .ecart-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .ecart-table tr:hover {
+            background: #e6fffa;
+        }
+
+        .ecart-item-info {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .ecart-category {
+            font-size: 12px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .ecart-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .ecart-status.not-ok {
+            background: #fed7d7;
+            color: #e53e3e;
+        }
+
+        .ecart-status.na {
+            background: #e2e8f0;
+            color: #718096;
+        }
+
+        .ecart-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 35px;
+        }
+
+        .ecart-input:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .ecart-date {
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .ecart-empty {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .delete-ecart-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-ecart-btn:hover {
+            background: #c53030;
+            transform: scale(1.05);
+        }
+
         .weekly-title {
             text-align: center;
             font-size: 20px;
@@ -559,6 +691,35 @@
             <!-- 5S Categories -->
             <div class="categories-container" id="categoriesContainer">
                 <!-- Categories will be dynamically generated -->
+            </div>
+
+            <!-- Ecart (Deviation) Table -->
+            <div class="ecart-section">
+                <div class="ecart-title">
+                    ⚠️ Table des Écarts (Deviations)
+                </div>
+                <p style="text-align: center; color: #718096; margin-bottom: 20px; font-size: 14px;">
+                    Les éléments marqués comme "NOT OK" ou "N/A" apparaissent automatiquement ici pour suivi des actions correctives.
+                </p>
+                <table class="ecart-table" id="ecartTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">N°</th>
+                            <th style="width: 25%;">ITEM</th>
+                            <th style="width: 10%;">DATE</th>
+                            <th style="width: 35%;">ACTIONS PILOTE</th>
+                            <th style="width: 15%;">DÉLAI</th>
+                            <th style="width: 10%;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ecartTableBody">
+                        <tr>
+                            <td colspan="6" class="ecart-empty">
+                                Aucun écart détecté. Les éléments "NOT OK" et "N/A" apparaîtront automatiquement ici.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <!-- Weekly Overview Chart -->

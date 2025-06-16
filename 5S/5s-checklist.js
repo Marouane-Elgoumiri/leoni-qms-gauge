@@ -13,6 +13,7 @@ class FiveSManager {
         this.updateScoreDashboard();
         this.updateProgressCircles();
         this.initWeeklyChart();
+        this.initializeEcartTable();
         this.loadSavedData();
     }
 
@@ -51,6 +52,7 @@ class FiveSManager {
         this.renderCategories();
         this.updateScoreDashboard();
         this.updateProgressCircles();
+        this.initializeEcartTable();
     }
 
     renderCategories() {
@@ -179,6 +181,9 @@ class FiveSManager {
         this.updateScoreDashboard();
         this.updateProgressCircles();
         this.updateWeeklyChart();
+        
+        // Handle Ecart table updates
+        this.updateEcartTable(category, index, status);
         
         // Auto-save
         this.autoSave();
@@ -436,18 +441,32 @@ class FiveSManager {
                 });
             });
             
+            // Clear Ecart data for current day
+            localStorage.removeItem(`ecartData_${this.currentDay}`);
+            
             this.renderCategories();
             this.updateScoreDashboard();
             this.updateProgressCircles();
             this.updateWeeklyChart();
+            this.initializeEcartTable();
             this.showNotification(`${this.currentDay} assessment reset`, 'success');
         }
     }
 
     exportData() {
+        // Collect all Ecart data for all days
+        const allEcartData = {};
+        ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].forEach(day => {
+            const dayEcartData = localStorage.getItem(`ecartData_${day}`);
+            if (dayEcartData) {
+                allEcartData[day] = JSON.parse(dayEcartData);
+            }
+        });
+
         const exportData = {
             timestamp: new Date().toISOString(),
             weeklyScores: weeklyScores,
+            ecartData: allEcartData,
             summary: this.generateSummary()
         };
         
@@ -569,6 +588,193 @@ class FiveSManager {
                 });
             });
         });
+    }
+
+    // Ecart (Deviation) Table Management
+    updateEcartTable(category, index, status) {
+        const criterionText = fiveSCriteria[category][index];
+        const itemId = `${category}-${index}`;
+        const currentDate = new Date().toLocaleDateString('fr-FR');
+        
+        if (status === 'not-ok' || status === 'na') {
+            // Add to ecart table if not already present
+            this.addToEcartTable(itemId, category, criterionText, status, currentDate);
+        } else if (status === 'ok') {
+            // Remove from ecart table if marked as OK
+            this.removeFromEcartTable(itemId);
+        }
+        
+        this.saveEcartData();
+    }
+
+    addToEcartTable(itemId, category, criterionText, status, date) {
+        // Check if item already exists
+        if (document.querySelector(`[data-ecart-id="${itemId}"]`)) {
+            return; // Already in table
+        }
+
+        const tableBody = document.getElementById('ecartTableBody');
+        
+        // Remove the "no deviations" message if present
+        const emptyRow = tableBody.querySelector('.ecart-empty');
+        if (emptyRow) {
+            emptyRow.parentElement.remove();
+        }
+
+        // Create new row
+        const row = document.createElement('tr');
+        row.setAttribute('data-ecart-id', itemId);
+        
+        // Get the current ecart count for numbering
+        const currentCount = tableBody.querySelectorAll('tr').length + 1;
+        
+        row.innerHTML = `
+            <td style="text-align: center; font-weight: bold;">${currentCount}</td>
+            <td>
+                <div class="ecart-item-info">${criterionText}</div>
+                <div class="ecart-category">${this.getCategoryDisplayName(category)}</div>
+                <span class="ecart-status ${status}">${status === 'not-ok' ? 'NOT OK' : 'N/A'}</span>
+            </td>
+            <td class="ecart-date">${date}</td>
+            <td>
+                <textarea class="ecart-input" 
+                          placeholder="Décrire les actions correctives à mettre en place..."
+                          data-field="actions"
+                          data-item-id="${itemId}"></textarea>
+            </td>
+            <td>
+                <input type="date" 
+                       class="ecart-input" 
+                       data-field="deadline"
+                       data-item-id="${itemId}">
+            </td>
+            <td style="text-align: center;">
+                <button class="delete-ecart-btn" onclick="fiveSManager.removeFromEcartTable('${itemId}')">
+                    🗑️
+                </button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+        
+        // Add event listeners for saving data
+        row.querySelectorAll('.ecart-input').forEach(input => {
+            input.addEventListener('change', () => {
+                this.saveEcartData();
+            });
+            input.addEventListener('input', () => {
+                this.saveEcartData();
+            });
+        });
+    }
+
+    removeFromEcartTable(itemId) {
+        const row = document.querySelector(`[data-ecart-id="${itemId}"]`);
+        if (row) {
+            row.remove();
+            
+            // Update numbering
+            this.updateEcartNumbering();
+            
+            // Show empty message if no items left
+            const tableBody = document.getElementById('ecartTableBody');
+            if (tableBody.children.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="6" class="ecart-empty">
+                        Aucun écart détecté. Les éléments "NOT OK" et "N/A" apparaîtront automatiquement ici.
+                    </td>
+                `;
+                tableBody.appendChild(emptyRow);
+            }
+            
+            this.saveEcartData();
+        }
+    }
+
+    updateEcartNumbering() {
+        const rows = document.querySelectorAll('#ecartTableBody tr[data-ecart-id]');
+        rows.forEach((row, index) => {
+            const numberCell = row.querySelector('td:first-child');
+            if (numberCell) {
+                numberCell.textContent = index + 1;
+            }
+        });
+    }
+
+    getCategoryDisplayName(categoryKey) {
+        const displayNames = {
+            'prebloc': 'PRÉBLOC',
+            'assemblage': 'ASSEMBLAGE DYNAMIQUE',
+            'test_electrique': 'TEST ÉLECTRIQUE',
+            'controle_final': 'CONTRÔLE FINAL'
+        };
+        return displayNames[categoryKey] || categoryKey.toUpperCase();
+    }
+
+    saveEcartData() {
+        const ecartData = {};
+        const rows = document.querySelectorAll('#ecartTableBody tr[data-ecart-id]');
+        
+        rows.forEach(row => {
+            const itemId = row.getAttribute('data-ecart-id');
+            const actions = row.querySelector('[data-field="actions"]')?.value || '';
+            const deadline = row.querySelector('[data-field="deadline"]')?.value || '';
+            
+            ecartData[itemId] = {
+                actions: actions,
+                deadline: deadline
+            };
+        });
+        
+        // Save to localStorage
+        localStorage.setItem(`ecartData_${this.currentDay}`, JSON.stringify(ecartData));
+    }
+
+    loadEcartData() {
+        const savedData = localStorage.getItem(`ecartData_${this.currentDay}`);
+        if (savedData) {
+            const ecartData = JSON.parse(savedData);
+            
+            // Apply saved data to inputs
+            Object.keys(ecartData).forEach(itemId => {
+                const row = document.querySelector(`[data-ecart-id="${itemId}"]`);
+                if (row) {
+                    const actionsInput = row.querySelector('[data-field="actions"]');
+                    const deadlineInput = row.querySelector('[data-field="deadline"]');
+                    
+                    if (actionsInput) actionsInput.value = ecartData[itemId].actions || '';
+                    if (deadlineInput) deadlineInput.value = ecartData[itemId].deadline || '';
+                }
+            });
+        }
+    }
+
+    initializeEcartTable() {
+        // Clear existing ecart table
+        const tableBody = document.getElementById('ecartTableBody');
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="ecart-empty">
+                    Aucun écart détecté. Les éléments "NOT OK" et "N/A" apparaîtront automatiquement ici.
+                </td>
+            </tr>
+        `;
+
+        // Rebuild ecart table based on current assessments
+        Object.keys(fiveSCriteria).forEach(category => {
+            fiveSCriteria[category].forEach((criterion, index) => {
+                const status = weeklyScores[this.currentDay]?.[category]?.[index];
+                if (status === 'not-ok' || status === 'na') {
+                    const itemId = `${category}-${index}`;
+                    const currentDate = new Date().toLocaleDateString('fr-FR');
+                    this.addToEcartTable(itemId, category, criterion, status, currentDate);
+                }
+            });
+        });
+
+        // Load saved ecart data
+        this.loadEcartData();
     }
 }
 
