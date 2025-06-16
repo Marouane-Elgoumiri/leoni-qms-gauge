@@ -4,20 +4,60 @@ class VCETVDashboard {
         this.defectsChart = null;
         this.gauge = null;
         this.currentPage = 0;
-        this.totalPages = 3;
+        this.totalPages = 4; // Updated to 4 pages
         this.pageInterval = 10000; // 10 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;
+        this.alertSound = null;
         this.init();
     }
 
     init() {
+        this.initializeAlertSound();
         this.loadInitialData();
         this.setupCharts();
         this.startPageRotation();
         this.startAutoRefresh();
         this.updateLastUpdateTime();
+    }
+
+    // Initialize alert sound for Flash Qualité page
+    initializeAlertSound() {
+        // Create audio context for alert sound
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('Audio context not supported');
+        }
+    }
+
+    // Play alert sound when reaching Flash Qualité page
+    playAlertSound() {
+        if (!this.audioContext) return;
+
+        try {
+            // Create a simple alert tone using Web Audio API
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+            
+            // Alert tone configuration
+            oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(600, this.audioContext.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime + 0.4);
+            
+            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.1);
+            gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.6);
+            
+            oscillator.start(this.audioContext.currentTime);
+            oscillator.stop(this.audioContext.currentTime + 0.6);
+        } catch (e) {
+            console.warn('Could not play alert sound:', e);
+        }
     }
 
     // Load and display initial KPI data
@@ -558,6 +598,26 @@ class VCETVDashboard {
         const nextPageIndex = (this.currentPage + 1) % this.totalPages;
         const nextPageElement = document.getElementById(`page${nextPageIndex + 1}`);
 
+        // Handle header visibility for Flash Qualité page (page 4 = index 3)
+        const header = document.querySelector('.header');
+        const refreshIndicator = document.querySelector('.refresh-indicator');
+        const pageIndicator = document.querySelector('.page-indicator');
+        const progressBar = document.getElementById('progressBar');
+        
+        if (nextPageIndex === 3) {
+            // Hide header and indicators for Flash Qualité page
+            if (header) header.style.display = 'none';
+            if (refreshIndicator) refreshIndicator.style.display = 'none';
+            if (pageIndicator) pageIndicator.style.display = 'none';
+            if (progressBar) progressBar.style.display = 'none';
+        } else {
+            // Show header and indicators for other pages
+            if (header) header.style.display = 'flex';
+            if (refreshIndicator) refreshIndicator.style.display = 'flex';
+            if (pageIndicator) pageIndicator.style.display = 'flex';
+            if (progressBar) progressBar.style.display = 'block';
+        }
+
         // Update page indicators
         this.updatePageIndicators(nextPageIndex);
 
@@ -576,6 +636,11 @@ class VCETVDashboard {
 
         this.currentPage = nextPageIndex;
         this.updateProgressBar();
+        
+        // Play alert sound when reaching the Flash Qualité page (page 4 = index 3)
+        if (nextPageIndex === 3) {
+            this.playAlertSound();
+        }
     }
 
     updatePageIndicators(activePage) {
