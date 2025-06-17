@@ -63,7 +63,7 @@
             color: #4a5568;
             margin-bottom: 5px;
         }
-        .info-field input, .info-field select {
+        .info-field input {
             padding: 8px;
             border: 1px solid #cbd5e0;
             border-radius: 4px;
@@ -406,17 +406,7 @@
                 </div>
                 <div class="info-field">
                     <label for="product-line">Product Line:</label>
-                    <select id="product-line" name="product-line" required>
-                        <option value="">Select Volvo Product Line...</option>
-                        <option value="VCE-Line-A">VCE Line A - Assembly</option>
-                        <option value="VCE-Line-B">VCE Line B - Testing</option>
-                        <option value="VCE-Line-C">VCE Line C - Packaging</option>
-                        <option value="Volvo-XC90">Volvo XC90 Harness</option>
-                        <option value="Volvo-XC60">Volvo XC60 Harness</option>
-                        <option value="Volvo-V60">Volvo V60 Harness</option>
-                        <option value="Volvo-S90">Volvo S90 Harness</option>
-                        <option value="Volvo-Electric">Volvo Electric Vehicle Line</option>
-                    </select>
+                    <input type="text" id="product-line" name="product-line" placeholder="Enter Product Line" required>
                 </div>
                 <div class="info-field">
                     <label for="inspector">Inspector:</label>
@@ -500,8 +490,8 @@
                         <label for="clerk-production">📋 Clerk Production</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="inspector-checkbox" name="personnel[]" value="inspector">
-                        <label for="inspector-checkbox">🔍 Inspector</label>
+                        <input type="checkbox" id="inspector" name="personnel[]" value="inspector">
+                        <label for="inspector">🔍 Inspector</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="aqf" name="personnel[]" value="aqf">
@@ -811,7 +801,7 @@
             
             // Simulate saving (in real implementation, this would be an API call)
             console.log('QRQC Data:', formData);
-            alert('QRQC Document submitted successfully!\n\nDefect ID: ' + formData.defectId + '\nProduct Line: ' + formData.productLine + '\nDate: ' + formData.date);
+            alert('QRQC Document submitted successfully!\n\nDefect ID: ' + formData.defectId + '\nDate: ' + formData.date);
             
             // Optional: Clear form or redirect
             // window.location.href = '../index.html';
