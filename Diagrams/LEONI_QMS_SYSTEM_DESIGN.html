@@ -355,7 +355,7 @@
                 <h3>📊 System Metrics</h3>
                 <div class="metrics-grid">
                     <div class="metric-card">
-                        <div class="metric-value">14</div>
+                        <div class="metric-value">15</div>
                         <p>Database Tables</p>
                     </div>
                     <div class="metric-card">
@@ -363,11 +363,11 @@
                         <p>User Roles</p>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">8</div>
+                        <div class="metric-value">13</div>
                         <p>JSONB Sections</p>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">25+</div>
+                        <div class="metric-value">30+</div>
                         <p>API Endpoints</p>
                     </div>
                 </div>
@@ -557,12 +557,27 @@ erDiagram
         decimal defect_rate
     }
     
+    VALUES {
+        int id PK
+        int production_line_id FK
+        int entered_by FK
+        string shift
+        date date
+        jsonb quality_data
+        text notes
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    
     USERS ||--o{ ANALYSIS : creates
     DEFECTS ||--o{ ANALYSIS : analyzes
     PRODUCTION_LINES ||--o{ DEFECTS : occurs_on
     PRODUCTION_LINES ||--o{ ANALYSIS : performed_on
     USERS ||--o{ AUDIT_5S : conducts
     PRODUCTION_LINES ||--o{ KPI : measures
+    PRODUCTION_LINES ||--o{ VALUES : measures_quality
+    USERS ||--o{ VALUES : enters
                     </div>
                 </div>
             </div>
@@ -594,6 +609,32 @@ qrqc_form JSONB NOT NULL DEFAULT '{}' CHECK (
 is_archived BOOLEAN DEFAULT FALSE
                     </div>
                 </div>
+                
+                <div class="rationale-box">
+                    <h4>VALUES Table - Quality Metrics JSONB Structure</h4>
+                    <div class="code-block">
+-- Quality metrics with flexible JSONB storage
+quality_data JSONB NOT NULL DEFAULT '{
+    "scrap": {
+        "total_scrap": 0,
+        "total_production": 0,
+        "rate": 0.0
+    },
+    "rework": {
+        "total_rework": 0,
+        "total_production": 0,
+        "rate": 0.0
+    },
+    "defects": {
+        "total_defects": 0,
+        "total_production": 0,
+        "rate_ppm": 0.0
+    }
+}'
+-- Enables scalable quality metrics entry with automatic calculations
+-- AQL agents enter raw data, system calculates rates via triggers
+                    </div>
+                </div>
             </div>
 
             <div class="subsection">
@@ -601,7 +642,7 @@ is_archived BOOLEAN DEFAULT FALSE
                 <div class="design-principles">
                     <div class="principle-card">
                         <h4>📇 Consolidated GIN Indexing</h4>
-                        <p>Single comprehensive GIN index on qrqc_form column plus specific path indexes for frequently accessed form sections and status fields.</p>
+                        <p>Comprehensive GIN indexes on JSONB columns for both ANALYSIS qrqc_form and VALUES quality_data, plus specific path indexes for frequently accessed form sections and quality metrics.</p>
                     </div>
                     <div class="principle-card">
                         <h4>🎯 Optimized Path Indexes</h4>
@@ -619,11 +660,18 @@ is_archived BOOLEAN DEFAULT FALSE
                 
                 <div class="code-block">
 -- Consolidated indexing strategy for optimized performance
+-- ANALYSIS table indexes
 CREATE INDEX idx_analysis_date ON analysis(analysis_date);
 CREATE INDEX idx_qrqc_form_gin ON analysis USING GIN (qrqc_form);
 CREATE INDEX idx_qrqc_status ON analysis USING GIN ((qrqc_form->'metadata'->>'status'));
 CREATE INDEX idx_qrqc_tri_decision ON analysis USING GIN ((qrqc_form->'tri_data'->>'decisionRetouche'));
 CREATE INDEX idx_qrqc_actions_status ON analysis USING GIN ((qrqc_form->'actions_securisation'->>'overall_status'));
+
+-- VALUES table JSONB indexes
+CREATE INDEX idx_values_quality_data ON values USING GIN (quality_data);
+CREATE INDEX idx_values_scrap_rate ON values USING BTREE ((quality_data->'scrap'->'rate')::DECIMAL);
+CREATE INDEX idx_values_rework_rate ON values USING BTREE ((quality_data->'rework'->'rate')::DECIMAL);
+CREATE INDEX idx_values_defect_rate_ppm ON values USING BTREE ((quality_data->'defects'->'rate_ppm')::DECIMAL);
                 </div>
             </div>
         </div>
@@ -668,6 +716,14 @@ graph TB
         E1[GET /api/kpi/dashboard]
         E2[GET /api/reports/export]
         E3[GET /api/analytics/trends]
+    end
+    
+    subgraph "📊 Quality Metrics"
+        F1[GET /api/values]
+        F2[POST /api/values/quality-metrics]
+        F3[PUT /api/values/:id]
+        F4[GET /api/values/production-line/:id/current]
+        F5[GET /api/values/trends]
     end
                     </div>
                 </div>
@@ -744,6 +800,74 @@ Response: {
   "autoCalculated": {
     "overall_status": "PLANNED",
     "next_due_date": "2025-06-20"
+  }
+}
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Quality Metrics API (VALUES Table)</h3>
+                <div class="code-block">
+// Quality Metrics Entry - JSONB Structure
+POST /api/values/quality-metrics
+
+{
+  "production_line_id": 1,
+  "shift": "Morning",
+  "date": "2025-06-18",
+  "quality_data": {
+    "scrap": {
+      "total_scrap": 15,
+      "total_production": 1000
+    },
+    "rework": {
+      "total_rework": 8,
+      "total_production": 1000
+    },
+    "defects": {
+      "total_defects": 3,
+      "total_production": 1000
+    }
+  },
+  "notes": "Morning shift quality metrics"
+}
+
+// Database Operation: INSERT INTO values with automatic rate calculation
+// Trigger calculates: scrap_rate=1.5%, rework_rate=0.8%, defect_rate_ppm=3000
+
+// Get Current Quality Metrics for Production Line
+GET /api/values/production-line/1/current
+
+Response: {
+  "success": true,
+  "data": {
+    "id": 123,
+    "production_line_id": 1,
+    "shift": "Morning",
+    "date": "2025-06-18",
+    "quality_data": {
+      "scrap": {"total_scrap": 15, "total_production": 1000, "rate": 1.5},
+      "rework": {"total_rework": 8, "total_production": 1000, "rate": 0.8},
+      "defects": {"total_defects": 3, "total_production": 1000, "rate_ppm": 3000.0}
+    },
+    "notes": "Morning shift quality metrics"
+  }
+}
+
+// Quality Trends Analysis
+GET /api/values/trends?production_line_id=1&days=7
+
+Response: {
+  "success": true,
+  "data": {
+    "scrap_trend": [1.2, 1.5, 1.3, 1.8, 1.4, 1.6, 1.5],
+    "rework_trend": [0.8, 0.9, 0.7, 1.1, 0.8, 0.9, 0.8],
+    "defect_ppm_trend": [2500, 3000, 2800, 3200, 2900, 3100, 3000],
+    "trend_analysis": {
+      "scrap_direction": "stable",
+      "rework_direction": "stable", 
+      "defects_direction": "increasing"
+    }
   }
 }
                 </div>

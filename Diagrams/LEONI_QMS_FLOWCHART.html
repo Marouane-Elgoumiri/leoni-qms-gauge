@@ -363,7 +363,20 @@ erDiagram
         datetime updated_at
     }
 
-    %% Relationships with cardinalities - 14 Tables Total
+    VALUES {
+        int id PK
+        int production_line_id FK
+        int entered_by FK
+        string shift
+        date date
+        jsonb quality_data
+        text notes
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% Relationships with cardinalities - 15 Tables Total
     USERS ||--o{ USER_SESSIONS : "HAS_SESSIONS"
     USERS ||--|| USER_PERMISSIONS : "HAS_PERMISSIONS"
     PRODUCTION_LINES ||--o{ POSTS : "CONTAINS"
@@ -382,6 +395,8 @@ erDiagram
     USERS ||--o{ SYSTEM_CONFIG : "UPDATES_CONFIG"
     PRODUCTION_LINES ||--o{ DEFECTS : "LINE_DEFECTS"
     PROJECTS ||--o{ KPI : "PROJECT_METRICS"
+    PRODUCTION_LINES ||--o{ VALUES : "MEASURES_QUALITY"
+    USERS ||--o{ VALUES : "ENTERS_VALUES"
             `,
             
             classDiagram: `
@@ -565,6 +580,27 @@ classDiagram
         +calculateScore() Double
     }
     
+    class Values {
+        -Long id
+        -Long productionLineId
+        -Long enteredBy
+        -String shift
+        -Date date
+        -JsonB qualityData
+        -String notes
+        -String status
+        -Date createdAt
+        -Date updatedAt
+        +calculateScrapRate() Double
+        +calculateReworkRate() Double
+        +calculateDefectPPM() Double
+        +updateQualityData(metricType, data) void
+        +getQualityMetric(metricType) JsonB
+        +getCurrentShift() String
+        +validateQualityData() Boolean
+        +extractMetricValue(path) Object
+    }
+    
     class SystemConfig {
         -Long id
         -String configKey
@@ -595,12 +631,14 @@ classDiagram
     User "1" --> "*" VigilanceSession : takes
     User "1" --> "*" Analysis : performs
     User "1" --> "*" SystemConfig : updates
+    User "1" --> "*" Values : enters
     
     ProductionLine "1" --> "*" Post : contains
     ProductionLine "1" --> "*" KPI : measures
     ProductionLine "1" --> "*" Audit5S : evaluated_by
     ProductionLine "1" --> "*" AuditAFP : audited_by
     ProductionLine "1" --> "*" Defect : line_defects
+    ProductionLine "1" --> "*" Values : measures_quality
     
     Project "1" --> "*" Defect : concerns
     Project "1" --> "*" KPI : project_metrics
@@ -620,13 +658,23 @@ sequenceDiagram
     participant AQL as AQL Agent
     participant QT as Quality Technician
     participant DC as DefectController
+    participant VC as ValuesController
     participant AC as AnalysisController
     participant DB as Database
     participant TL as Team Leader
     participant QM as Quality Manager
     
-    Note over AQL,QM: QRQC Analysis Workflow - User-Driven Process
+    Note over AQL,QM: Quality Metrics Entry & QRQC Analysis Workflow
     
+    %% Quality Metrics Entry (VALUES table)
+    AQL->>+VC: POST /api/values/quality-metrics
+    VC->>+DB: INSERT INTO values (quality_data JSONB)
+    Note over DB: JSONB structure: {scrap, rework, defects} with nested rates
+    DB->>DB: TRIGGER calculate_quality_rates()
+    DB-->>-VC: values_id with calculated rates
+    VC-->>-AQL: HTTP 201 - Quality metrics saved
+    
+    %% Defect Detection and Recording
     AQL->>+DC: POST /api/defects
     DC->>+DB: INSERT INTO defects
     DB-->>-DC: defect_id
@@ -640,7 +688,7 @@ sequenceDiagram
     alt Critical Defect
         DC->>QT: Notification: QRQC Required
         QT->>+AC: POST /api/analysis/initiate
-        AC->>+DB: INSERT INTO analysis
+        AC->>+DB: INSERT INTO analysis (qrqc_form JSONB)
         DB-->>-AC: analysis_id
         AC-->>-QT: QRQC initiated
     end
@@ -650,13 +698,20 @@ sequenceDiagram
     DB-->>-AC: Consolidated qrqc_form JSONB
     AC-->>-QT: Complete QRQC form data
     
-    loop QRQC Form Updates
+    loop QRQC Form Updates (JSONB Operations)
         QT->>+AC: PUT /api/analysis/:id/form
         AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, path, data)
         Note over DB: Single JSONB column with nested structure
         DB-->>-AC: Updated consolidated form
         AC-->>-QT: Form section updated
     end
+    
+    %% Quality Metrics Analysis Integration
+    AC->>+VC: GET /api/values/production-line/:id/current
+    VC->>+DB: SELECT * FROM current_quality_metrics VIEW
+    Note over DB: Extract JSONB data: scrap_rate, rework_rate, defect_ppm
+    DB-->>-VC: Current quality metrics (JSONB extracted)
+    VC-->>-AC: Quality metrics for correlation
     
     QT->>+AC: PUT /api/analysis/:id/why-analysis
     AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{analysis_data}', data)
@@ -692,11 +747,11 @@ sequenceDiagram
     QM->>+AC: PUT /api/analysis/:id/close
     AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{metadata,status}', '"CLOSED"'), is_archived = true
     DB-->>-AC: QRQC closed and archived with complete form data
-    AC->>+DB: INSERT INTO kpi (calculated from qrqc_form analysis)
-    DB-->>-AC: KPIs updated
+    AC->>+DB: INSERT INTO kpi (calculated from qrqc_form and values quality_data)
+    DB-->>-AC: KPIs updated with JSONB metrics
     AC-->>-QM: QRQC successfully closed
     
-    Note over AQL,QM: Process Complete - User-Driven QRQC Analysis Workflow Finished
+    Note over AQL,QM: Process Complete - Quality Metrics & QRQC Analysis Workflow Finished
             `,
             
             useCaseDiagram: `
@@ -715,6 +770,14 @@ graph TD
             UC2["📊 View Defect Details"]
             UC3["✏️ Update Defect Status"]
             UC4["📈 Generate Defect Reports"]
+        end
+        
+        subgraph QualityMetrics["📊 Quality Metrics Entry"]
+            UC28["📊 Enter Scrap Rate"]
+            UC29["🔄 Enter Rework Rate"]
+            UC30["⚠️ Enter Defect Rate PPM"]
+            UC31["📈 View Quality Trends"]
+            UC32["📋 Generate Quality Reports"]
         end
         
         subgraph QRQCAnalysis["🎯 QRQC Analysis"]
@@ -770,6 +833,9 @@ graph TD
     AQL --> UC1
     AQL --> UC2
     AQL --> UC25
+    AQL --> UC28
+    AQL --> UC29
+    AQL --> UC30
     
     QT --> UC1
     QT --> UC2
@@ -781,6 +847,10 @@ graph TD
     QT --> UC12
     QT --> UC13
     QT --> UC17
+    QT --> UC28
+    QT --> UC29
+    QT --> UC30
+    QT --> UC31
     
     TL --> UC2
     TL --> UC3
@@ -794,6 +864,8 @@ graph TD
     TL --> UC19
     TL --> UC26
     TL --> UC27
+    TL --> UC31
+    TL --> UC32
     
     QM --> UC4
     QM --> UC10
@@ -802,6 +874,8 @@ graph TD
     QM --> UC18
     QM --> UC19
     QM --> UC20
+    QM --> UC31
+    QM --> UC32
     
     ADM --> UC21
     ADM --> UC22
@@ -839,6 +913,16 @@ graph TD
             flowchartDiagram: `
 graph TD
     A["🏭 Production Line"] --> B{"🔍 Defect Detected?"}
+    A --> A1["📊 Quality Metrics Entry"]
+    
+    %% Quality Metrics Flow (VALUES table)
+    A1 --> A2["📊 Enter Total Scrap/Production"]
+    A2 --> A3["🔄 Enter Total Rework/Production"]
+    A3 --> A4["⚠️ Auto-fetch Defects"]
+    A4 --> A5["💾 Save to VALUES (JSONB)"]
+    A5 --> A6["🔄 Auto-calculate Rates"]
+    A6 --> A7["📈 Update Dashboard"]
+    
     B -->|Yes| C["📝 Record Defect"]
     B -->|No| D["▶️ Continue Production"]
     
@@ -849,7 +933,8 @@ graph TD
     
     F --> I["🔍 Root Cause Analysis"]
     G --> I
-    I --> J["🛠️ Corrective Actions"]
+    I --> I1["📊 Correlate with Quality Metrics"]
+    I1 --> J["🛠️ Corrective Actions"]
     J --> K["⚙️ Implementation"]
     K --> L["✅ Verification"]
     L --> M{"🎯 Effective?"}
@@ -863,6 +948,12 @@ graph TD
     
     N --> R["📊 Update Dashboard"]
     R --> S["📈 Generate Reports"]
+    
+    %% Quality Metrics Trend Analysis
+    A7 --> A8{"📈 Quality Trends"}
+    A8 -->|⚠️ Degrading| A9["🔄 Trigger Analysis"]
+    A8 -->|✅ Stable| A10["📊 Continue Monitoring"]
+    A9 --> G
     
     %% Parallel Audit Process
     T["📋 Audit Schedule"] --> U{"🔧 Audit Type"}
@@ -903,24 +994,19 @@ graph TD
 
         const descriptions = {
             mcdDiagram: {
-                title: "MCD Diagram - LEONI QMS Data Model",
-                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships. The ANALYSIS table has been consolidated for maximum efficiency with only 7 key columns: 4 structured columns (id, analysis_date, defect_id, production_line_id, inspector_id), 1 consolidated JSONB column (qrqc_form) containing all 10 form sections, and 2 system columns (is_archived, created_at). This consolidation enables perfect archival where each analysis record contains complete form data as a single atomic unit."
+                title: "MCD Diagram - LEONI QMS Data Model"
             },
             classDiagram: {
-                title: "Class Diagram - LEONI QMS Architecture",
-                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity and Service layers. The Analysis class now uses a consolidated qrqcForm JSONB field that contains all 10 sections of the QRQC form as nested data, enabling atomic operations and perfect archival. The architecture follows a user-driven approach where AQL agents and quality technicians directly perform defect insertion and QRQC analysis through controllers."
+                title: "Class Diagram - LEONI QMS Architecture"
             },
             sequenceDiagram: {
-                title: "Sequence Diagram - QRQC Analysis Workflow",
-                description: "This diagram illustrates the user-driven QRQC (Quick Response Quality Control) analysis workflow with consolidated database operations. Quality technicians perform QRQC analysis using a single qrqc_form JSONB column that stores all 10 form sections as nested data. This consolidated approach ensures atomic updates, perfect data integrity, and enables complete form reconstruction from archives with a single database query."
+                title: "Sequence Diagram - Quality Metrics & QRQC Workflow"
             },
             useCaseDiagram: {
-                title: "Use Case Diagram - System Functionality",
-                description: "This diagram shows all functional use cases organized by user roles and system integration points with external systems."
+                title: "Use Case Diagram - System Functionality"
             },
             flowchartDiagram: {
-                title: "Process Flow - Quality Management Workflow",
-                description: "This diagram shows the complete quality management process flow including defect handling, audit processes, and vigilance testing."
+                title: "Process Flow - Quality Management Workflow"
             }
         };
 
@@ -932,10 +1018,7 @@ graph TD
             
             // Update title and description
             titleElement.textContent = descriptions[diagramType].title;
-            descElement.innerHTML = `
-                <h3>${descriptions[diagramType].title}</h3>
-                <p>${descriptions[diagramType].description}</p>
-            `;
+            descElement.innerHTML = ``;
             
             // Update button states
             document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Metrics Entry - LEONI Quality Department</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 15px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a365d, #2c5282);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: fit-content;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .metric-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .metric-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        /* Color schemes for different metrics */
+        .scrap-rate .metric-icon {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+        }
+
+        .rework-rate .metric-icon {
+            background: linear-gradient(135deg, #fbb042, #ed8936);
+        }
+
+        .customer-complaints .metric-icon {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .defect-rate .metric-icon {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+        }
+
+        .calculated-value {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .calculated-value-label {
+            font-size: 11px;
+            color: #234e52;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .calculated-value-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #234e52;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 13px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background: #f7fafc;
+            color: #718096;
+            cursor: not-allowed;
+            border-color: #cbd5e0;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .unit-label {
+            padding: 12px 15px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .current-value {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .current-value-label {
+            font-size: 11px;
+            color: #2f855a;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .current-value-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f855a;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .history-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .history-header .metric-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin-right: 12px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .history-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .history-table tr:hover {
+            background: #f7fafc;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 40px 0 30px 0;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            padding: 14px 22px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 160px;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-home { 
+            background: linear-gradient(135deg, #005691, #3182ce); 
+        }
+        .nav-dashboard { 
+            background: linear-gradient(135deg, #059669, #10b981); 
+        }
+        .nav-tv { 
+            background: linear-gradient(135deg, #1e40af, #3b82f6); 
+        }
+
+        /* Success/Error Messages */
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.success {
+            background: #f0fff4;
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .metric-card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header p {
+                font-size: 14px;
+            }
+            
+            .metrics-grid {
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .metric-card {
+                padding: 15px;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .navigation {
+                margin: 25px 0 15px 0;
+                padding: 0 5px;
+            }
+            
+            .nav-btn {
+                min-width: 120px;
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1440px) {
+            .metrics-grid {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Quality Metrics Entry</h1>
+            <p>Production Metrics Input - Scrap Rate, Rework Rate & Defect Rate PPM</p>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <!-- Scrap Rate Card -->
+            <div class="metric-card scrap-rate">
+                <div class="metric-header">
+                    <div class="metric-icon">🗑️</div>
+                    <div class="metric-title">Scrap Rate</div>
+                </div>
+                
+                <div class="current-value">
+                    <div class="current-value-label">Current Value</div>
+                    <div class="current-value-number" id="currentScrapRate">0.00%</div>
+                </div>
+
+                <div class="calculated-value">
+                    <div class="calculated-value-label">Calculated Rate</div>
+                    <div class="calculated-value-number" id="calculatedScrapRate">0.00%</div>
+                </div>
+
+                <div id="scrapMessage" class="message"></div>
+
+                <form id="scrapForm">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="totalScrap">Total Scrap</label>
+                            <input type="number" id="totalScrap" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalProduction">Total Production</label>
+                            <input type="number" id="totalProduction" min="1" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scrapProductionLine">Production Line</label>
+                        <select id="scrapProductionLine" required>
+                            <option value="">Select Production Line</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scrapDate">Date</label>
+                        <input type="date" id="scrapDate" required>
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Save Scrap Rate
+                    </button>
+                </form>
+            </div>
+
+            <!-- Rework Rate Card -->
+            <div class="metric-card rework-rate">
+                <div class="metric-header">
+                    <div class="metric-icon">🔄</div>
+                    <div class="metric-title">Rework Rate</div>
+                </div>
+                
+                <div class="current-value">
+                    <div class="current-value-label">Current Value</div>
+                    <div class="current-value-number" id="currentReworkRate">0.00%</div>
+                </div>
+
+                <div class="calculated-value">
+                    <div class="calculated-value-label">Calculated Rate</div>
+                    <div class="calculated-value-number" id="calculatedReworkRate">0.00%</div>
+                </div>
+
+                <div id="reworkMessage" class="message"></div>
+
+                <form id="reworkForm">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="totalRework">Total Rework</label>
+                            <input type="number" id="totalRework" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reworkTotalProduction">Total Production</label>
+                            <input type="number" id="reworkTotalProduction" min="1" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reworkProductionLine">Production Line</label>
+                        <select id="reworkProductionLine" required>
+                            <option value="">Select Production Line</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reworkDate">Date</label>
+                        <input type="date" id="reworkDate" required>
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Save Rework Rate
+                    </button>
+                </form>
+            </div>
+
+            <!-- Defect Rate PPM Card -->
+            <div class="metric-card defect-rate">
+                <div class="metric-header">
+                    <div class="metric-icon">⚠️</div>
+                    <div class="metric-title">Defect Rate PPM</div>
+                </div>
+                
+                <div class="current-value">
+                    <div class="current-value-label">Current Value</div>
+                    <div class="current-value-number" id="currentDefectRate">0 PPM</div>
+                </div>
+
+                <div class="calculated-value">
+                    <div class="calculated-value-label">Calculated PPM</div>
+                    <div class="calculated-value-number" id="calculatedDefectRate">0 PPM</div>
+                </div>
+
+                <div id="defectMessage" class="message"></div>
+
+                <form id="defectForm">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="totalDefects">Total Defects</label>
+                            <input type="number" id="totalDefects" min="0" placeholder="0" readonly title="Auto-fetched from defect system">
+                        </div>
+                        <div class="form-group">
+                            <label for="defectTotalProduction">Total Production</label>
+                            <input type="number" id="defectTotalProduction" min="1" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="defectProductionLine">Production Line</label>
+                        <select id="defectProductionLine" required>
+                            <option value="">Select Production Line</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="defectDate">Date</label>
+                        <input type="date" id="defectDate" required>
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Save Defect Rate
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section">
+            <div class="history-header">
+                <div class="metric-icon">📈</div>
+                <div class="metric-title">Recent Entries History</div>
+            </div>
+
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Metric</th>
+                        <th>Production Line</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                        <th>Shift</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- History entries will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="../index.html" class="nav-btn nav-home">
+                <i class="fas fa-home"></i> Main Dashboard
+            </a>
+            <a href="../graphs/dashboard.html" class="nav-btn nav-dashboard">
+                <i class="fas fa-chart-bar"></i> Quality Dashboard
+            </a>
+            <a href="../graphs/DashPerLine/vce-tv-dashboard.html" class="nav-btn nav-tv">
+                <i class="fas fa-tv"></i> VCE TV Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script src="quality-metrics.js"></script>
+</body>
+</html>

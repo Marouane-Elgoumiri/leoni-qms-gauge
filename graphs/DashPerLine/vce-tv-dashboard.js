@@ -10,6 +10,7 @@ class VCETVDashboard {
         this.progressTimer = null;
         this.autoRefreshInterval = null;
         this.alertSound = null;
+        this.qualityMetricsIntegrated = false;
         this.init();
     }
 
@@ -20,6 +21,66 @@ class VCETVDashboard {
         this.startPageRotation();
         this.startAutoRefresh();
         this.updateLastUpdateTime();
+        this.integrateQualityMetrics();
+    }
+
+    // Integrate manually entered quality metrics
+    integrateQualityMetrics() {
+        try {
+            // Check if quality metrics functions are available
+            if (typeof getQualityMetricsForLine === 'function') {
+                const manualMetrics = getQualityMetricsForLine('VCE');
+                
+                // Override mock data with manual entries if available
+                if (manualMetrics.scrapRate > 0) {
+                    vceData.qualityKPIs.scrapRate.value = manualMetrics.scrapRate.toFixed(1);
+                    vceData.qualityKPIs.scrapRate.trend = this.calculateTrend('scrap', manualMetrics.scrapRate);
+                }
+                
+                if (manualMetrics.reworkRate > 0) {
+                    vceData.qualityKPIs.reworkRate.value = manualMetrics.reworkRate.toFixed(1);
+                    vceData.qualityKPIs.reworkRate.trend = this.calculateTrend('rework', manualMetrics.reworkRate);
+                }
+                
+                if (manualMetrics.customerComplaints >= 0) {
+                    vceData.qualityKPIs.customerComplaints.value = manualMetrics.customerComplaints;
+                    vceData.qualityKPIs.customerComplaints.trend = this.calculateTrend('complaints', manualMetrics.customerComplaints);
+                }
+                
+                if (manualMetrics.defectRatePPM > 0) {
+                    vceData.qualityKPIs.defectRate.value = manualMetrics.defectRatePPM;
+                    vceData.qualityKPIs.defectRate.trend = this.calculateTrend('defect', manualMetrics.defectRatePPM);
+                }
+                
+                this.qualityMetricsIntegrated = true;
+                console.log('TV Dashboard - Quality metrics integrated successfully:', manualMetrics);
+            } else {
+                console.warn('TV Dashboard - Quality metrics functions not available - using mock data');
+            }
+        } catch (error) {
+            console.warn('TV Dashboard - Error integrating quality metrics:', error);
+        }
+    }
+
+    // Calculate trend based on historical data
+    calculateTrend(metricType, currentValue) {
+        try {
+            if (typeof getQualityMetricsHistory === 'function') {
+                const history = getQualityMetricsHistory('VCE', metricType, 7); // Last 7 days
+                if (history.length >= 2) {
+                    const previousValue = history[history.length - 2].value;
+                    const change = currentValue - previousValue;
+                    
+                    // For scrap rate, rework rate, defect rate, and complaints - lower is better
+                    if (['scrap', 'rework', 'defect', 'complaints'].includes(metricType)) {
+                        return change < 0 ? 'down' : change > 0 ? 'up' : 'stable';
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Error calculating trend:', error);
+        }
+        return 'stable';
     }
 
     // Initialize alert sound for Flash Qualité page
@@ -682,6 +743,9 @@ class VCETVDashboard {
     }
 
     refreshData() {
+        // Re-integrate quality metrics on each refresh
+        this.integrateQualityMetrics();
+        
         // Generate new variations
         vceData.generateVariation();
         
