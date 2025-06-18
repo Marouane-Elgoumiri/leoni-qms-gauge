@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEONI QMS System Diagrams</title>
-    <link rel="icon" href="../assets/logo.png" type="image/png">
-    <link rel="shortcut icon" href="../assets/logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="../assets/logo.png">
-    <link rel="mask-icon" href="../assets/logo.png" color="#1a365d">
-    <meta name="msapplication-TileImage" content="../assets/logo.png">
-    <meta name="msapplication-TileColor" content="#1a365d">
+    <link rel="icon" type="image/png" href="../assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         body {
@@ -129,20 +124,6 @@
         <div class="header">
             <h1>LEONI Quality Management System</h1>
             <p>System Architecture Diagrams - Interactive Mermaid.js Version</p>
-            <div style="margin-top: 15px;">
-                <button onclick="window.location.href='../index.html'" style="
-                    background: #4a90e2; 
-                    color: white; 
-                    border: none; 
-                    padding: 8px 16px; 
-                    border-radius: 6px; 
-                    cursor: pointer;
-                    font-size: 14px;
-                    transition: background 0.3s ease;
-                " onmouseover="this.style.background='#357abd'" onmouseout="this.style.background='#4a90e2'">
-                    ← Back to Dashboard
-                </button>
-            </div>
         </div>
         
         <div class="diagram-controls">
@@ -325,16 +306,19 @@ erDiagram
     
     ANALYSIS {
         int id PK
+        date analysis_date
         int defect_id FK
         int production_line_id FK
-        int analyst_id FK
-        text defect_description
+        int inspector_id FK
+        jsonb document_info
+        jsonb caracterisation
+        jsonb personnel_notification
+        jsonb tri_data
         jsonb analysis_data
         jsonb corrective_actions
         jsonb verification_tracking
-        string status
+        jsonb metadata
         datetime created_at
-        datetime updated_at
     }
     
     VIGILANCE_SESSIONS {
@@ -522,20 +506,29 @@ classDiagram
     
     class Analysis {
         -Long id
+        -Date analysisDate
         -Long defectId
         -Long productionLineId
-        -Long analystId
-        -String defectDescription
+        -Long inspectorId
+        -JsonB documentInfo
+        -JsonB caracterisation
+        -JsonB personnelNotification
+        -JsonB triData
         -JsonB analysisData
         -JsonB correctiveActions
         -JsonB verificationTracking
-        -String status
+        -JsonB metadata
         -Date createdAt
-        -Date updatedAt
         +performWhyAnalysis() void
+        +storeTriData(triData) void
+        +storePersonnelNotification(personnel) void
         +defineCorrectiveActions() void
         +trackImplementation() void
+        +archiveQRQC() void
         +closeQRQC() void
+        +getStatus() String
+        +getQRQCReference() String
+        +updateMetadata(metadata) void
     }
     
     class VigilanceSession {
@@ -560,26 +553,6 @@ classDiagram
         +updateConfig() void
         +getConfigValue() Object
         +validateConfig() Boolean
-    }
-    
-    class DefectService {
-        -DefectRepository defectRepo
-        -BibleDefectsRepository bibleRepo
-        +createDefect(defectData) Defect
-        +updateDefect(id, data) Defect
-        +getDefectsByLine(lineId) List~Defect~
-        +validateDefectType(type) Boolean
-        +generateKPIs(period) List~KPI~
-    }
-    
-    class QRQCService {
-        -AnalysisRepository analysisRepo
-        -DefectService defectService
-        +initiateQRQC(defectId) Analysis
-        +performWhyAnalysis(defectId, whyData) void
-        +defineCorrectiveActions(defectId, actions) void
-        +trackImplementation(defectId) String
-        +closeQRQC(defectId) void
     }
     
     class AuditService {
@@ -616,11 +589,7 @@ classDiagram
     BibleDefects "1" --> "*" Defect : references
     Defect "1" --> "0..1" Analysis : analyzed_by
     
-    %% Service Dependencies
-    DefectService --> Defect : manages
-    DefectService --> BibleDefects : validates
-    QRQCService --> Analysis : creates
-    QRQCService --> DefectService : depends
+    %% Service Dependencies (Only valid services)
     AuditService --> Audit5S : manages
     AuditService --> AuditAFP : manages
         `,
@@ -630,104 +599,83 @@ sequenceDiagram
     participant AQL as AQL Agent
     participant QT as Quality Technician
     participant DC as DefectController
-    participant QS as QRQCService
-    participant DS as DefectService
+    participant AC as AnalysisController
     participant DB as Database
     participant TL as Team Leader
     participant QM as Quality Manager
     
-    Note over AQL,QM: QRQC Analysis Workflow - Complete Process
+    Note over AQL,QM: QRQC Analysis Workflow - User-Driven Process
     
     AQL->>+DC: POST /api/defects
-    DC->>+DS: createDefect(defectData)
-    DS->>+DB: INSERT INTO defects
-    DB-->>-DS: defect_id
-    DS-->>-DC: Defect created
-    DC-->>-AQL: HTTP 201
+    DC->>+DB: INSERT INTO defects
+    DB-->>-DC: defect_id
+    DC-->>-AQL: HTTP 201 - Defect created
     
-    Note over DS,DB: Automatic severity evaluation
-    DS->>+DB: SELECT severity_rules
-    DB-->>-DS: severity criteria
-    DS->>DS: evaluateSeverity()
+    Note over DC,DB: Automatic severity evaluation
+    DC->>+DB: SELECT severity_rules
+    DB-->>-DC: severity criteria
+    DC->>DC: evaluateSeverity()
     
     alt Critical Defect
-        DS->>+QS: initiateQRQC(defectId)
-        QS->>+DB: UPDATE defects SET qrqc_analysis
-        DB-->>-QS: Updated
-        QS-->>-DS: QRQC initiated
-        DS->>QT: Notification: QRQC Required
+        DC->>QT: Notification: QRQC Required
+        QT->>+AC: POST /api/analysis/initiate
+        AC->>+DB: INSERT INTO analysis
+        DB-->>-AC: analysis_id
+        AC-->>-QT: QRQC initiated
     end
     
-    QT->>+DC: GET /api/qrqc/analysis
-    DC->>+QS: getQRQCAnalysis(defectId)
-    QS->>+DB: SELECT qrqc_analysis FROM defects
-    DB-->>-QS: JSONB analysis data
-    QS-->>-DC: Analysis structure
-    DC-->>-QT: Current analysis state
+    QT->>+AC: GET /api/analysis/:id
+    AC->>+DB: SELECT * FROM analysis
+    DB-->>-AC: JSONB analysis data
+    AC-->>-QT: Current analysis state
     
-    loop 5 Why Analysis
-        QT->>+DC: PUT /api/qrqc/why-analysis
-        DC->>+QS: updateWhyAnalysis(defectId, whyData)
-        QS->>+DB: UPDATE defects SET qrqc_analysis
+    loop QRQC Form Sections
+        QT->>+AC: PUT /api/analysis/:id/section
+        AC->>+DB: UPDATE analysis SET section_data
         Note over DB: Using PostgreSQL JSONB operators
-        DB-->>-QS: Updated JSONB
-        QS-->>-DC: Why analysis updated
-        DC-->>-QT: HTTP 200
+        DB-->>-AC: Updated JSONB
+        AC-->>-QT: Section updated
     end
     
-    QT->>+DC: PUT /api/qrqc/root-cause
-    DC->>+QS: identifyRootCause(defectId, rootCauseData)
-    QS->>+DB: UPDATE defects SET qrqc_analysis
-    DB-->>-QS: Root cause stored
-    QS-->>-DC: Root cause identified
-    DC-->>-QT: HTTP 200
+    QT->>+AC: PUT /api/analysis/:id/why-analysis
+    AC->>+DB: UPDATE analysis SET analysis_data
+    DB-->>-AC: Why analysis stored
+    AC-->>-QT: Analysis completed
     
-    QT->>+DC: PUT /api/qrqc/corrective-actions
-    DC->>+QS: defineCorrectiveActions(defectId, actions)
-    QS->>+DB: UPDATE defects SET qrqc_analysis
+    QT->>+AC: PUT /api/analysis/:id/corrective-actions
+    AC->>+DB: UPDATE analysis SET corrective_actions
     Note over DB: Storing structured action plans
-    DB-->>-QS: Actions stored
-    QS-->>-DC: Corrective actions defined
-    DC-->>-QT: HTTP 200
+    DB-->>-AC: Actions stored
+    AC-->>-QT: Corrective actions defined
     
-    QS->>TL: Notification: QRQC Review Required
-    TL->>+DC: GET /api/qrqc/review
-    DC->>+QS: getQRQCForReview(defectId)
-    QS->>+DB: SELECT * FROM defects
-    DB-->>-QS: Complete QRQC data
-    QS-->>-DC: QRQC analysis for review
-    DC-->>-TL: Complete analysis data
+    AC->>TL: Notification: QRQC Review Required
+    TL->>+AC: GET /api/analysis/:id/review
+    AC->>+DB: SELECT * FROM analysis
+    DB-->>-AC: Complete QRQC data
+    AC-->>-TL: Complete analysis data
     
-    TL->>+DC: PUT /api/qrqc/implementation
-    DC->>+QS: trackImplementation(defectId, progress)
-    QS->>+DB: UPDATE defects SET qrqc_analysis
-    DB-->>-QS: Implementation tracked
-    QS-->>-DC: Progress updated
-    DC-->>-TL: HTTP 200
+    TL->>+AC: PUT /api/analysis/:id/implementation
+    AC->>+DB: UPDATE analysis SET verification_tracking
+    DB-->>-AC: Implementation tracked
+    AC-->>-TL: Progress updated
     
     alt Implementation Complete
         TL->>QM: Request: Final QRQC Validation
-        QM->>+DC: GET /api/qrqc/validation
-        DC->>+QS: validateQRQC(defectId)
-        QS->>+DB: SELECT qrqc_analysis FROM defects
+        QM->>+AC: GET /api/analysis/:id/validation
+        AC->>+DB: SELECT * FROM analysis
         Note over DB: Using GIN indexes for fast queries
-        DB-->>-QS: Validation data
-        QS-->>-DC: QRQC ready for closure
-        DC-->>-QM: Validation data
+        DB-->>-AC: Validation data
+        AC-->>-QM: QRQC ready for closure
     end
     
-    QM->>+DC: POST /api/qrqc/close
-    DC->>+QS: closeQRQC(defectId)
-    QS->>+DB: UPDATE defects SET status = 'closed'
-    DB-->>-QS: QRQC closed
-    QS->>+DS: updateKPIs(defectId)
-    DS->>+DB: INSERT INTO kpi
-    DB-->>-DS: KPIs updated
-    DS-->>-QS: KPIs refreshed
-    QS-->>-DC: QRQC successfully closed
-    DC-->>-QM: HTTP 200
+    QM->>+AC: PUT /api/analysis/:id/close
+    AC->>+DB: UPDATE analysis SET metadata = jsonb_set(metadata, '{status}', '"CLOSED"')
+    DB-->>-AC: QRQC closed
+    AC->>+DB: INSERT INTO kpi (calculated from analysis)
+    DB-->>-AC: KPIs updated
+    AC-->>-QM: QRQC successfully closed
     
-    Note over AQL,QM: Process Complete - QRQC Analysis Workflow Finished
+    Note over AQL,QM: Process Complete - User-Driven QRQC Analysis Workflow Finished
             `,
             
             useCaseDiagram: `
@@ -932,19 +880,18 @@ graph TD
             `
         };
 
-        // Descriptions for each diagram
         const descriptions = {
             mcdDiagram: {
                 title: "MCD Diagram - LEONI QMS Data Model",
-                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships matching the enhanced database schema."
+                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships. The ANALYSIS table has been simplified for scalability with only 5 key structured columns (id, analysis_date, defect_id, production_line_id, inspector_id) and 8 JSONB sections (document_info, caracterisation, personnel_notification, tri_data, analysis_data, corrective_actions, verification_tracking, metadata) for maximum flexibility."
             },
             classDiagram: {
                 title: "Class Diagram - LEONI QMS Architecture",
-                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity, Service layers aligned with the 14-table database schema including JSONB hybrid implementation."
+                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity and Service layers. The architecture follows a user-driven approach where AQL agents and quality technicians directly perform defect insertion and QRQC analysis through controllers. Only legitimate service classes like AuditService are included, eliminating unnecessary DefectService and QRQCService intermediaries."
             },
             sequenceDiagram: {
                 title: "Sequence Diagram - QRQC Analysis Workflow",
-                description: "This diagram illustrates the complete QRQC (Quick Response Quality Control) analysis workflow with 11 sequential steps involving all stakeholders."
+                description: "This diagram illustrates the user-driven QRQC (Quick Response Quality Control) analysis workflow with direct user interactions. AQL agents record defects and quality technicians perform QRQC analysis directly through controllers, eliminating unnecessary service layer intermediaries for a more streamlined and accurate representation of the actual process flow."
             },
             useCaseDiagram: {
                 title: "Use Case Diagram - System Functionality",

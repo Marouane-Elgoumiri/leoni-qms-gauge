@@ -244,6 +244,133 @@
             cursor: pointer;
             flex: 1;
         }
+        
+        /* Tri Section */
+        .tri {
+            background: #f9fdf4;
+            border: 2px solid #22c55e;
+        }
+        .tri .section-header {
+            background: #16a34a;
+        }
+        .tri-subtitle {
+            color: #166534;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .reset-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+        }
+        .reset-btn:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+        .tri-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #a0aec0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .tri-table th {
+            background: #22c55e;
+            color: white;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #16a34a;
+        }
+        .tri-table td {
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            vertical-align: middle;
+        }
+        .tri-table .stage-cell {
+            background: #f9fafb;
+            font-weight: bold;
+            color: #166534;
+            text-align: left;
+            width: 40%;
+        }
+        .tri-table input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 2px;
+            font-size: 12px;
+            background: #f7fafc;
+            text-align: center;
+        }
+        .retouche-row {
+            background: #fef3c7;
+            transition: all 0.3s ease;
+        }
+        .retouche-row.critical {
+            background: #fecaca !important;
+            border: 5px solid #dc2626 !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+        .retouche-row .stage-cell {
+            background: #fbbf24;
+            color: #92400e;
+            font-weight: bold;
+        }
+        .checkbox-cell {
+            text-align: center;
+            background: #fffbeb;
+        }
+        .checkbox-cell input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            accent-color: #f59e0b;
+        }
+        .checkbox-cell label {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .totals-row {
+            background: #dbeafe;
+            border-top: 2px solid #2563eb;
+        }
+        .totals-cell {
+            background: #2563eb !important;
+            color: white !important;
+            font-weight: bold;
+            text-align: center;
+        }
+        .totals-value {
+            background: #dbeafe;
+            font-weight: bold;
+            font-size: 16px;
+            color: #1d4ed8;
+            text-align: center;
+        }
+        
         /* Analysis Section */
         .analysis {
             background: #edf2f7;
@@ -587,10 +714,86 @@
             </div>
         </div>
 
-        <!-- 2. ANALYSIS Section -->
+        <!-- 2. TRI Section -->
+        <div class="section tri">
+            <div class="section-header">
+                2. TRI
+            </div>
+            <div class="section-content">
+                <div class="tri-subtitle">
+                    Quality Sorting Table
+                    <button type="button" id="reset-tri-btn" class="reset-btn" onclick="resetTriNumbers()" title="Reset all numbers">
+                        🔄
+                    </button>
+                </div>
+                <table class="tri-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2"></th>
+                            <th colspan="2">Qualité trouvée</th>
+                        </tr>
+                        <tr>
+                            <th>Bon</th>
+                            <th>Mauvais</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="stage-cell">Magasin produit fini</td>
+                            <td><input type="number" id="magasin-produit-bon" name="magasin-produit-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="magasin-produit-mauvais" name="magasin-produit-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Palette fin ligne</td>
+                            <td><input type="number" id="palette-fin-bon" name="palette-fin-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="palette-fin-mauvais" name="palette-fin-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Ligne d'assemblage</td>
+                            <td><input type="number" id="ligne-assemblage-bon" name="ligne-assemblage-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="ligne-assemblage-mauvais" name="ligne-assemblage-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Coupe</td>
+                            <td><input type="number" id="coupe-bon" name="coupe-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="coupe-mauvais" name="coupe-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Pré-assemblage</td>
+                            <td><input type="number" id="pre-assemblage-bon" name="pre-assemblage-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="pre-assemblage-mauvais" name="pre-assemblage-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Magasin composant</td>
+                            <td><input type="number" id="magasin-composant-bon" name="magasin-composant-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="magasin-composant-mauvais" name="magasin-composant-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="stage-cell">Retouche/ cage rouge</td>
+                            <td><input type="number" id="retouche-cage-bon" name="retouche-cage-bon" min="0" placeholder="0"></td>
+                            <td><input type="number" id="retouche-cage-mauvais" name="retouche-cage-mauvais" min="0" placeholder="0"></td>
+                        </tr>
+                        <tr class="totals-row">
+                            <td class="stage-cell totals-cell">TOTAUX</td>
+                            <td class="totals-value"><span id="total-bon">0</span></td>
+                            <td class="totals-value"><span id="total-mauvais">0</span></td>
+                        </tr>
+                        <tr class="retouche-row">
+                            <td class="stage-cell">Décision de retouche</td>
+                            <td colspan="2" class="checkbox-cell">
+                                <input type="checkbox" id="decision-retouche" name="decision-retouche" value="yes">
+                                <label for="decision-retouche">Retouche nécessaire</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. ANALYSIS Section -->
         <div class="section analysis">
             <div class="section-header">
-                2. ANALYSIS
+                3. ANALYSIS
             </div>
             <div class="section-content">
                 <div class="analysis-grid">
@@ -635,10 +838,10 @@
             </div>
         </div>
 
-        <!-- 3. CORRECTIVE ACTIONS Section -->
+        <!-- 4. CORRECTIVE ACTIONS Section -->
         <div class="section corrective-actions">
             <div class="section-header">
-                3. CORRECTIVE ACTIONS
+                4. CORRECTIVE ACTIONS
             </div>
             <div class="section-content">
                 <table class="actions-table">
@@ -665,10 +868,10 @@
             </div>
         </div>
 
-        <!-- 4. VÉRIFICATION Section -->
+        <!-- 5. VÉRIFICATION Section -->
         <div class="section verification">
             <div class="section-header">
-                4. VÉRIFICATION
+                5. VÉRIFICATION
             </div>
             <div class="section-content">
                 <div class="verification-subtitle">Results of 5 successive teams</div>
@@ -757,6 +960,13 @@
                 <li><strong>• Why it is a Problem:</strong> Text field to explain impact and consequences</li>
                 <li><strong>• How it was Detected:</strong> Text field to describe the detection method</li>
                 <li><strong>Personnel Notification Section (Blue):</strong> Checkbox list of all personnel roles that must be informed</li>
+                <li><strong>Tri Section (Green):</strong> Quality sorting table with production stages and quality counts</li>
+                <li><strong>• Production Stages:</strong> 7 rows covering Magasin produit fini, Palette fin ligne, Ligne d'assemblage, Coupe, Pré-assemblage, Magasin composant, Retouche/cage rouge</li>
+                <li><strong>• Quality Columns:</strong> Two columns for "Bon" and "Mauvais" with number inputs</li>
+                <li><strong>• Reset Button (🔄):</strong> Quick reset button to clear all number inputs with confirmation dialog</li>
+                <li><strong>• Auto-Decision Logic:</strong> System automatically checks "Retouche nécessaire" when bad quantities exceed good quantities</li>
+                <li><strong>• Critical Visual Alert:</strong> Retouche row turns red with pulsing animation when rework is automatically decided</li>
+                <li><strong>• Real-time Totals:</strong> Automatic calculation and display of total bon/mauvais quantities</li>
                 <li><strong>Analysis Section (Blue/Red):</strong> Two "Why" questions with 4 text fields each for thorough root cause analysis</li>
                 <li><strong>Why 1 (Blue):</strong> Focus on problem identification and root cause</li>
                 <li><strong>Why 2 (Red):</strong> Focus on detection failure analysis</li>
@@ -798,6 +1008,41 @@
                 
                 // Personnel notified
                 personnelNotified: Array.from(document.querySelectorAll('input[name="personnel[]"]:checked')).map(cb => cb.value),
+                
+                // Tri (Quality Sorting)
+                tri: {
+                    magasinProduitFini: {
+                        bon: document.getElementById('magasin-produit-bon').value || 0,
+                        mauvais: document.getElementById('magasin-produit-mauvais').value || 0
+                    },
+                    paletteFinLigne: {
+                        bon: document.getElementById('palette-fin-bon').value || 0,
+                        mauvais: document.getElementById('palette-fin-mauvais').value || 0
+                    },
+                    ligneAssemblage: {
+                        bon: document.getElementById('ligne-assemblage-bon').value || 0,
+                        mauvais: document.getElementById('ligne-assemblage-mauvais').value || 0
+                    },
+                    coupe: {
+                        bon: document.getElementById('coupe-bon').value || 0,
+                        mauvais: document.getElementById('coupe-mauvais').value || 0
+                    },
+                    preAssemblage: {
+                        bon: document.getElementById('pre-assemblage-bon').value || 0,
+                        mauvais: document.getElementById('pre-assemblage-mauvais').value || 0
+                    },
+                    magasinComposant: {
+                        bon: document.getElementById('magasin-composant-bon').value || 0,
+                        mauvais: document.getElementById('magasin-composant-mauvais').value || 0
+                    },
+                    retoucheCageRouge: {
+                        bon: document.getElementById('retouche-cage-bon').value || 0,
+                        mauvais: document.getElementById('retouche-cage-mauvais').value || 0
+                    },
+                    decisionRetouche: document.getElementById('decision-retouche').checked,
+                    totals: calculateTriTotals(),
+                    autoDecisionNote: "Retouche decision automatically determined based on quality ratio"
+                },
                 
                 // Analysis
                 why1: {
@@ -887,6 +1132,99 @@
                 this.style.transform = 'translateY(0)';
             });
         });
+
+        // Add calculation functionality for Tri section
+        function calculateTriTotals() {
+            const stages = ['magasin-produit', 'palette-fin', 'ligne-assemblage', 'coupe', 'pre-assemblage', 'magasin-composant', 'retouche-cage'];
+            let totalBon = 0;
+            let totalMauvais = 0;
+            
+            stages.forEach(stage => {
+                const bon = parseInt(document.getElementById(stage + '-bon').value) || 0;
+                const mauvais = parseInt(document.getElementById(stage + '-mauvais').value) || 0;
+                totalBon += bon;
+                totalMauvais += mauvais;
+            });
+            
+            // Update totals display
+            const totalBonElement = document.getElementById('total-bon');
+            const totalMauvaisElement = document.getElementById('total-mauvais');
+            
+            if (totalBonElement) totalBonElement.textContent = totalBon;
+            if (totalMauvaisElement) totalMauvaisElement.textContent = totalMauvais;
+            
+            // Auto-decide retouche based on quality comparison
+            const retoucheCheckbox = document.getElementById('decision-retouche');
+            if (retoucheCheckbox) {
+                const retoucheRow = document.querySelector('.retouche-row');
+                
+                // If bad quantities exceed good quantities, automatically check retouche
+                if (totalMauvais > totalBon && totalMauvais > 0) {
+                    retoucheCheckbox.checked = true;
+                    // Add visual indication for critical decision
+                    if (retoucheRow) {
+                        retoucheRow.classList.add('critical');
+                    }
+                } else {
+                    retoucheCheckbox.checked = false;
+                    // Reset visual indication
+                    if (retoucheRow) {
+                        retoucheRow.classList.remove('critical');
+                    }
+                }
+            }
+            
+            return { totalBon, totalMauvais };
+        }
+
+        // Add event listeners to all tri input fields for real-time calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            const triInputs = document.querySelectorAll('.tri-table input[type="number"]');
+            triInputs.forEach(input => {
+                input.addEventListener('input', calculateTriTotals);
+            });
+        });
+
+        // Reset all number inputs in Tri section
+        function resetTriNumbers() {
+            const stages = ['magasin-produit', 'palette-fin', 'ligne-assemblage', 'coupe', 'pre-assemblage', 'magasin-composant', 'retouche-cage'];
+            
+            // Confirm before resetting
+            if (confirm('Are you sure you want to reset all sorting numbers? This action cannot be undone.')) {
+                stages.forEach(stage => {
+                    const bonInput = document.getElementById(stage + '-bon');
+                    const mauvaisInput = document.getElementById(stage + '-mauvais');
+                    
+                    if (bonInput) bonInput.value = '';
+                    if (mauvaisInput) mauvaisInput.value = '';
+                });
+                
+                // Uncheck retouche decision
+                const retoucheCheckbox = document.getElementById('decision-retouche');
+                if (retoucheCheckbox) retoucheCheckbox.checked = false;
+                
+                // Reset visual indication
+                const retoucheRow = document.querySelector('.retouche-row');
+                if (retoucheRow) {
+                    retoucheRow.classList.remove('critical');
+                }
+                
+                // Recalculate totals (will show 0)
+                calculateTriTotals();
+                
+                // Show success message
+                const resetBtn = document.getElementById('reset-tri-btn');
+                if (resetBtn) {
+                    const originalText = resetBtn.innerHTML;
+                    resetBtn.innerHTML = '✅';
+                    resetBtn.style.background = '#22c55e';
+                    setTimeout(() => {
+                        resetBtn.innerHTML = originalText;
+                        resetBtn.style.background = '#ef4444';
+                    }, 1000);
+                }
+            }
+        }
     </script>
 
     <!-- Navigation Section -->
