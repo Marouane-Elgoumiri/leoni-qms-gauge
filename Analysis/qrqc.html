@@ -245,6 +245,20 @@
             flex: 1;
         }
         
+        /* Two Column Layout for sections 3 and 4 */
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Tri Section */
         .tri {
             background: #f9fdf4;
@@ -252,6 +266,57 @@
         }
         .tri .section-header {
             background: #16a34a;
+        }
+        
+        /* Pré-analyse Section */
+        .pre-analyse {
+            background: #fef7ff;
+            border: 2px solid #c084fc;
+        }
+        .pre-analyse .section-header {
+            background: #9333ea;
+        }
+        .pre-analyse-subsection {
+            background: white;
+            border: 1px solid #c084fc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .pre-analyse-subsection:last-child {
+            margin-bottom: 0;
+        }
+        .pre-analyse-subsection-header {
+            background: #c084fc;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .pre-analyse-subsection-content {
+            padding: 15px;
+        }
+        .pre-analyse-field {
+            margin-bottom: 10px;
+        }
+        .pre-analyse-field:last-child {
+            margin-bottom: 0;
+        }
+        .pre-analyse-field label {
+            display: block;
+            font-size: 12px;
+            color: #7c3aed;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .pre-analyse-field input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #c084fc;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #faf5ff;
         }
         .tri-subtitle {
             color: #166534;
@@ -371,6 +436,56 @@
             text-align: center;
         }
         
+        /* Actions de Sécurisation Section */
+        .actions-securisation {
+            background: #fff1f2;
+            border: 2px solid #fb7185;
+        }
+        .actions-securisation .section-header {
+            background: #e11d48;
+        }
+        .securisation-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #a0aec0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .securisation-table th {
+            background: #fb7185;
+            color: white;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #e11d48;
+        }
+        .securisation-table td {
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            vertical-align: middle;
+        }
+        .securisation-table .action-cell {
+            background: #fef2f2;
+            font-weight: bold;
+            color: #dc2626;
+            text-align: center;
+            width: 15%;
+            font-size: 12px;
+        }
+        .securisation-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #fb7185;
+            border-radius: 2px;
+            font-size: 11px;
+            background: #fef7f7;
+        }
+        .securisation-table input[type="date"] {
+            font-size: 10px;
+        }
+
         /* Analysis Section */
         .analysis {
             background: #edf2f7;
@@ -714,7 +829,7 @@
             </div>
         </div>
 
-        <!-- 2. TRI Section -->
+        <!-- 2. TRI Section (Full Width) -->
         <div class="section tri">
             <div class="section-header">
                 2. TRI
@@ -790,10 +905,86 @@
             </div>
         </div>
 
-        <!-- 3. ANALYSIS Section -->
+        <!-- Two Column Layout: PRÉ-ANALYSE and ACTIONS DE SÉCURISATION -->
+        <div class="two-column-layout">
+            <!-- 3. PRÉ-ANALYSE Section -->
+            <div class="section pre-analyse">
+                <div class="section-header">
+                    3. PRÉ-ANALYSE
+                </div>
+                <div class="section-content">
+                    <!-- Who produced the defect? -->
+                    <div class="pre-analyse-subsection">
+                        <div class="pre-analyse-subsection-header">Who produced the defect?</div>
+                        <div class="pre-analyse-subsection-content">
+                            <div class="pre-analyse-field">
+                                <label for="operator-id">Operator ID:</label>
+                                <input type="text" id="operator-id" name="operator-id" placeholder="Enter operator ID...">
+                            </div>
+                            <div class="pre-analyse-field">
+                                <label for="post-machine">Post/Machine:</label>
+                                <input type="text" id="post-machine" name="post-machine" placeholder="Specify post or machine...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- When the defect was produced? -->
+                    <div class="pre-analyse-subsection">
+                        <div class="pre-analyse-subsection-header">When the defect was produced?</div>
+                        <div class="pre-analyse-subsection-content">
+                            <div class="pre-analyse-field">
+                                <label for="defect-date">Date:</label>
+                                <input type="date" id="defect-date" name="defect-date">
+                            </div>
+                            <div class="pre-analyse-field">
+                                <label for="defect-hour">Hour:</label>
+                                <input type="time" id="defect-hour" name="defect-hour">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ACTIONS DE SÉCURISATION Section -->
+            <div class="section actions-securisation">
+                <div class="section-header">
+                    4. ACTIONS DE SÉCURISATION
+                </div>
+                <div class="section-content">
+                    <table class="securisation-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Responsable</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="action-cell">Action 1</td>
+                                <td><input type="text" id="action1-responsable" name="action1-responsable" placeholder="Responsable..."></td>
+                                <td><input type="date" id="action1-date" name="action1-date"></td>
+                            </tr>
+                            <tr>
+                                <td class="action-cell">Action 2</td>
+                                <td><input type="text" id="action2-responsable" name="action2-responsable" placeholder="Responsable..."></td>
+                                <td><input type="date" id="action2-date" name="action2-date"></td>
+                            </tr>
+                            <tr>
+                                <td class="action-cell">Action 3</td>
+                                <td><input type="text" id="action3-responsable" name="action3-responsable" placeholder="Responsable..."></td>
+                                <td><input type="date" id="action3-date" name="action3-date"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. ANALYSIS Section -->
         <div class="section analysis">
             <div class="section-header">
-                3. ANALYSIS
+                5. ANALYSIS
             </div>
             <div class="section-content">
                 <div class="analysis-grid">
@@ -838,10 +1029,10 @@
             </div>
         </div>
 
-        <!-- 4. CORRECTIVE ACTIONS Section -->
+        <!-- 6. CORRECTIVE ACTIONS Section -->
         <div class="section corrective-actions">
             <div class="section-header">
-                4. CORRECTIVE ACTIONS
+                6. CORRECTIVE ACTIONS
             </div>
             <div class="section-content">
                 <table class="actions-table">
@@ -868,10 +1059,10 @@
             </div>
         </div>
 
-        <!-- 5. VÉRIFICATION Section -->
+        <!-- 7. VÉRIFICATION Section -->
         <div class="section verification">
             <div class="section-header">
-                5. VÉRIFICATION
+                7. VÉRIFICATION
             </div>
             <div class="section-content">
                 <div class="verification-subtitle">Results of 5 successive teams</div>
@@ -960,20 +1151,26 @@
                 <li><strong>• Why it is a Problem:</strong> Text field to explain impact and consequences</li>
                 <li><strong>• How it was Detected:</strong> Text field to describe the detection method</li>
                 <li><strong>Personnel Notification Section (Blue):</strong> Checkbox list of all personnel roles that must be informed</li>
-                <li><strong>Tri Section (Green):</strong> Quality sorting table with production stages and quality counts</li>
+                <li><strong>2. TRI Section (Green) - Full Width:</strong> Quality sorting table with production stages and quality counts</li>
                 <li><strong>• Production Stages:</strong> 7 rows covering Magasin produit fini, Palette fin ligne, Ligne d'assemblage, Coupe, Pré-assemblage, Magasin composant, Retouche/cage rouge</li>
                 <li><strong>• Quality Columns:</strong> Two columns for "Bon" and "Mauvais" with number inputs</li>
                 <li><strong>• Reset Button (🔄):</strong> Quick reset button to clear all number inputs with confirmation dialog</li>
                 <li><strong>• Auto-Decision Logic:</strong> System automatically checks "Retouche nécessaire" when bad quantities exceed good quantities</li>
                 <li><strong>• Critical Visual Alert:</strong> Retouche row turns red with pulsing animation when rework is automatically decided</li>
                 <li><strong>• Real-time Totals:</strong> Automatic calculation and display of total bon/mauvais quantities</li>
-                <li><strong>Analysis Section (Blue/Red):</strong> Two "Why" questions with 4 text fields each for thorough root cause analysis</li>
+                <li><strong>Two-Column Layout:</strong> Sections 3 (Pré-analyse) and 4 (Actions de Sécurisation) are displayed side by side below TRI section</li>
+                <li><strong>3. Pré-analyse Section (Purple):</strong> Pre-analysis form with two subsections for defect source investigation</li>
+                <li><strong>• Who produced the defect?:</strong> Operator ID and Post/Machine identification fields</li>
+                <li><strong>• When the defect was produced?:</strong> Date and Hour fields for temporal tracking</li>
+                <li><strong>4. Actions de Sécurisation Section (Pink):</strong> Security actions table with 3 action rows</li>
+                <li><strong>• Action 1, 2, 3:</strong> Each action has Responsable and Date fields for accountability</li>
+                <li><strong>5. Analysis Section (Blue/Red):</strong> Two "Why" questions with 4 text fields each for thorough root cause analysis</li>
                 <li><strong>Why 1 (Blue):</strong> Focus on problem identification and root cause</li>
                 <li><strong>Why 2 (Red):</strong> Focus on detection failure analysis</li>
-                <li><strong>Corrective Actions Table (Green):</strong> Structured 3-column table with Type, Pilote, and Délai</li>
+                <li><strong>6. Corrective Actions Table (Green):</strong> Structured 3-column table with Type, Pilote, and Délai</li>
                 <li><strong>Occurrence Row (Red):</strong> Actions to prevent problem recurrence with responsible person and deadline</li>
                 <li><strong>Non-Detection Row (Orange):</strong> Actions to improve detection methods with responsible person and deadline</li>
-                <li><strong>Vérification Section (Purple):</strong> Verification tracking table for 5 successive teams</li>
+                <li><strong>7. Vérification Section (Purple):</strong> Verification tracking table for 5 successive teams</li>
                 <li><strong>• Team Column:</strong> Team identifier (Team 1 through Team 5)</li>
                 <li><strong>• Date Column:</strong> Date when verification was performed by each team</li>
                 <li><strong>• Occurrence Column:</strong> Whether the defect occurred again for this team</li>
@@ -1008,6 +1205,30 @@
                 
                 // Personnel notified
                 personnelNotified: Array.from(document.querySelectorAll('input[name="personnel[]"]:checked')).map(cb => cb.value),
+                
+                // Pré-analyse
+                preAnalyse: {
+                    operatorId: document.getElementById('operator-id').value,
+                    postMachine: document.getElementById('post-machine').value,
+                    defectDate: document.getElementById('defect-date').value,
+                    defectHour: document.getElementById('defect-hour').value
+                },
+                
+                // Actions de Sécurisation
+                actionsSecurisation: {
+                    action1: {
+                        responsable: document.getElementById('action1-responsable').value,
+                        date: document.getElementById('action1-date').value
+                    },
+                    action2: {
+                        responsable: document.getElementById('action2-responsable').value,
+                        date: document.getElementById('action2-date').value
+                    },
+                    action3: {
+                        responsable: document.getElementById('action3-responsable').value,
+                        date: document.getElementById('action3-date').value
+                    }
+                },
                 
                 // Tri (Quality Sorting)
                 tri: {

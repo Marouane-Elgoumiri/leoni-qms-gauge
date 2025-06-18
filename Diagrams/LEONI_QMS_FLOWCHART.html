@@ -107,6 +107,31 @@
             color: #4a5568;
             line-height: 1.5;
         }
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .btn-back { background: linear-gradient(135deg, #005691, #3182ce); box-shadow: 0 4px 8px rgba(0, 86, 145, 0.3); }
         @media (max-width: 768px) {
             .diagram-controls {
                 flex-direction: column;
@@ -143,6 +168,11 @@
             <div id="diagram" class="mermaid">
                 <!-- Diagram will be rendered here -->
             </div>
+        </div>
+        <div class="navigation">
+            <a href="LEONI_QMS_SYSTEM_DESIGN.html" class="nav-button btn-back">
+                ⬅️ System Design
+            </a>
         </div>
     </div>
 
@@ -310,14 +340,8 @@ erDiagram
         int defect_id FK
         int production_line_id FK
         int inspector_id FK
-        jsonb document_info
-        jsonb caracterisation
-        jsonb personnel_notification
-        jsonb tri_data
-        jsonb analysis_data
-        jsonb corrective_actions
-        jsonb verification_tracking
-        jsonb metadata
+        jsonb qrqc_form
+        boolean is_archived
         datetime created_at
     }
     
@@ -510,25 +534,22 @@ classDiagram
         -Long defectId
         -Long productionLineId
         -Long inspectorId
-        -JsonB documentInfo
-        -JsonB caracterisation
-        -JsonB personnelNotification
-        -JsonB triData
-        -JsonB analysisData
-        -JsonB correctiveActions
-        -JsonB verificationTracking
-        -JsonB metadata
+        -JsonB qrqcForm
+        -Boolean isArchived
         -Date createdAt
         +performWhyAnalysis() void
-        +storeTriData(triData) void
-        +storePersonnelNotification(personnel) void
+        +storeQRQCSection(section, data) void
+        +getQRQCSection(section) JsonB
         +defineCorrectiveActions() void
         +trackImplementation() void
         +archiveQRQC() void
         +closeQRQC() void
         +getStatus() String
         +getQRQCReference() String
-        +updateMetadata(metadata) void
+        +updateQRQCForm(formData) void
+        +calculateTriTotals() JsonB
+        +autoDecideRetouche() Boolean
+        +reconstructForm() JsonB
     }
     
     class VigilanceSession {
@@ -626,25 +647,25 @@ sequenceDiagram
     
     QT->>+AC: GET /api/analysis/:id
     AC->>+DB: SELECT * FROM analysis
-    DB-->>-AC: JSONB analysis data
-    AC-->>-QT: Current analysis state
+    DB-->>-AC: Consolidated qrqc_form JSONB
+    AC-->>-QT: Complete QRQC form data
     
-    loop QRQC Form Sections
-        QT->>+AC: PUT /api/analysis/:id/section
-        AC->>+DB: UPDATE analysis SET section_data
-        Note over DB: Using PostgreSQL JSONB operators
-        DB-->>-AC: Updated JSONB
-        AC-->>-QT: Section updated
+    loop QRQC Form Updates
+        QT->>+AC: PUT /api/analysis/:id/form
+        AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, path, data)
+        Note over DB: Single JSONB column with nested structure
+        DB-->>-AC: Updated consolidated form
+        AC-->>-QT: Form section updated
     end
     
     QT->>+AC: PUT /api/analysis/:id/why-analysis
-    AC->>+DB: UPDATE analysis SET analysis_data
-    DB-->>-AC: Why analysis stored
+    AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{analysis_data}', data)
+    DB-->>-AC: Why analysis stored in consolidated form
     AC-->>-QT: Analysis completed
     
     QT->>+AC: PUT /api/analysis/:id/corrective-actions
-    AC->>+DB: UPDATE analysis SET corrective_actions
-    Note over DB: Storing structured action plans
+    AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{corrective_actions}', data)
+    Note over DB: All data stored in single qrqc_form column
     DB-->>-AC: Actions stored
     AC-->>-QT: Corrective actions defined
     
@@ -655,23 +676,23 @@ sequenceDiagram
     AC-->>-TL: Complete analysis data
     
     TL->>+AC: PUT /api/analysis/:id/implementation
-    AC->>+DB: UPDATE analysis SET verification_tracking
-    DB-->>-AC: Implementation tracked
+    AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{verification_tracking}', data)
+    DB-->>-AC: Implementation tracked in consolidated form
     AC-->>-TL: Progress updated
     
     alt Implementation Complete
         TL->>QM: Request: Final QRQC Validation
         QM->>+AC: GET /api/analysis/:id/validation
         AC->>+DB: SELECT * FROM analysis
-        Note over DB: Using GIN indexes for fast queries
-        DB-->>-AC: Validation data
+        Note over DB: Single qrqc_form contains all validation data
+        DB-->>-AC: Complete consolidated form data
         AC-->>-QM: QRQC ready for closure
     end
     
     QM->>+AC: PUT /api/analysis/:id/close
-    AC->>+DB: UPDATE analysis SET metadata = jsonb_set(metadata, '{status}', '"CLOSED"')
-    DB-->>-AC: QRQC closed
-    AC->>+DB: INSERT INTO kpi (calculated from analysis)
+    AC->>+DB: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{metadata,status}', '"CLOSED"'), is_archived = true
+    DB-->>-AC: QRQC closed and archived with complete form data
+    AC->>+DB: INSERT INTO kpi (calculated from qrqc_form analysis)
     DB-->>-AC: KPIs updated
     AC-->>-QM: QRQC successfully closed
     
@@ -883,15 +904,15 @@ graph TD
         const descriptions = {
             mcdDiagram: {
                 title: "MCD Diagram - LEONI QMS Data Model",
-                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships. The ANALYSIS table has been simplified for scalability with only 5 key structured columns (id, analysis_date, defect_id, production_line_id, inspector_id) and 8 JSONB sections (document_info, caracterisation, personnel_notification, tri_data, analysis_data, corrective_actions, verification_tracking, metadata) for maximum flexibility."
+                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships. The ANALYSIS table has been consolidated for maximum efficiency with only 7 key columns: 4 structured columns (id, analysis_date, defect_id, production_line_id, inspector_id), 1 consolidated JSONB column (qrqc_form) containing all 10 form sections, and 2 system columns (is_archived, created_at). This consolidation enables perfect archival where each analysis record contains complete form data as a single atomic unit."
             },
             classDiagram: {
                 title: "Class Diagram - LEONI QMS Architecture",
-                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity and Service layers. The architecture follows a user-driven approach where AQL agents and quality technicians directly perform defect insertion and QRQC analysis through controllers. Only legitimate service classes like AuditService are included, eliminating unnecessary DefectService and QRQCService intermediaries."
+                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity and Service layers. The Analysis class now uses a consolidated qrqcForm JSONB field that contains all 10 sections of the QRQC form as nested data, enabling atomic operations and perfect archival. The architecture follows a user-driven approach where AQL agents and quality technicians directly perform defect insertion and QRQC analysis through controllers."
             },
             sequenceDiagram: {
                 title: "Sequence Diagram - QRQC Analysis Workflow",
-                description: "This diagram illustrates the user-driven QRQC (Quick Response Quality Control) analysis workflow with direct user interactions. AQL agents record defects and quality technicians perform QRQC analysis directly through controllers, eliminating unnecessary service layer intermediaries for a more streamlined and accurate representation of the actual process flow."
+                description: "This diagram illustrates the user-driven QRQC (Quick Response Quality Control) analysis workflow with consolidated database operations. Quality technicians perform QRQC analysis using a single qrqc_form JSONB column that stores all 10 form sections as nested data. This consolidated approach ensures atomic updates, perfect data integrity, and enables complete form reconstruction from archives with a single database query."
             },
             useCaseDiagram: {
                 title: "Use Case Diagram - System Functionality",

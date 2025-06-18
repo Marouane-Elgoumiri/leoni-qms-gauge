@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEONI QMS - Software Engineering Design Documentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .subsection {
+            margin-bottom: 40px;
+        }
+
+        .subsection h3 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection h4 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        .diagram-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        .design-principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .principle-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .principle-card h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .architecture-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .layer {
+            background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .layer h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .emoji {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .rationale-box {
+            background: #f0f8ff;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .rationale-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .design-principles {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ LEONI Quality Management System</h1>
+            <p class="subtitle">Software Engineering Design Documentation & Architecture</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">🎯 System Overview</button>
+            <button class="nav-tab" onclick="showSection('architecture')">🏛️ Architecture</button>
+            <button class="nav-tab" onclick="showSection('database')">🗄️ Database Design</button>
+            <button class="nav-tab" onclick="showSection('api')">🔌 API Design</button>
+            <button class="nav-tab" onclick="showSection('patterns')">🧩 Design Patterns</button>
+            <button class="nav-tab" onclick="showSection('performance')">⚡ Performance</button>
+            <button class="nav-tab" onclick="showSection('security')">🔒 Security</button>
+            <button class="nav-tab" onclick="showSection('deployment')">🚀 Deployment</button>
+        </div>
+
+        <!-- System Overview -->
+        <div id="overview" class="content-section active">
+            <h2 class="section-title">🎯 System Overview & Requirements</h2>
+            
+            <div class="subsection">
+                <h3>📋 Business Requirements Analysis</h3>
+                <p>The LEONI Quality Management System (QMS) is designed to streamline quality control processes in automotive wire harness manufacturing. The system addresses critical business needs:</p>
+                
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>🔍 Defect Management</h4>
+                        <p>Real-time defect tracking and reporting with automated severity assessment and escalation workflows.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📊 QRQC Analysis</h4>
+                        <p>Quick Response Quality Control with structured root cause analysis, corrective actions, and verification tracking.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔍 Audit Systems</h4>
+                        <p>5S and AFP audit management with automated scoring, action plans, and progress tracking.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📈 KPI Monitoring</h4>
+                        <p>Real-time production quality metrics with dashboard visualization and trend analysis.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🎨 Design Philosophy</h3>
+                <div class="rationale-box">
+                    <h4>User-Driven Architecture</h4>
+                    <p>The system is designed around actual user workflows rather than abstract service layers. AQL agents directly record defects, quality technicians perform QRQC analysis, and team leaders track implementation - no unnecessary intermediary services.</p>
+                </div>
+                
+                <div class="rationale-box">
+                    <h4>Hybrid Data Strategy</h4>
+                    <p>Critical queryable data is stored in structured columns for performance, while evolving form data uses JSONB for flexibility. This approach eliminates the need for schema migrations when forms change.</p>
+                </div>
+                
+                <div class="rationale-box">
+                    <h4>Scalable JSONB Architecture</h4>
+                    <p>The Analysis table uses a consolidated approach with only 7 columns: 4 structured columns (id, analysis_date, defect_id, production_line_id, inspector_id), 1 comprehensive JSONB column (qrqc_form) containing all 10 form sections as nested data, and 2 system columns (is_archived, created_at). This consolidation enables perfect archival where each analysis record contains complete form data as a single atomic unit.</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 System Metrics</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">14</div>
+                        <p>Database Tables</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">4</div>
+                        <p>User Roles</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">8</div>
+                        <p>JSONB Sections</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">25+</div>
+                        <p>API Endpoints</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture -->
+        <div id="architecture" class="content-section">
+            <h2 class="section-title">🏛️ System Architecture</h2>
+            
+            <div class="subsection">
+                <h3>🏗️ High-Level Architecture</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TB
+    subgraph "🖥️ Presentation Layer"
+        A[Web Frontend - HTML/CSS/JS]
+        B[📊 Dashboard Components]
+        C[📝 Forms & UI Components]
+        D[📱 Responsive Design]
+    end
+    
+    subgraph "🧠 Business Logic Layer"
+        E[🔐 Authentication Service]
+        F[📋 QRQC Analysis Engine]
+        G[🔍 Audit Management]
+        H[📊 KPI Calculator]
+        I[📧 Notification System]
+        J[📁 File Management]
+    end
+    
+    subgraph "🔌 Data Access Layer"
+        K[🎮 Database Controllers]
+        L[🌐 API Endpoints]
+        M[🔍 Query Optimization]
+        N[💾 Caching Layer]
+    end
+    
+    subgraph "🗄️ Data Storage Layer"
+        O[(PostgreSQL - Primary)]
+        P[(Redis - Cache)]
+        Q[📁 File Storage]
+        R[📊 JSONB Indexing]
+    end
+    
+    A --> E
+    B --> H
+    C --> F
+    D --> G
+    E --> K
+    F --> K
+    G --> K
+    H --> K
+    I --> L
+    J --> M
+    K --> O
+    L --> O
+    M --> P
+    N --> P
+    K --> R
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🏢 Layered Architecture</h3>
+                <div class="architecture-layers">
+                    <div class="layer">
+                        <h4>🖥️ Presentation Layer</h4>
+                        <p><strong>Technologies:</strong> HTML5, CSS3, JavaScript ES6+, Responsive Design</p>
+                        <p><strong>Responsibility:</strong> User interface, form validation, dashboard visualization, user experience</p>
+                    </div>
+                    
+                    <div class="layer">
+                        <h4>🧠 Business Logic Layer</h4>
+                        <p><strong>Technologies:</strong> JavaScript/Node.js, Express.js, Business Rules Engine</p>
+                        <p><strong>Responsibility:</strong> Application logic, workflow management, calculations, validations</p>
+                    </div>
+                    
+                    <div class="layer">
+                        <h4>🔌 Data Access Layer</h4>
+                        <p><strong>Technologies:</strong> RESTful APIs, ORM/Query Builder, Connection Pooling</p>
+                        <p><strong>Responsibility:</strong> Data operations, API endpoints, query optimization, caching</p>
+                    </div>
+                    
+                    <div class="layer">
+                        <h4>🗄️ Data Storage Layer</h4>
+                        <p><strong>Technologies:</strong> PostgreSQL, Redis, File System, JSONB, GIN Indexes</p>
+                        <p><strong>Responsibility:</strong> Data persistence, indexing, backup, archival</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔄 Process Flow Architecture</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+sequenceDiagram
+    participant AQL as 👤 AQL Agent
+    participant QT as 👤 Quality Technician
+    participant System as 🖥️ QMS System
+    participant DB as 🗄️ Database
+    participant TL as 👤 Team Leader
+    
+    Note over AQL,TL: User-Driven QRQC Workflow
+    
+    AQL->>System: 📝 Report Defect
+    System->>System: ✅ Validate Data
+    System->>DB: 💾 Store Defect
+    System->>QT: 📧 Notify Critical Defect
+    
+    QT->>System: 🔍 Create QRQC Analysis
+    System->>System: 🧮 Calculate Tri Totals
+    System->>System: 🤖 Auto-decide Retouche
+    System->>DB: 💾 Store Analysis (Consolidated qrqc_form)
+    
+    QT->>System: 📊 Complete Analysis Sections
+    System->>DB: 🔄 Update Consolidated Form (jsonb_set operations)
+    System->>TL: 📧 Notify for Review
+    
+    TL->>System: ✅ Review & Approve
+    System->>DB: 🔒 Close Analysis (Archive with complete form data)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Design -->
+        <div id="database" class="content-section">
+            <h2 class="section-title">🗄️ Database Design Strategy</h2>
+            
+            <div class="subsection">
+                <h3>📊 Entity Relationship Design</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+erDiagram
+    USERS {
+        int id PK
+        string username
+        string email
+        string role
+        boolean is_active
+        datetime created_at
+    }
+    
+    ANALYSIS {
+        int id PK
+        date analysis_date
+        int defect_id FK
+        int production_line_id FK
+        int inspector_id FK
+        jsonb qrqc_form
+        boolean is_archived
+        datetime created_at
+    }
+    
+    DEFECTS {
+        int id PK
+        int production_line_id FK
+        int project_id FK
+        string description
+        string status
+        datetime created_at
+    }
+    
+    PRODUCTION_LINES {
+        int id PK
+        string name
+        string code
+        boolean is_active
+    }
+    
+    AUDIT_5S {
+        int id PK
+        int line_id FK
+        int auditor_id FK
+        date audit_date
+        jsonb audit_data
+        int total_score
+    }
+    
+    KPI {
+        int id PK
+        int line_id FK
+        date metric_date
+        decimal fpy
+        decimal defect_rate
+    }
+    
+    USERS ||--o{ ANALYSIS : creates
+    DEFECTS ||--o{ ANALYSIS : analyzes
+    PRODUCTION_LINES ||--o{ DEFECTS : occurs_on
+    PRODUCTION_LINES ||--o{ ANALYSIS : performed_on
+    USERS ||--o{ AUDIT_5S : conducts
+    PRODUCTION_LINES ||--o{ KPI : measures
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🎯 Hybrid Storage Strategy</h3>
+                <div class="rationale-box">
+                    <h4>Structured Columns for Performance</h4>
+                    <div class="code-block">
+-- Key queryable fields as structured columns
+analysis_date DATE NOT NULL,
+defect_id INTEGER REFERENCES defects(id),
+production_line_id INTEGER REFERENCES production_lines(id),
+inspector_id INTEGER REFERENCES users(id)
+                    </div>
+                </div>
+                
+                <div class="rationale-box">
+                    <h4>Consolidated QRQC Form Structure</h4>
+                    <div class="code-block">
+-- Single consolidated JSONB column for all form data
+qrqc_form JSONB NOT NULL DEFAULT '{}' CHECK (
+    jsonb_typeof(qrqc_form) = 'object'
+),
+-- Contains all 10 sections as nested structure:
+-- document_info, caracterisation, personnel_notification,
+-- tri_data, pre_analyse, actions_securisation, 
+-- analysis_data, corrective_actions, verification_tracking, metadata
+is_archived BOOLEAN DEFAULT FALSE
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🚀 Performance Optimization</h3>
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>📇 Consolidated GIN Indexing</h4>
+                        <p>Single comprehensive GIN index on qrqc_form column plus specific path indexes for frequently accessed form sections and status fields.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🎯 Optimized Path Indexes</h4>
+                        <p>Targeted JSONB path indexes for common query patterns like metadata status, TRI decisions, and actions tracking.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>⚡ Atomic Operations</h4>
+                        <p>Consolidated structure enables atomic QRQC form updates and perfect archival with complete form reconstruction from single column.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>💾 Connection Pooling</h4>
+                        <p>Database connection pooling for optimal resource utilization and scalability.</p>
+                    </div>
+                </div>
+                
+                <div class="code-block">
+-- Consolidated indexing strategy for optimized performance
+CREATE INDEX idx_analysis_date ON analysis(analysis_date);
+CREATE INDEX idx_qrqc_form_gin ON analysis USING GIN (qrqc_form);
+CREATE INDEX idx_qrqc_status ON analysis USING GIN ((qrqc_form->'metadata'->>'status'));
+CREATE INDEX idx_qrqc_tri_decision ON analysis USING GIN ((qrqc_form->'tri_data'->>'decisionRetouche'));
+CREATE INDEX idx_qrqc_actions_status ON analysis USING GIN ((qrqc_form->'actions_securisation'->>'overall_status'));
+                </div>
+            </div>
+        </div>
+
+        <!-- API Design -->
+        <div id="api" class="content-section">
+            <h2 class="section-title">🔌 API Design & Architecture</h2>
+            
+            <div class="subsection">
+                <h3>🌐 RESTful API Design</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TB
+    subgraph "🔐 Authentication"
+        A1[POST /api/auth/login]
+        A2[POST /api/auth/logout]
+        A3[GET /api/auth/profile]
+    end
+    
+    subgraph "🔧 Defect Management"
+        B1[GET /api/defects]
+        B2[POST /api/defects]
+        B3[PUT /api/defects/:id]
+        B4[DELETE /api/defects/:id]
+    end
+    
+    subgraph "📋 QRQC Analysis"
+        C1[GET /api/analysis]
+        C2[POST /api/analysis]
+        C3[PUT /api/analysis/:id/section]
+        C4[GET /api/analysis/:id/report]
+    end
+    
+    subgraph "🔍 Audit Systems"
+        D1[GET /api/audits/5s]
+        D2[POST /api/audits/5s]
+        D3[GET /api/audits/afp]
+        D4[POST /api/audits/afp]
+    end
+    
+    subgraph "📊 KPI & Reports"
+        E1[GET /api/kpi/dashboard]
+        E2[GET /api/reports/export]
+        E3[GET /api/analytics/trends]
+    end
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📝 Consolidated QRQC Form Updates</h3>
+                <div class="code-block">
+// QRQC Analysis - Update Consolidated Form Section
+PUT /api/analysis/:id/form
+
+{
+  "section": "tri_data",
+  "data": {
+    "magasinProduitFini": {"bon": 15, "mauvais": 2},
+    "paletteFinLigne": {"bon": 12, "mauvais": 5},
+    "totals": {"totalBon": 27, "totalMauvais": 7},
+    "decisionRetouche": false
+  }
+}
+
+// Updates: UPDATE analysis SET qrqc_form = jsonb_set(qrqc_form, '{tri_data}', $1)
+
+// QRQC Analysis - Update Pre-Analyse Section
+PUT /api/analysis/:id/form
+
+{
+  "section": "pre_analyse", 
+  "data": {
+    "operatorId": "OP123",
+    "postMachine": "Station 5 - Assembly Line",
+    "defectDate": "2025-06-18",
+    "defectHour": "14:30"
+  }
+}
+
+// QRQC Analysis - Complete Form Retrieval (Perfect for Archives)
+GET /api/analysis/:id
+
+Response: {
+  "id": 123,
+  "analysis_date": "2025-06-18",
+  "defect_id": 456,
+  "production_line_id": 1,
+  "inspector_id": 789,
+  "qrqc_form": {
+    "document_info": { "qrqc_reference_id": "DEF-1703123456789" },
+    "caracterisation": { "defect_description": "Detailed description" },
+    "personnel_notification": { "informed_personnel": ["operateur", "team-speaker"] },
+    "tri_data": { "totals": {"totalBon": 27, "totalMauvais": 7} },
+    "pre_analyse": { "operatorId": "OP123" },
+    "actions_securisation": { "action1": {"responsable": "Quality Supervisor"} },
+    "analysis_data": { "why1": {"field1": "Root cause analysis"} },
+    "corrective_actions": { "occurrence": {"pilote": "Production Manager"} },
+    "verification_tracking": { "teams": [{"team": "Team 1", "occurrence": "No"}] },
+    "metadata": { "status": "OPEN", "priority": "MEDIUM" }
+  },
+  "is_archived": false,
+  "created_at": "2025-06-18T10:30:00Z"
+}
+      "responsable": "Maintenance Team",
+      "date": "2025-06-25", 
+      "status": "PLANNED"
+    }
+  }
+}
+
+// Response
+{
+  "success": true,
+  "message": "Section updated successfully",
+  "analysisId": 123,
+  "section": "actions_securisation",
+  "autoCalculated": {
+    "overall_status": "PLANNED",
+    "next_due_date": "2025-06-20"
+  }
+}
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔄 API Response Strategy</h3>
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>📊 Consistent Response Format</h4>
+                        <p>Standardized JSON response structure with success/error states, data payload, and metadata.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔒 Security Headers</h4>
+                        <p>CORS, CSRF protection, rate limiting, and authentication tokens for secure API access.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📈 Performance Monitoring</h4>
+                        <p>API response time monitoring, error tracking, and usage analytics for optimization.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📝 Documentation</h4>
+                        <p>Comprehensive API documentation with examples, schemas, and interactive testing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Patterns -->
+        <div id="patterns" class="content-section">
+            <h2 class="section-title">🧩 Design Patterns & Best Practices</h2>
+            
+            <div class="subsection">
+                <h3>🏗️ Architectural Patterns</h3>
+                
+                <h4>📦 Repository Pattern</h4>
+                <div class="code-block">
+class AnalysisRepository {
+    async create(analysisData) {
+        const query = `
+            INSERT INTO analysis (
+                analysis_date, defect_id, production_line_id, 
+                inspector_id, qrqc_form, is_archived
+            ) VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING *
+        `;
+        
+        return await this.db.query(query, [
+            analysisData.date,
+            analysisData.defectId,
+            analysisData.productionLineId,
+            analysisData.inspectorId,
+            JSON.stringify(analysisData.qrqcForm), // Consolidated form data
+            false
+        ]);
+    }
+    
+    async updateFormSection(id, section, data) {
+        const query = `
+            UPDATE analysis 
+            SET qrqc_form = jsonb_set(qrqc_form, $2, $3)
+            WHERE id = $1
+            RETURNING *
+        `;
+        
+        return await this.db.query(query, [
+            id, 
+            `{${section}}`, 
+            JSON.stringify(data)
+        ]);
+    }
+    
+    async getCompleteForm(id) {
+        const query = `
+            SELECT id, analysis_date, defect_id, production_line_id, 
+                   inspector_id, qrqc_form, is_archived, created_at
+            FROM analysis 
+            WHERE id = $1
+        `;
+        
+        return await this.db.query(query, [id]);
+    }
+}
+                </div>
+
+                <h4>🏭 Factory Pattern for Validation</h4>
+                <div class="code-block">
+class QRQCValidatorFactory {
+    static createValidator(section) {
+        const validators = {
+            'document_info': DocumentInfoValidator,
+            'caracterisation': CaracterisationValidator,
+            'tri_data': TriDataValidator,
+            'analysis_data': AnalysisDataValidator,
+            'corrective_actions': CorrectiveActionValidator,
+            'verification_tracking': VerificationValidator,
+            'metadata': MetadataValidator
+        };
+        
+        const ValidatorClass = validators[section];
+        if (!ValidatorClass) {
+            throw new Error(`Unknown section: ${section}`);
+        }
+        
+        return new ValidatorClass();
+    }
+}
+
+class TriDataValidator {
+    validate(data) {
+        const required = ['magasinProduitFini', 'paletteFinLigne', 'ligneAssemblage'];
+        const errors = [];
+        
+        for (const stage of required) {
+            if (!data[stage] || typeof data[stage] !== 'object') {
+                errors.push(`Missing or invalid ${stage} data`);
+            }
+        }
+        
+        return { isValid: errors.length === 0, errors };
+    }
+}
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔄 Data Flow Patterns</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph LR
+    A[📝 QRQC Form] --> B[✅ Validation Layer]
+    B --> C[🧠 Business Logic]
+    C --> D[🔄 Data Transform]
+    D --> E[🗄️ Database Layer]
+    E --> F[(PostgreSQL)]
+    
+    C --> G[📊 JSONB Processor]
+    G --> H[🔍 GIN Indexing]
+    H --> F
+    
+    F --> I[⚡ Query Optimizer]
+    I --> J[🌐 Dashboard APIs]
+    J --> K[📱 Frontend Views]
+    
+    style A fill:#e1f5fe
+    style F fill:#f3e5f5
+    style K fill:#e8f5e8
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🛡️ Error Handling Patterns</h3>
+                <div class="code-block">
+class ErrorHandler {
+    static async handleDatabaseError(error, context) {
+        const errorMap = {
+            '23505': 'Duplicate entry detected',
+            '23503': 'Referenced record not found',
+            '23514': 'Data validation failed',
+            '42P01': 'Table does not exist'
+        };
+        
+        const message = errorMap[error.code] || 'Database operation failed';
+        
+        logger.error('Database Error', {
+            code: error.code,
+            message: error.message,
+            context: context,
+            timestamp: new Date().toISOString()
+        });
+        
+        return {
+            success: false,
+            error: message,
+            code: error.code,
+            timestamp: new Date().toISOString()
+        };
+    }
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance -->
+        <div id="performance" class="content-section">
+            <h2 class="section-title">⚡ Performance Optimization Strategy</h2>
+            
+            <div class="subsection">
+                <h3>📊 Database Performance</h3>
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>🔍 Indexing Strategy</h4>
+                        <p>Strategic GIN indexes on JSONB columns, B-tree indexes on structured columns, and composite indexes for complex queries.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>💾 Query Optimization</h4>
+                        <p>Optimized SQL queries with proper JOINs, WHERE clauses, and JSONB operators for fast data retrieval.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🔄 Connection Pooling</h4>
+                        <p>Database connection pooling to handle concurrent users efficiently and reduce connection overhead.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📈 Monitoring</h4>
+                        <p>Query performance monitoring, slow query analysis, and automatic index recommendations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>💾 Caching Architecture</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TB
+    A[🌐 API Request] --> B{💾 Cache Check}
+    B -->|Hit| C[📦 Return Cached Data]
+    B -->|Miss| D[🗄️ Database Query]
+    D --> E[💾 Store in Cache]
+    E --> F[📦 Return Fresh Data]
+    
+    subgraph "🔄 Cache Strategy"
+        G[📊 KPI Data - 5min TTL]
+        H[👥 User Permissions - 1hr TTL]
+        I[📋 Production Lines - 24hr TTL]
+        J[📈 Dashboard Data - 2min TTL]
+    end
+    
+    style C fill:#e8f5e8
+    style F fill:#e1f5fe
+                    </div>
+                </div>
+                
+                <div class="code-block">
+class CacheService {
+    constructor() {
+        this.redis = new Redis(process.env.REDIS_URL);
+        this.defaultTTL = 300; // 5 minutes
+    }
+    
+    async get(key) {
+        try {
+            const cached = await this.redis.get(key);
+            return cached ? JSON.parse(cached) : null;
+        } catch (error) {
+            console.error('Cache get error:', error);
+            return null;
+        }
+    }
+    
+    async set(key, data, ttl = this.defaultTTL) {
+        try {
+            await this.redis.setex(key, ttl, JSON.stringify(data));
+        } catch (error) {
+            console.error('Cache set error:', error);
+        }
+    }
+    
+    async getProductionLines() {
+        const cacheKey = 'production_lines_active';
+        let lines = await this.get(cacheKey);
+        
+        if (!lines) {
+            lines = await db.query(
+                'SELECT * FROM production_lines WHERE is_active = true'
+            );
+            await this.set(cacheKey, lines, 86400); // 24 hours
+        }
+        
+        return lines;
+    }
+}
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Performance Metrics</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">&lt; 100ms</div>
+                        <p>API Response Time</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">&lt; 50ms</div>
+                        <p>Database Queries</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">95%</div>
+                        <p>Cache Hit Rate</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">1000+</div>
+                        <p>Concurrent Users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security -->
+        <div id="security" class="content-section">
+            <h2 class="section-title">🔒 Security Architecture</h2>
+            
+            <div class="subsection">
+                <h3>🛡️ Role-Based Access Control (RBAC)</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TB
+    subgraph "👥 User Roles"
+        A[👤 AQL Agent]
+        B[🔧 Quality Technician]
+        C[👨‍💼 Team Leader]
+        D[👩‍💼 Quality Manager]
+    end
+    
+    subgraph "🔐 Permissions"
+        E[📝 Can Add Defects]
+        F[🔍 Can View QRQC]
+        G[📋 Can Create QRQC]
+        H[✏️ Can Edit QRQC]
+        I[🔍 Can Perform Audits]
+        J[👥 Can Manage Staff]
+        K[⚙️ Can System Admin]
+    end
+    
+    A --> E
+    A --> F
+    
+    B --> E
+    B --> F
+    B --> G
+    B --> H
+    B --> I
+    
+    C --> E
+    C --> F
+    C --> G
+    C --> H
+    C --> I
+    C --> J
+    
+    D --> E
+    D --> F
+    D --> G
+    D --> H
+    D --> I
+    D --> J
+    D --> K
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔐 Authentication & Authorization</h3>
+                <div class="code-block">
+-- Automated permission management
+CREATE OR REPLACE FUNCTION update_user_permissions()
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM user_permissions WHERE user_id = NEW.id;
+    
+    CASE NEW.role
+        WHEN 'AQL_AGENT' THEN
+            INSERT INTO user_permissions (user_id, can_add_defect, can_view_qrqc)
+            VALUES (NEW.id, TRUE, TRUE);
+            
+        WHEN 'QUALITY_TECHNICIAN' THEN
+            INSERT INTO user_permissions (user_id, can_add_defect, can_view_qrqc, 
+                                        can_add_qrqc, can_edit_qrqc, can_perform_5s_audit)
+            VALUES (NEW.id, TRUE, TRUE, TRUE, TRUE, TRUE);
+            
+        WHEN 'QUALITY_MANAGER' THEN
+            -- Full permissions for quality manager
+            INSERT INTO user_permissions (user_id, can_system_admin, can_user_management)
+            VALUES (NEW.id, TRUE, TRUE);
+    END CASE;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🛡️ Security Measures</h3>
+                <div class="design-principles">
+                    <div class="principle-card">
+                        <h4>🔐 Data Encryption</h4>
+                        <p>Password hashing with bcrypt, HTTPS/TLS encryption, and secure session management with signed tokens.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>🚫 Input Validation</h4>
+                        <p>Server-side validation, SQL injection prevention, XSS protection, and CSRF token validation.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>📝 Audit Trail</h4>
+                        <p>Comprehensive logging of user actions, data changes, and system events for security monitoring.</p>
+                    </div>
+                    <div class="principle-card">
+                        <h4>⏰ Session Management</h4>
+                        <p>Secure session tokens, automatic session expiry, and concurrent session monitoring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment -->
+        <div id="deployment" class="content-section">
+            <h2 class="section-title">🚀 Deployment & Infrastructure</h2>
+            
+            <div class="subsection">
+                <h3>🏗️ Deployment Architecture</h3>
+                <div class="diagram-container">
+                    <div class="mermaid">
+graph TB
+    subgraph "🌐 Load Balancer"
+        A[Nginx/HAProxy]
+    end
+    
+    subgraph "🖥️ Application Servers"
+        B1[App Server 1]
+        B2[App Server 2]
+        B3[App Server N]
+    end
+    
+    subgraph "🗄️ Database Cluster"
+        C1[(PostgreSQL Primary)]
+        C2[(PostgreSQL Replica)]
+    end
+    
+    subgraph "💾 Cache Layer"
+        D1[Redis Primary]
+        D2[Redis Replica]
+    end
+    
+    subgraph "📁 Storage"
+        E[File Storage]
+        F[Backup Storage]
+    end
+    
+    A --> B1
+    A --> B2
+    A --> B3
+    
+    B1 --> C1
+    B2 --> C1
+    B3 --> C1
+    
+    C1 --> C2
+    
+    B1 --> D1
+    B2 --> D1
+    B3 --> D1
+    
+    D1 --> D2
+    
+    B1 --> E
+    B2 --> E
+    B3 --> E
+    
+    C1 --> F
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>🔄 CI/CD Pipeline</h3>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="emoji">🔧</div>
+                        <h4>Development</h4>
+                        <p>Git, VS Code, Local PostgreSQL, Hot Reload</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="emoji">🧪</div>
+                        <h4>Testing</h4>
+                        <p>Jest, Supertest, Database Fixtures, Automated Testing</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="emoji">🏗️</div>
+                        <h4>Build</h4>
+                        <p>GitHub Actions, Docker, Asset Optimization</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="emoji">🚀</div>
+                        <h4>Deploy</h4>
+                        <p>Docker Compose, Environment Config, Health Checks</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3>📊 Monitoring & Observability</h3>
+                <div class="code-block">
+// Application Health Check
+app.get('/health', async (req, res) => {
+    const health = {
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV,
+        version: process.env.APP_VERSION,
+        checks: {
+            database: await checkDatabase(),
+            redis: await checkRedis(),
+            diskSpace: await checkDiskSpace(),
+            memory: process.memoryUsage()
+        }
+    };
+    
+    const hasFailures = Object.values(health.checks)
+        .some(check => check.status === 'ERROR');
+    
+    res.status(hasFailures ? 503 : 200).json(health);
+});
+
+// Performance Monitoring
+const performanceMonitor = {
+    trackApiResponse: (req, res, next) => {
+        const start = Date.now();
+        
+        res.on('finish', () => {
+            const duration = Date.now() - start;
+            console.log(`${req.method} ${req.path} - ${res.statusCode} - ${duration}ms`);
+            
+            // Send metrics to monitoring service
+            metrics.timing('api.response_time', duration, {
+                method: req.method,
+                path: req.path,
+                status: res.statusCode
+            });
+        });
+        
+        next();
+    }
+};
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📋 LEONI Quality Management System - Software Engineering Design Documentation</p>
+            <p>🏗️ Designed with scalability, performance, and maintainability in mind</p>
+            <p>🔧 Built for automotive manufacturing quality excellence</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            er: {
+                useMaxWidth: true
+            },
+            sequence: {
+                useMaxWidth: true,
+                showSequenceNumbers: true
+            }
+        });
+
+        // Tab switching functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Re-render mermaid diagrams in the active section
+            setTimeout(() => {
+                mermaid.init(undefined, document.querySelector(`#${sectionId} .mermaid`));
+            }, 100);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render all mermaid diagrams
+            mermaid.init();
+            
+            // Add smooth scrolling
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelector('.container').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
