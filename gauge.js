@@ -652,6 +652,13 @@ function initializeApp() {
             });
         }
         
+        const diagramsBtn = document.getElementById("diagrams-btn");
+        if (diagramsBtn) {
+            diagramsBtn.addEventListener("click", function() {
+                window.location.href = "Diagrams/LEONI_QMS_FLOWCHART.html";
+            });
+        }
+        
         console.log('LEONI QMS Gauge initialized successfully');
         
     } catch (error) {

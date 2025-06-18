@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEONI QMS Defect Gauge</title>
+    <link rel="icon" href="assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="assets/logo.png?v=2025">
+    <link rel="mask-icon" href="assets/logo.png?v=2025" color="#1a365d">
+    <meta name="msapplication-TileImage" content="assets/logo.png?v=2025">
+    <meta name="msapplication-TileColor" content="#1a365d">
     <link rel="stylesheet" href="styles.css">
     <!-- Load D3.js with fallback -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -16,7 +22,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>LEONI Wiring Systems QMS</h1>
+        <h1><img src="assets/logo.png" alt="LEONI Logo" style="height: 150px; width: auto; margin-right: 12px; vertical-align: middle;">LEONI Wiring Systems QMS</h1>
         <h2>VOLVO Project - Production Line Defect Status</h2>
         <div id="gauge-container">
             <div id="gauge">
@@ -578,6 +584,9 @@
                 </button>
                 <button id="afp-btn" class="nav-button">
                     📋 AFP Audit
+                </button>
+                <button id="diagrams-btn" class="nav-button">
+                    📐 System Diagrams
                 </button>
                 <button id="admin-btn" class="nav-button">
                     👥 Admin

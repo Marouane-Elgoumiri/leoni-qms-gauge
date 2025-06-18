@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Management - LEONI Admin</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
     <style>
         * {
             margin: 0;
@@ -626,5 +627,52 @@
     <!-- Scripts -->
     <script src="mockData.js"></script>
     <script src="admin.js"></script>
+
+    <!-- Navigation Section -->
+    <div style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); z-index: 1000;">
+        <div style="display: flex; gap: 10px; flex-direction: column; min-width: 180px;">
+            <button onclick="window.location.href='../index.html'" style="
+                background: #1a365d; 
+                color: white; 
+                border: none; 
+                padding: 8px 12px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                font-size: 13px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">🏠 Dashboard</button>
+            
+            <button onclick="window.location.href='../Diagrams/LEONI_QMS_FLOWCHART.html'" style="
+                background: #4a90e2; 
+                color: white; 
+                border: none; 
+                padding: 8px 12px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                font-size: 13px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">📐 System Diagrams</button>
+            
+            <button onclick="window.location.href='../Analysis/qrqc.html'" style="
+                background: #e53e3e; 
+                color: white; 
+                border: none; 
+                padding: 8px 12px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                font-size: 13px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            ">📋 QRQC Analysis</button>
+        </div>
+    </div>
 </body>
 </html> 

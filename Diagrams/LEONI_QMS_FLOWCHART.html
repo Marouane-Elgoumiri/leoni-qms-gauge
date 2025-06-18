@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEONI QMS System Diagrams</title>
+    <link rel="icon" href="../assets/logo.png" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png">
+    <link rel="mask-icon" href="../assets/logo.png" color="#1a365d">
+    <meta name="msapplication-TileImage" content="../assets/logo.png">
+    <meta name="msapplication-TileColor" content="#1a365d">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .header {
+            background: #1a365d;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            color: #cbd5e0;
+        }
+        .diagram-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #1a365d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2d4a6b;
+            transform: translateY(-2px);
+        }
+        .btn.active {
+            background: #4a90e2;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+        }
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn:disabled:hover {
+            background: #a0aec0;
+            transform: none;
+        }
+        .diagram-container {
+            text-align: center;
+            min-height: 600px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .diagram-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a365d;
+            margin-bottom: 15px;
+        }
+        .mermaid {
+            background: white;
+            margin: 0 auto;
+        }
+        .description {
+            background: #f8fafc;
+            border-left: 4px solid #4a90e2;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .description h3 {
+            margin: 0 0 10px 0;
+            color: #1a365d;
+        }
+        .description p {
+            margin: 5px 0;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .diagram-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LEONI Quality Management System</h1>
+            <p>System Architecture Diagrams - Interactive Mermaid.js Version</p>
+            <div style="margin-top: 15px;">
+                <button onclick="window.location.href='../index.html'" style="
+                    background: #4a90e2; 
+                    color: white; 
+                    border: none; 
+                    padding: 8px 16px; 
+                    border-radius: 6px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: background 0.3s ease;
+                " onmouseover="this.style.background='#357abd'" onmouseout="this.style.background='#4a90e2'">
+                    ← Back to Dashboard
+                </button>
+            </div>
+        </div>
+        
+        <div class="diagram-controls">
+            <button class="btn active" onclick="showMcdDiagram()">MCD Diagram</button>
+            <button class="btn" onclick="showClassDiagram()">Class Diagram</button>
+            <button class="btn" onclick="showSequenceDiagram()">Sequence Diagram</button>
+            <button class="btn" onclick="showUseCaseDiagram()">Use Case Diagram</button>
+            <button class="btn" onclick="showFlowchartDiagram()">Process Flow</button>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title" id="diagramTitle">MCD Diagram - LEONI QMS Data Model</div>
+            <div class="description" id="diagramDescription">
+                <h3>MCD (Modèle Conceptuel de Données) Overview</h3>
+                <p>This diagram shows the conceptual data model of the LEONI Quality Management System with entities, attributes, and relationships.</p>
+            </div>
+            <div id="diagram" class="mermaid">
+                <!-- Diagram will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid with proper configuration
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#e6fffa',
+                primaryTextColor: '#2d3748',
+                primaryBorderColor: '#4a90e2',
+                lineColor: '#4a5568',
+                secondaryColor: '#f0f9ff',
+                tertiaryColor: '#dbeafe',
+                background: '#ffffff',
+                mainBkg: '#e6fffa',
+                secondBkg: '#f0f9ff',
+                tertiaryBkg: '#dbeafe'
+            },
+            erDiagram: {
+                useMaxWidth: true,
+                entityPadding: 15,
+                stroke: '#4a90e2',
+                fill: '#f0f9ff',
+                entityBackground: '#f0f9ff',
+                attributeBackgroundColorOdd: '#ffffff',
+                attributeBackgroundColorEven: '#f8fafc'
+            },
+            classDiagram: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            sequenceDiagram: {
+                useMaxWidth: true,
+                actorMargin: 50,
+                width: 150,
+                height: 65
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // Current diagram state
+        let currentDiagram = 'mcdDiagram';
+
+        // Diagram definitions
+        const diagrams = {
+            mcdDiagram: `
+erDiagram
+    USERS {
+        int id PK
+        string username
+        string email
+        string password_hash
+        string role
+        datetime created_at
+    }
+    
+    USER_SESSIONS {
+        int id PK
+        int user_id FK
+        string session_token
+        string ip_address
+        boolean is_active
+        datetime created_at
+        datetime expires_at
+    }
+    
+    USER_PERMISSIONS {
+        int user_id PK
+        boolean can_view_defects
+        boolean can_create_qrqc
+        boolean can_manage_audits
+        boolean can_view_archives
+        datetime updated_at
+    }
+    
+    PRODUCTION_LINES {
+        int id PK
+        string name
+        string description
+        boolean is_active
+        int capacity
+    }
+    
+    PROJECTS {
+        int id PK
+        string name
+        string client
+        date start_date
+        boolean is_active
+    }
+    
+    POSTS {
+        int id PK
+        string name
+        string description
+        boolean is_active
+        int line_id FK
+    }
+    
+    BIBLE_DEFECTS {
+        int id PK
+        string class
+        string name
+    }
+    
+    DEFECTS {
+        int id PK
+        int line_id FK
+        int project_id FK
+        int post_id FK
+        string category
+        text description
+        string severity
+        string status
+        datetime created_at
+        datetime updated_at
+        int detected_by FK
+        int bible_defect_id FK
+    }
+    
+    KPI {
+        int id PK
+        int line_id FK
+        int project_id FK
+        date metric_date
+        decimal kpi_value
+        string metric_type
+        decimal target_value
+        datetime created_at
+    }
+    
+    AUDIT_5S {
+        int id PK
+        int line_id FK
+        int auditor_id FK
+        date audit_date
+        int total_score
+        jsonb audit_data
+        string status
+        text comments
+        datetime created_at
+    }
+    
+    AUDIT_AFP {
+        int id PK
+        int line_id FK
+        int auditor_id FK
+        date audit_date
+        int total_score
+        jsonb audit_data
+        string compliance_level
+        text recommendations
+        datetime created_at
+    }
+    
+    ANALYSIS {
+        int id PK
+        int defect_id FK
+        int production_line_id FK
+        int analyst_id FK
+        text defect_description
+        jsonb analysis_data
+        jsonb corrective_actions
+        jsonb verification_tracking
+        string status
+        datetime created_at
+        datetime updated_at
+    }
+    
+    VIGILANCE_SESSIONS {
+        int id PK
+        int user_id FK
+        date session_date
+        decimal score_percentage
+        string status
+        jsonb test_data
+        datetime created_at
+    }
+    
+    SYSTEM_CONFIG {
+        int id PK
+        string config_key
+        jsonb config_value
+        int updated_by FK
+        datetime updated_at
+    }
+
+    %% Relationships with cardinalities - 14 Tables Total
+    USERS ||--o{ USER_SESSIONS : "HAS_SESSIONS"
+    USERS ||--|| USER_PERMISSIONS : "HAS_PERMISSIONS"
+    PRODUCTION_LINES ||--o{ POSTS : "CONTAINS"
+    USERS ||--o{ DEFECTS : "DETECTS"
+    POSTS ||--o{ DEFECTS : "OCCURS_ON"
+    PROJECTS ||--o{ DEFECTS : "CONCERNS"
+    BIBLE_DEFECTS ||--o{ DEFECTS : "REFERENCES"
+    DEFECTS ||--o| ANALYSIS : "ANALYZED_BY"
+    USERS ||--o{ ANALYSIS : "PERFORMS"
+    PRODUCTION_LINES ||--o{ KPI : "MEASURES"
+    PRODUCTION_LINES ||--o{ AUDIT_5S : "EVALUATED_BY"
+    PRODUCTION_LINES ||--o{ AUDIT_AFP : "AUDITED_BY"
+    USERS ||--o{ AUDIT_5S : "CONDUCTS_5S"
+    USERS ||--o{ AUDIT_AFP : "CONDUCTS_AFP"
+    USERS ||--o{ VIGILANCE_SESSIONS : "TAKES_TEST"
+    USERS ||--o{ SYSTEM_CONFIG : "UPDATES_CONFIG"
+    PRODUCTION_LINES ||--o{ DEFECTS : "LINE_DEFECTS"
+    PROJECTS ||--o{ KPI : "PROJECT_METRICS"
+            `,
+            
+            classDiagram: `
+classDiagram
+    class User {
+        -Long id
+        -String username
+        -String email
+        -String passwordHash
+        -String role
+        -Date createdAt
+        +login() void
+        +logout() void
+        +updateProfile() void
+        +getRole() String
+        +hasPermission(permission) Boolean
+    }
+    
+    class UserSession {
+        -Long id
+        -Long userId
+        -String sessionToken
+        -String ipAddress
+        -Boolean isActive
+        -Date createdAt
+        -Date expiresAt
+        +createSession() UserSession
+        +validateToken() Boolean
+        +expireSession() void
+    }
+    
+    class UserPermissions {
+        -Long userId
+        -Boolean canViewDefects
+        -Boolean canCreateQrqc
+        -Boolean canManageAudits
+        -Boolean canViewArchives
+        -Date updatedAt
+        +updatePermissions() void
+        +checkPermission(permission) Boolean
+    }
+    
+    class ProductionLine {
+        -Long id
+        -String name
+        -String description
+        -Boolean isActive
+        -Integer capacity
+        +getPosts() List~Post~
+        +getKPIs() List~KPI~
+        +updateStatus() void
+    }
+    
+    class Project {
+        -Long id
+        -String name
+        -String client
+        -Date startDate
+        -Boolean isActive
+        +getDefects() List~Defect~
+        +getKPIs() List~KPI~
+        +updateStatus() void
+    }
+    
+    class Post {
+        -Long id
+        -String name
+        -String description
+        -Boolean isActive
+        -Long lineId
+        +getDefects() List~Defect~
+        +getAudits() List~AuditAFP~
+        +updateConfiguration() void
+    }
+    
+    class BibleDefects {
+        -Long id
+        -String defectClass
+        -String name
+        -String description
+        +validateDefect() Boolean
+        +getByClass() List~BibleDefects~
+    }
+    
+    class Defect {
+        -Long id
+        -Long lineId
+        -Long projectId
+        -Long postId
+        -String category
+        -String description
+        -String severity
+        -String status
+        -Date createdAt
+        -Date updatedAt
+        -Long detectedBy
+        -Long bibleDefectId
+        +createQRQC() Analysis
+        +updateStatus() void
+        +escalate() void
+    }
+    
+    class KPI {
+        -Long id
+        -Long lineId
+        -Long projectId
+        -Date metricDate
+        -Double kpiValue
+        -String metricType
+        -Double targetValue
+        -Date createdAt
+        +calculate() Double
+        +getTrend() String
+        +isTargetMet() Boolean
+    }
+    
+    class Audit5S {
+        -Long id
+        -Long lineId
+        -Long auditorId
+        -Date auditDate
+        -Integer totalScore
+        -JsonB auditData
+        -String status
+        -String comments
+        -Date createdAt
+        +calculateScore() Integer
+        +generateReport() String
+        +getActionPlan() String
+    }
+    
+    class AuditAFP {
+        -Long id
+        -Long lineId
+        -Long auditorId
+        -Date auditDate
+        -Integer totalScore
+        -JsonB auditData
+        -String complianceLevel
+        -String recommendations
+        -Date createdAt
+        +performAudit() void
+        +evaluateCompliance() Integer
+        +getActionPlan() String
+    }
+    
+    class Analysis {
+        -Long id
+        -Long defectId
+        -Long productionLineId
+        -Long analystId
+        -String defectDescription
+        -JsonB analysisData
+        -JsonB correctiveActions
+        -JsonB verificationTracking
+        -String status
+        -Date createdAt
+        -Date updatedAt
+        +performWhyAnalysis() void
+        +defineCorrectiveActions() void
+        +trackImplementation() void
+        +closeQRQC() void
+    }
+    
+    class VigilanceSession {
+        -Long id
+        -Long userId
+        -Date sessionDate
+        -Double scorePercentage
+        -String status
+        -JsonB testData
+        -Date createdAt
+        +startSession() void
+        +completeSession() void
+        +calculateScore() Double
+    }
+    
+    class SystemConfig {
+        -Long id
+        -String configKey
+        -JsonB configValue
+        -Long updatedBy
+        -Date updatedAt
+        +updateConfig() void
+        +getConfigValue() Object
+        +validateConfig() Boolean
+    }
+    
+    class DefectService {
+        -DefectRepository defectRepo
+        -BibleDefectsRepository bibleRepo
+        +createDefect(defectData) Defect
+        +updateDefect(id, data) Defect
+        +getDefectsByLine(lineId) List~Defect~
+        +validateDefectType(type) Boolean
+        +generateKPIs(period) List~KPI~
+    }
+    
+    class QRQCService {
+        -AnalysisRepository analysisRepo
+        -DefectService defectService
+        +initiateQRQC(defectId) Analysis
+        +performWhyAnalysis(defectId, whyData) void
+        +defineCorrectiveActions(defectId, actions) void
+        +trackImplementation(defectId) String
+        +closeQRQC(defectId) void
+    }
+    
+    class AuditService {
+        -Audit5SRepository audit5SRepo
+        -AuditAFPRepository auditAFPRepo
+        +schedule5SAudit(lineId, date) Audit5S
+        +performAFPAudit(postId, checkpoints) AuditAFP
+        +calculateScores(auditId) Integer
+        +generateActionPlans(auditId) String
+        +trackProgress(auditId) String
+    }
+    
+    %% Entity Relationships
+    User "1" --> "*" UserSession : has
+    User "1" --> "1" UserPermissions : has
+    User "1" --> "*" Defect : detects
+    User "1" --> "*" Audit5S : conducts
+    User "1" --> "*" AuditAFP : conducts
+    User "1" --> "*" VigilanceSession : takes
+    User "1" --> "*" Analysis : performs
+    User "1" --> "*" SystemConfig : updates
+    
+    ProductionLine "1" --> "*" Post : contains
+    ProductionLine "1" --> "*" KPI : measures
+    ProductionLine "1" --> "*" Audit5S : evaluated_by
+    ProductionLine "1" --> "*" AuditAFP : audited_by
+    ProductionLine "1" --> "*" Defect : line_defects
+    
+    Project "1" --> "*" Defect : concerns
+    Project "1" --> "*" KPI : project_metrics
+    
+    Post "1" --> "*" Defect : occurs_on
+    
+    BibleDefects "1" --> "*" Defect : references
+    Defect "1" --> "0..1" Analysis : analyzed_by
+    
+    %% Service Dependencies
+    DefectService --> Defect : manages
+    DefectService --> BibleDefects : validates
+    QRQCService --> Analysis : creates
+    QRQCService --> DefectService : depends
+    AuditService --> Audit5S : manages
+    AuditService --> AuditAFP : manages
+        `,
+            
+            sequenceDiagram: `
+sequenceDiagram
+    participant AQL as AQL Agent
+    participant QT as Quality Technician
+    participant DC as DefectController
+    participant QS as QRQCService
+    participant DS as DefectService
+    participant DB as Database
+    participant TL as Team Leader
+    participant QM as Quality Manager
+    
+    Note over AQL,QM: QRQC Analysis Workflow - Complete Process
+    
+    AQL->>+DC: POST /api/defects
+    DC->>+DS: createDefect(defectData)
+    DS->>+DB: INSERT INTO defects
+    DB-->>-DS: defect_id
+    DS-->>-DC: Defect created
+    DC-->>-AQL: HTTP 201
+    
+    Note over DS,DB: Automatic severity evaluation
+    DS->>+DB: SELECT severity_rules
+    DB-->>-DS: severity criteria
+    DS->>DS: evaluateSeverity()
+    
+    alt Critical Defect
+        DS->>+QS: initiateQRQC(defectId)
+        QS->>+DB: UPDATE defects SET qrqc_analysis
+        DB-->>-QS: Updated
+        QS-->>-DS: QRQC initiated
+        DS->>QT: Notification: QRQC Required
+    end
+    
+    QT->>+DC: GET /api/qrqc/analysis
+    DC->>+QS: getQRQCAnalysis(defectId)
+    QS->>+DB: SELECT qrqc_analysis FROM defects
+    DB-->>-QS: JSONB analysis data
+    QS-->>-DC: Analysis structure
+    DC-->>-QT: Current analysis state
+    
+    loop 5 Why Analysis
+        QT->>+DC: PUT /api/qrqc/why-analysis
+        DC->>+QS: updateWhyAnalysis(defectId, whyData)
+        QS->>+DB: UPDATE defects SET qrqc_analysis
+        Note over DB: Using PostgreSQL JSONB operators
+        DB-->>-QS: Updated JSONB
+        QS-->>-DC: Why analysis updated
+        DC-->>-QT: HTTP 200
+    end
+    
+    QT->>+DC: PUT /api/qrqc/root-cause
+    DC->>+QS: identifyRootCause(defectId, rootCauseData)
+    QS->>+DB: UPDATE defects SET qrqc_analysis
+    DB-->>-QS: Root cause stored
+    QS-->>-DC: Root cause identified
+    DC-->>-QT: HTTP 200
+    
+    QT->>+DC: PUT /api/qrqc/corrective-actions
+    DC->>+QS: defineCorrectiveActions(defectId, actions)
+    QS->>+DB: UPDATE defects SET qrqc_analysis
+    Note over DB: Storing structured action plans
+    DB-->>-QS: Actions stored
+    QS-->>-DC: Corrective actions defined
+    DC-->>-QT: HTTP 200
+    
+    QS->>TL: Notification: QRQC Review Required
+    TL->>+DC: GET /api/qrqc/review
+    DC->>+QS: getQRQCForReview(defectId)
+    QS->>+DB: SELECT * FROM defects
+    DB-->>-QS: Complete QRQC data
+    QS-->>-DC: QRQC analysis for review
+    DC-->>-TL: Complete analysis data
+    
+    TL->>+DC: PUT /api/qrqc/implementation
+    DC->>+QS: trackImplementation(defectId, progress)
+    QS->>+DB: UPDATE defects SET qrqc_analysis
+    DB-->>-QS: Implementation tracked
+    QS-->>-DC: Progress updated
+    DC-->>-TL: HTTP 200
+    
+    alt Implementation Complete
+        TL->>QM: Request: Final QRQC Validation
+        QM->>+DC: GET /api/qrqc/validation
+        DC->>+QS: validateQRQC(defectId)
+        QS->>+DB: SELECT qrqc_analysis FROM defects
+        Note over DB: Using GIN indexes for fast queries
+        DB-->>-QS: Validation data
+        QS-->>-DC: QRQC ready for closure
+        DC-->>-QM: Validation data
+    end
+    
+    QM->>+DC: POST /api/qrqc/close
+    DC->>+QS: closeQRQC(defectId)
+    QS->>+DB: UPDATE defects SET status = 'closed'
+    DB-->>-QS: QRQC closed
+    QS->>+DS: updateKPIs(defectId)
+    DS->>+DB: INSERT INTO kpi
+    DB-->>-DS: KPIs updated
+    DS-->>-QS: KPIs refreshed
+    QS-->>-DC: QRQC successfully closed
+    DC-->>-QM: HTTP 200
+    
+    Note over AQL,QM: Process Complete - QRQC Analysis Workflow Finished
+            `,
+            
+            useCaseDiagram: `
+graph TD
+    subgraph LEONI["LEONI Quality Management System"]
+        subgraph Actors["👥 Actors"]
+            AQL["👤 AQL Agent"]
+            QT["👤 Quality Technician"]
+            TL["👤 Team Leader"]
+            QM["👤 Quality Manager"]
+            ADM["👤 System Administrator"]
+        end
+        
+        subgraph DefectMgmt["🔧 Defect Management"]
+            UC1["🔍 Record Defect"]
+            UC2["📊 View Defect Details"]
+            UC3["✏️ Update Defect Status"]
+            UC4["📈 Generate Defect Reports"]
+        end
+        
+        subgraph QRQCAnalysis["🎯 QRQC Analysis"]
+            UC5["🎯 Initiate QRQC"]
+            UC6["❓ Perform Why Analysis"]
+            UC7["🎯 Identify Root Cause"]
+            UC8["✅ Define Corrective Actions"]
+            UC9["📋 Track Implementation"]
+            UC10["✔️ Validate Effectiveness"]
+            UC11["📁 Close QRQC"]
+        end
+        
+        subgraph AuditMgmt["📋 Audit Management"]
+            UC12["📝 Conduct 5S Audit"]
+            UC13["🔧 Perform AFP Audit"]
+            UC14["📊 Calculate Audit Scores"]
+            UC15["📋 Generate Action Plans"]
+            UC16["📈 Track Audit Progress"]
+        end
+        
+        subgraph KPIReporting["📊 KPI & Reporting"]
+            UC17["📊 View Production KPIs"]
+            UC18["📈 Generate Quality Reports"]
+            UC19["📋 Create Dashboard Views"]
+            UC20["⚠️ Monitor Alert Thresholds"]
+        end
+        
+        subgraph UserMgmt["👥 User Management"]
+            UC21["👥 Manage Users"]
+            UC22["🔐 Assign Roles"]
+            UC23["⚙️ Configure System"]
+            UC24["🗄️ Backup Data"]
+        end
+        
+        subgraph VigilanceTest["🧠 Vigilance Testing"]
+            UC25["🧠 Take Vigilance Test"]
+            UC26["📊 View Test Results"]
+            UC27["📈 Track Performance"]
+        end
+        
+        subgraph ExtSystems["🌐 External Systems"]
+            ERP["🏭 ERP System"]
+            MES["⚙️ MES System"]
+            BI["📊 BI Platform"]
+            EMAIL["📧 Email System"]
+            AD["🔐 Active Directory"]
+            FILE["📁 File Storage"]
+            BACKUP["💾 Backup System"]
+        end
+    end
+    
+    %% Actor-Use Case Relationships
+    AQL --> UC1
+    AQL --> UC2
+    AQL --> UC25
+    
+    QT --> UC1
+    QT --> UC2
+    QT --> UC3
+    QT --> UC5
+    QT --> UC6
+    QT --> UC7
+    QT --> UC8
+    QT --> UC12
+    QT --> UC13
+    QT --> UC17
+    
+    TL --> UC2
+    TL --> UC3
+    TL --> UC4
+    TL --> UC9
+    TL --> UC14
+    TL --> UC15
+    TL --> UC16
+    TL --> UC17
+    TL --> UC18
+    TL --> UC19
+    TL --> UC26
+    TL --> UC27
+    
+    QM --> UC4
+    QM --> UC10
+    QM --> UC11
+    QM --> UC16
+    QM --> UC18
+    QM --> UC19
+    QM --> UC20
+    
+    ADM --> UC21
+    ADM --> UC22
+    ADM --> UC23
+    ADM --> UC24
+    
+    %% System Integration
+    UC1 -.-> ERP
+    UC1 -.-> MES
+    UC4 -.-> BI
+    UC11 -.-> EMAIL
+    UC21 -.-> AD
+    UC18 -.-> FILE
+    UC24 -.-> BACKUP
+    
+    %% Use Case Dependencies
+    UC5 -.-> UC1
+    UC6 -.-> UC5
+    UC7 -.-> UC6
+    UC8 -.-> UC7
+    UC9 -.-> UC8
+    UC10 -.-> UC9
+    UC11 -.-> UC10
+    
+    UC14 -.-> UC12
+    UC14 -.-> UC13
+    UC15 -.-> UC14
+    UC16 -.-> UC15
+    
+    UC18 -.-> UC17
+    UC19 -.-> UC17
+    UC20 -.-> UC17
+            `,
+            
+            flowchartDiagram: `
+graph TD
+    A["🏭 Production Line"] --> B{"🔍 Defect Detected?"}
+    B -->|Yes| C["📝 Record Defect"]
+    B -->|No| D["▶️ Continue Production"]
+    
+    C --> E{"⚡ Severity Level"}
+    E -->|🔴 Critical| F["🚨 Immediate QRQC"]
+    E -->|🟡 Medium| G["📅 Schedule Analysis"]
+    E -->|🟢 Minor| H["📊 Track in KPI"]
+    
+    F --> I["🔍 Root Cause Analysis"]
+    G --> I
+    I --> J["🛠️ Corrective Actions"]
+    J --> K["⚙️ Implementation"]
+    K --> L["✅ Verification"]
+    L --> M{"🎯 Effective?"}
+    M -->|✅ Yes| N["📁 Close Case"]
+    M -->|❌ No| I
+    
+    H --> O["📅 Weekly Review"]
+    O --> P{"📈 Trend Analysis"}
+    P -->|⚠️ Concerning| G
+    P -->|✅ Normal| Q["👁️ Continue Monitoring"]
+    
+    N --> R["📊 Update Dashboard"]
+    R --> S["📈 Generate Reports"]
+    
+    %% Parallel Audit Process
+    T["📋 Audit Schedule"] --> U{"🔧 Audit Type"}
+    U -->|🏠 5S| V["📝 5S Checklist"]
+    U -->|🔧 AFP| W["⚙️ AFP Audit"]
+    U -->|📋 Process| X["📊 Process Audit"]
+    
+    V --> Y["📊 Score Calculation"]
+    W --> Y
+    X --> Y
+    
+    Y --> Z{"🎯 Score >= Target?"}
+    Z -->|✅ Yes| AA["✅ Audit Complete"]
+    Z -->|❌ No| BB["📋 Action Plan Required"]
+    
+    BB --> CC["👥 Assign Responsibilities"]
+    CC --> DD["📅 Set Deadlines"]
+    DD --> EE["🔄 Follow-up Schedule"]
+    EE --> FF["🔄 Re-audit"]
+    FF --> Z
+    
+    AA --> GG["📊 Update Dashboard"]
+    GG --> HH["📈 Trend Analysis"]
+    
+    %% Vigilance Testing Process
+    II["🧠 Vigilance Test"] --> JJ["⏱️ Test Session"]
+    JJ --> KK["📊 Score Calculation"]
+    KK --> LL{"🎯 Pass Threshold?"}
+    LL -->|✅ Pass| MM["✅ Test Complete"]
+    LL -->|❌ Fail| NN["📚 Additional Training"]
+    NN --> OO["🔄 Retest Required"]
+    OO --> JJ
+    
+    MM --> PP["📊 Update Records"]
+    PP --> QQ["📈 Performance Tracking"]
+            `
+        };
+
+        // Descriptions for each diagram
+        const descriptions = {
+            mcdDiagram: {
+                title: "MCD Diagram - LEONI QMS Data Model",
+                description: "This diagram shows the conceptual data model (Modèle Conceptuel de Données) of the LEONI Quality Management System with 14 tables, their attributes, and relationships matching the enhanced database schema."
+            },
+            classDiagram: {
+                title: "Class Diagram - LEONI QMS Architecture",
+                description: "This diagram shows the object-oriented architecture of the LEONI Quality Management System with Entity, Service layers aligned with the 14-table database schema including JSONB hybrid implementation."
+            },
+            sequenceDiagram: {
+                title: "Sequence Diagram - QRQC Analysis Workflow",
+                description: "This diagram illustrates the complete QRQC (Quick Response Quality Control) analysis workflow with 11 sequential steps involving all stakeholders."
+            },
+            useCaseDiagram: {
+                title: "Use Case Diagram - System Functionality",
+                description: "This diagram shows all functional use cases organized by user roles and system integration points with external systems."
+            },
+            flowchartDiagram: {
+                title: "Process Flow - Quality Management Workflow",
+                description: "This diagram shows the complete quality management process flow including defect handling, audit processes, and vigilance testing."
+            }
+        };
+
+        // Function to render diagram with proper cleanup
+        async function renderDiagram(diagramType) {
+            const element = document.getElementById('diagram');
+            const titleElement = document.getElementById('diagramTitle');
+            const descElement = document.getElementById('diagramDescription');
+            
+            // Update title and description
+            titleElement.textContent = descriptions[diagramType].title;
+            descElement.innerHTML = `
+                <h3>${descriptions[diagramType].title}</h3>
+                <p>${descriptions[diagramType].description}</p>
+            `;
+            
+            // Update button states
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            
+            try {
+                // Complete cleanup of previous diagram
+                element.innerHTML = '';
+                
+                // Remove any existing mermaid elements and SVGs
+                const existingMermaidElements = document.querySelectorAll('[id^="mermaid-"], .mermaid svg');
+                existingMermaidElements.forEach(el => el.remove());
+                
+                // Add loading indicator
+                element.innerHTML = '<div style="padding: 40px; text-align: center; color: #4a5568;">Loading diagram...</div>';
+                
+                // Small delay to allow DOM cleanup
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Create a unique ID for this diagram
+                const diagramId = 'mermaid-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                
+                // Create fresh container
+                const diagramContainer = document.createElement('div');
+                diagramContainer.className = 'mermaid';
+                diagramContainer.id = diagramId;
+                diagramContainer.textContent = diagrams[diagramType];
+                
+                // Clear and add new container
+                element.innerHTML = '';
+                element.appendChild(diagramContainer);
+                
+                // Initialize mermaid for this specific element
+                await mermaid.init(undefined, `#${diagramId}`);
+                
+                currentDiagram = diagramType;
+                
+            } catch (error) {
+                console.error('Error rendering diagram:', error);
+                element.innerHTML = `
+                    <div style="color: #e53e3e; padding: 20px; background: #fed7d7; border-radius: 8px; margin: 20px 0;">
+                        <h4 style="margin: 0 0 10px 0;">Error rendering diagram</h4>
+                        <p style="margin: 0; font-family: monospace; font-size: 14px;">${error.message}</p>
+                        <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #e53e3e; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Reload Page
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Track rendering state to prevent rapid clicks
+        let isRendering = false;
+
+        // Helper function to disable/enable all buttons
+        function setButtonsState(disabled) {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.disabled = disabled;
+            });
+        }
+
+        // Button event handlers with debounce protection
+        async function showMcdDiagram() {
+            if (isRendering || currentDiagram === 'mcdDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('mcdDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+
+        async function showClassDiagram() {
+            if (isRendering || currentDiagram === 'classDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('classDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+
+        async function showSequenceDiagram() {
+            if (isRendering || currentDiagram === 'sequenceDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('sequenceDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+
+        async function showUseCaseDiagram() {
+            if (isRendering || currentDiagram === 'useCaseDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('useCaseDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+
+        async function showFlowchartDiagram() {
+            if (isRendering || currentDiagram === 'flowchartDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('flowchartDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+
+        // Initialize with MCD diagram when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for Mermaid to fully load
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const initDiagram = async () => {
+                try {
+                    if (typeof mermaid !== 'undefined' && mermaid.init) {
+                        document.querySelector('.btn').classList.add('active');
+                        await renderDiagram('mcdDiagram');
+                    } else {
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            setTimeout(initDiagram, 500);
+                        } else {
+                            console.error('Failed to load Mermaid.js after maximum attempts');
+                            document.getElementById('diagram').innerHTML = `
+                                <div style="color: #e53e3e; padding: 20px; text-align: center;">
+                                    <h4>Failed to load diagram library</h4>
+                                    <p>Please refresh the page to try again.</p>
+                                    <button onclick="location.reload()" style="padding: 8px 16px; background: #4a90e2; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                        Refresh Page
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error during initialization:', error);
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        setTimeout(initDiagram, 500);
+                    }
+                }
+            };
+            
+            // Start initialization
+            setTimeout(initDiagram, 300);
+        });
+    </script>
+</body>
+</html>
