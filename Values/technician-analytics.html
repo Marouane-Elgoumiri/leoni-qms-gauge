@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Metrics Analytics - LEONI Quality Department</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a365d, #2c5282);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .rft-stat .stat-icon { background: linear-gradient(135deg, #48bb78, #38a169); }
+        .cpk-stat .stat-icon { background: linear-gradient(135deg, #4299e1, #3182ce); }
+        .fpy-stat .stat-icon { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+
+        .stat-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+
+        .stat-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 8px;
+            background: #f7fafc;
+            border-radius: 6px;
+        }
+
+        .stat-item-label {
+            font-size: 11px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .stat-item-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .trend-up { background: #fed7d7; color: #c53030; }
+        .trend-down { background: #c6f6d5; color: #2f855a; }
+        .trend-stable { background: #e2e8f0; color: #4a5568; }
+
+        .history-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: #f7fafc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a5568;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-btn i {
+            margin-right: 8px;
+        }
+
+        .nav-entry { background: linear-gradient(135deg, #48bb78, #38a169); }
+        .nav-aql { background: linear-gradient(135deg, #4299e1, #3182ce); }
+        .nav-dashboard { background: linear-gradient(135deg, #ed8936, #dd6b20); }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Technician Metrics Analytics</h1>
+            <p>Statistical Analysis and Trends for Quality Metrics</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <div class="form-group">
+                    <label for="lineSelect">Production Line</label>
+                    <select id="lineSelect">
+                        <option value="ALL">All Lines</option>
+                        <option value="VCE">VCE Line</option>
+                        <option value="HDEP-C1">HDEP C1</option>
+                        <option value="HDEP-C2">HDEP C2</option>
+                        <option value="HDEP-C3">HDEP C3</option>
+                        <option value="MDEP">MDEP</option>
+                        <option value="HAULER">HAULER</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="periodSelect">Time Period</label>
+                    <select id="periodSelect">
+                        <option value="7">Last 7 Days</option>
+                        <option value="14">Last 14 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shiftSelect">Shift</label>
+                    <select id="shiftSelect">
+                        <option value="ALL">All Shifts</option>
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Night">Night</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button onclick="updateAnalytics()" style="padding: 10px 20px; background: #4299e1; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-refresh"></i> Update Analytics
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card rft-stat">
+                <div class="stat-header">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-title">Right First Time (RFT)</div>
+                </div>
+                <div class="stat-value" id="rftAverage">--</div>
+                <div id="rftTrend" class="trend-indicator">No data</div>
+                <div class="stat-details">
+                    <div class="stat-item">
+                        <div class="stat-item-label">MIN</div>
+                        <div class="stat-item-value" id="rftMin">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">MAX</div>
+                        <div class="stat-item-value" id="rftMax">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">COUNT</div>
+                        <div class="stat-item-value" id="rftCount">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">TARGET</div>
+                        <div class="stat-item-value">95%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card cpk-stat">
+                <div class="stat-header">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-title">Process Capability (CPK)</div>
+                </div>
+                <div class="stat-value" id="cpkAverage">--</div>
+                <div id="cpkTrend" class="trend-indicator">No data</div>
+                <div class="stat-details">
+                    <div class="stat-item">
+                        <div class="stat-item-label">MIN</div>
+                        <div class="stat-item-value" id="cpkMin">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">MAX</div>
+                        <div class="stat-item-value" id="cpkMax">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">COUNT</div>
+                        <div class="stat-item-value" id="cpkCount">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">TARGET</div>
+                        <div class="stat-item-value">1.33</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card fpy-stat">
+                <div class="stat-header">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-title">First Pass Yield (FPY)</div>
+                </div>
+                <div class="stat-value" id="fpyAverage">--</div>
+                <div id="fpyTrend" class="trend-indicator">No data</div>
+                <div class="stat-details">
+                    <div class="stat-item">
+                        <div class="stat-item-label">MIN</div>
+                        <div class="stat-item-value" id="fpyMin">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">MAX</div>
+                        <div class="stat-item-value" id="fpyMax">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">COUNT</div>
+                        <div class="stat-item-value" id="fpyCount">--</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-label">TARGET</div>
+                        <div class="stat-item-value">95%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h3><i class="fas fa-chart-line"></i> Performance Trends</h3>
+            <div class="chart-placeholder">
+                📈 Trend Chart (Future Enhancement - Chart.js Integration)
+            </div>
+            <p class="no-data" id="noDataMessage">Select filters and click "Update Analytics" to view performance data</p>
+        </div>
+
+        <div class="navigation">
+            <a href="technician-metrics.html" class="nav-btn nav-entry">
+                <i class="fas fa-plus-circle"></i> Entry System
+            </a>
+            <a href="quality-metrics.html" class="nav-btn nav-aql">
+                <i class="fas fa-clipboard-list"></i> AQL Metrics
+            </a>
+            <a href="../graphs/DashPerLine/vce-dashboard.html" class="nav-btn nav-dashboard">
+                <i class="fas fa-tachometer-alt"></i> VCE Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script src="technician-metrics.js"></script>
+    <script>
+        function updateAnalytics() {
+            const line = document.getElementById('lineSelect').value;
+            const period = parseInt(document.getElementById('periodSelect').value);
+            const shift = document.getElementById('shiftSelect').value;
+
+            if (!window.technicianMetricsManager) {
+                showNoData("Technician metrics system not available");
+                return;
+            }
+
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - period);
+
+            const data = window.technicianMetricsManager.getStoredData();
+            
+            // Filter data based on selections
+            let filteredData = data.filter(entry => {
+                const entryDate = new Date(entry.timestamp);
+                const lineMatch = line === 'ALL' || entry.production_line_id === line;
+                const dateMatch = entryDate >= cutoffDate;
+                const shiftMatch = shift === 'ALL' || entry.shift === shift;
+                
+                return lineMatch && dateMatch && shiftMatch;
+            });
+
+            if (filteredData.length === 0) {
+                showNoData("No data available for selected criteria");
+                return;
+            }
+
+            // Calculate statistics for each metric
+            updateMetricStats('rft', filteredData);
+            updateMetricStats('cpk', filteredData);
+            updateMetricStats('fpy', filteredData);
+
+            document.getElementById('noDataMessage').textContent = 
+                `Analysis based on ${filteredData.length} entries from ${formatFilters(line, period, shift)}`;
+        }
+
+        function updateMetricStats(metricType, data) {
+            const metricData = data.filter(entry => entry.metric_type === metricType);
+            
+            if (metricData.length === 0) {
+                setMetricDisplay(metricType, '--', '--', '--', 0, 'No data');
+                return;
+            }
+
+            const values = metricData.map(entry => entry.value);
+            const average = values.reduce((sum, val) => sum + val, 0) / values.length;
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            const count = values.length;
+
+            // Calculate trend
+            const trend = calculateSimpleTrend(values);
+            
+            // Format display values
+            let avgDisplay, minDisplay, maxDisplay;
+            if (metricType === 'cpk') {
+                avgDisplay = average.toFixed(2);
+                minDisplay = min.toFixed(2);
+                maxDisplay = max.toFixed(2);
+            } else {
+                avgDisplay = average.toFixed(1) + '%';
+                minDisplay = min.toFixed(1) + '%';
+                maxDisplay = max.toFixed(1) + '%';
+            }
+
+            setMetricDisplay(metricType, avgDisplay, minDisplay, maxDisplay, count, trend);
+        }
+
+        function setMetricDisplay(metricType, avg, min, max, count, trend) {
+            document.getElementById(`${metricType}Average`).textContent = avg;
+            document.getElementById(`${metricType}Min`).textContent = min;
+            document.getElementById(`${metricType}Max`).textContent = max;
+            document.getElementById(`${metricType}Count`).textContent = count;
+            
+            const trendEl = document.getElementById(`${metricType}Trend`);
+            trendEl.textContent = trend;
+            trendEl.className = `trend-indicator trend-${getTrendClass(trend)}`;
+        }
+
+        function calculateSimpleTrend(values) {
+            if (values.length < 2) return 'stable';
+            
+            const recent = values.slice(-Math.min(5, values.length));
+            const older = values.slice(0, Math.min(5, values.length));
+            
+            if (recent.length === 0 || older.length === 0) return 'stable';
+            
+            const recentAvg = recent.reduce((sum, val) => sum + val, 0) / recent.length;
+            const olderAvg = older.reduce((sum, val) => sum + val, 0) / older.length;
+            
+            const diff = recentAvg - olderAvg;
+            const threshold = olderAvg * 0.05; // 5% threshold
+            
+            if (Math.abs(diff) < threshold) return 'stable';
+            return diff > 0 ? 'up' : 'down';
+        }
+
+        function getTrendClass(trend) {
+            return trend.toLowerCase();
+        }
+
+        function formatFilters(line, period, shift) {
+            const parts = [];
+            if (line !== 'ALL') parts.push(`Line: ${line}`);
+            parts.push(`Period: ${period} days`);
+            if (shift !== 'ALL') parts.push(`Shift: ${shift}`);
+            return parts.join(', ');
+        }
+
+        function showNoData(message) {
+            ['rft', 'cpk', 'fpy'].forEach(metricType => {
+                setMetricDisplay(metricType, '--', '--', '--', 0, 'No data');
+            });
+            document.getElementById('noDataMessage').textContent = message;
+        }
+
+        // Auto-load analytics on page load
+        setTimeout(() => {
+            updateAnalytics();
+        }, 1000);
+    </script>
+</body>
+</html>

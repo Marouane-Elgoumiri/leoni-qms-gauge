@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quality Metrics Entry - LEONI Quality Department</title>
+    <title>Technician Quality Metrics - LEONI Quality Department</title>
     <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
@@ -97,20 +97,16 @@
         }
 
         /* Color schemes for different metrics */
-        .scrap-rate .metric-icon {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
+        .rft-metric .metric-icon {
+            background: linear-gradient(135deg, #10b981, #065f46);
         }
 
-        .rework-rate .metric-icon {
-            background: linear-gradient(135deg, #fbb042, #ed8936);
+        .cpk-metric .metric-icon {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
         }
 
-        .customer-complaints .metric-icon {
-            background: linear-gradient(135deg, #9f7aea, #805ad5);
-        }
-
-        .defect-rate .metric-icon {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
+        .fpy-metric .metric-icon {
+            background: linear-gradient(135deg, #8b5cf6, #5b21b6);
         }
 
         .calculated-value {
@@ -166,13 +162,6 @@
             outline: none;
             border-color: #4299e1;
             box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-        }
-
-        .form-group input[readonly] {
-            background: #f7fafc;
-            color: #718096;
-            cursor: not-allowed;
-            border-color: #cbd5e0;
         }
 
         .input-group {
@@ -313,8 +302,14 @@
         .nav-home { 
             background: linear-gradient(135deg, #005691, #3182ce); 
         }
+        .nav-analytics { 
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6); 
+        }
         .nav-dashboard { 
             background: linear-gradient(135deg, #059669, #10b981); 
+        }
+        .nav-aql { 
+            background: linear-gradient(135deg, #dc2626, #ef4444); 
         }
         .nav-tv { 
             background: linear-gradient(135deg, #1e40af, #3b82f6); 
@@ -322,18 +317,11 @@
 
         /* Success/Error Messages */
         .message {
-            padding: 12px 15px;
+            padding: 12px;
             border-radius: 8px;
             margin-bottom: 15px;
-            font-weight: 600;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-        }
-
-        .message.show {
-            opacity: 1;
-            transform: translateY(0);
+            font-size: 13px;
+            display: none;
         }
 
         .message.success {
@@ -346,6 +334,33 @@
             background: #fed7d7;
             color: #c53030;
             border: 1px solid #feb2b2;
+        }
+
+        .error-container {
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .error-message strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .error-message ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .error-message li {
+            margin-bottom: 4px;
         }
 
         /* Responsive Design */
@@ -415,158 +430,114 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📊 Quality Metrics Entry</h1>
-            <p>Production Metrics Input - Scrap Weight, Rework Status & Defect Rate PPM</p>
+            <h1>🔧 Technician Quality Metrics</h1>
+            <p>Quality Technician Metrics Entry - RFT, CPK & FPY</p>
         </div>
 
         <!-- Metrics Grid -->
         <div class="metrics-grid">
-            <!-- Scrap Rate Card -->
-            <div class="metric-card scrap-rate">
+            <!-- RFT Card -->
+            <div class="metric-card rft-metric">
                 <div class="metric-header">
-                    <div class="metric-icon">⚖️</div>
-                    <div class="metric-title">Scrap Weight</div>
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-title">Right First Time (RFT)</div>
                 </div>
                 
                 <div class="current-value">
                     <div class="current-value-label">Current Value</div>
-                    <div class="current-value-number" id="currentScrapWeight">0.00g</div>
+                    <div class="current-value-number" id="currentRFT">0.00%</div>
                 </div>
 
                 <div class="calculated-value">
-                    <div class="calculated-value-label">Entered Weight</div>
-                    <div class="calculated-value-number" id="enteredScrapWeight">0.00g</div>
+                    <div class="calculated-value-label">Calculated RFT</div>
+                    <div class="calculated-value-number" id="calculatedRFT">0.00%</div>
                 </div>
 
-                <div id="scrapMessage" class="message"></div>
+                <div id="rftMessage" class="message"></div>
+                <div id="rftErrors" class="error-container" style="display: none;"></div>
 
-                <form id="scrapForm">
-                    <div class="form-group">
-                        <label for="scrapWeight">Scrap Weight (grams)</label>
-                        <div class="input-group">
-                            <input type="number" id="scrapWeight" min="0" step="0.01" placeholder="0.00" required>
-                            <div class="unit-label">g</div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="scrapProductionLine">Production Line</label>
-                        <select id="scrapProductionLine" required>
-                            <option value="">Select Production Line</option>
-                            <option value="VCE">VCE Line</option>
-                            <option value="HDEP-C1">HDEP C1</option>
-                            <option value="HDEP-C2">HDEP C2</option>
-                            <option value="HDEP-C3">HDEP C3</option>
-                            <option value="MDEP">MDEP</option>
-                            <option value="HAULER">HAULER</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="scrapDate">Date</label>
-                        <input type="date" id="scrapDate" required>
-                    </div>
-
-                    <button type="submit" class="save-btn">
-                        <i class="fas fa-save"></i> Save Scrap Weight
-                    </button>
-                </form>
-            </div>
-
-            <!-- Rework Rate Card -->
-            <div class="metric-card rework-rate">
-                <div class="metric-header">
-                    <div class="metric-icon">🔄</div>
-                    <div class="metric-title">Rework Status</div>
-                </div>
-                
-                <div class="current-value">
-                    <div class="current-value-label">Current Status</div>
-                    <div class="current-value-number" id="currentReworkStatus">0 / 0</div>
-                </div>
-
-                <div class="calculated-value">
-                    <div class="calculated-value-label">Harnesses Status</div>
-                    <div class="calculated-value-number" id="calculatedReworkStatus">Reworked: 0 | Pending: 0</div>
-                </div>
-
-                <div id="reworkMessage" class="message"></div>
-
-                <form id="reworkForm">
-                    <div class="form-group">
-                        <label for="reworkProductionLine">Production Line</label>
-                        <select id="reworkProductionLine" required>
-                            <option value="">Select Production Line</option>
-                            <option value="VCE">VCE Line</option>
-                            <option value="HDEP-C1">HDEP C1</option>
-                            <option value="HDEP-C2">HDEP C2</option>
-                            <option value="HDEP-C3">HDEP C3</option>
-                            <option value="MDEP">MDEP</option>
-                            <option value="HAULER">HAULER</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="numberOfDefects">Number of Defects</label>
-                        <input type="number" id="numberOfDefects" min="0" placeholder="0" readonly title="Auto-fetched from defect database">
-                    </div>
-                    
+                <form id="rftForm">
                     <div class="input-row">
                         <div class="form-group">
-                            <label for="harnessesReworked">Harnesses Reworked</label>
-                            <input type="number" id="harnessesReworked" min="0" placeholder="0" required>
+                            <label for="rftDefectFreeUnits">Defect-Free Units</label>
+                            <input type="number" id="rftDefectFreeUnits" min="0" placeholder="0" required>
                         </div>
                         <div class="form-group">
-                            <label for="totalHarnessesWithDefects">Total Harnesses with Defects</label>
-                            <input type="number" id="totalHarnessesWithDefects" min="0" placeholder="0" required>
+                            <label for="rftTotalUnitsProduced">Total Units Produced</label>
+                            <input type="number" id="rftTotalUnitsProduced" min="1" placeholder="0" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="reworkDate">Date</label>
-                        <input type="date" id="reworkDate" required>
+                        <label for="rftProductionLine">Production Line</label>
+                        <select id="rftProductionLine" required>
+                            <option value="">Select Production Line</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rftDate">Date</label>
+                        <input type="date" id="rftDate" required>
                     </div>
 
                     <button type="submit" class="save-btn">
-                        <i class="fas fa-save"></i> Save Rework Status
+                        <i class="fas fa-save"></i> Save RFT
                     </button>
                 </form>
             </div>
 
-            <!-- Defect Rate PPM Card -->
-            <div class="metric-card defect-rate">
+            <!-- CPK Card -->
+            <div class="metric-card cpk-metric">
                 <div class="metric-header">
-                    <div class="metric-icon">⚠️</div>
-                    <div class="metric-title">Defect Rate PPM</div>
+                    <div class="metric-icon">📊</div>
+                    <div class="metric-title">Process Capability (CPK)</div>
                 </div>
                 
                 <div class="current-value">
                     <div class="current-value-label">Current Value</div>
-                    <div class="current-value-number" id="currentDefectRate">0 PPM</div>
+                    <div class="current-value-number" id="currentCPK">0.00</div>
                 </div>
 
                 <div class="calculated-value">
-                    <div class="calculated-value-label">Calculated PPM</div>
-                    <div class="calculated-value-number" id="calculatedDefectRate">0 PPM</div>
+                    <div class="calculated-value-label">Calculated CPK</div>
+                    <div class="calculated-value-number" id="calculatedCPK">0.00</div>
                 </div>
 
-                <div id="defectMessage" class="message"></div>
+                <div id="cpkMessage" class="message"></div>
+                <div id="cpkErrors" class="error-container" style="display: none;"></div>
 
-                <form id="defectForm">
+                <form id="cpkForm">
                     <div class="input-row">
                         <div class="form-group">
-                            <label for="totalDefects">Total Defects</label>
-                            <input type="number" id="totalDefects" min="0" placeholder="0" readonly title="Auto-fetched from defect system">
+                            <label for="cpkUpperLimit">Upper Specification Limit (USL)</label>
+                            <input type="number" id="cpkUpperLimit" step="0.001" placeholder="0.000" required>
                         </div>
                         <div class="form-group">
-                            <label for="defectTotalProduction">Total Production</label>
-                            <input type="number" id="defectTotalProduction" min="1" placeholder="0" required>
+                            <label for="cpkLowerLimit">Lower Specification Limit (LSL)</label>
+                            <input type="number" id="cpkLowerLimit" step="0.001" placeholder="0.000" required>
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="cpkProcessMean">Process Mean (μ)</label>
+                            <input type="number" id="cpkProcessMean" step="0.001" placeholder="0.000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpkStandardDeviation">Standard Deviation (σ)</label>
+                            <input type="number" id="cpkStandardDeviation" step="0.001" min="0.001" placeholder="0.000" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="defectProductionLine">Production Line</label>
-                        <select id="defectProductionLine" required>
+                        <label for="cpkProductionLine">Production Line</label>
+                        <select id="cpkProductionLine" required>
                             <option value="">Select Production Line</option>
                             <option value="VCE">VCE Line</option>
                             <option value="HDEP-C1">HDEP C1</option>
@@ -578,12 +549,68 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="defectDate">Date</label>
-                        <input type="date" id="defectDate" required>
+                        <label for="cpkDate">Date</label>
+                        <input type="date" id="cpkDate" required>
                     </div>
 
                     <button type="submit" class="save-btn">
-                        <i class="fas fa-save"></i> Save Defect Rate
+                        <i class="fas fa-save"></i> Save CPK
+                    </button>
+                </form>
+            </div>
+
+            <!-- FPY Card -->
+            <div class="metric-card fpy-metric">
+                <div class="metric-header">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-title">First Pass Yield (FPY)</div>
+                </div>
+                
+                <div class="current-value">
+                    <div class="current-value-label">Current Value</div>
+                    <div class="current-value-number" id="currentFPY">0.00%</div>
+                </div>
+
+                <div class="calculated-value">
+                    <div class="calculated-value-label">Calculated FPY</div>
+                    <div class="calculated-value-number" id="calculatedFPY">0.00%</div>
+                </div>
+
+                <div id="fpyMessage" class="message"></div>
+                <div id="fpyErrors" class="error-container" style="display: none;"></div>
+
+                <form id="fpyForm">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="fpyGoodUnits">Good Units (No Defects)</label>
+                            <input type="number" id="fpyGoodUnits" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fpyTotalUnits">Total Units Produced</label>
+                            <input type="number" id="fpyTotalUnits" min="1" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fpyProductionLine">Production Line</label>
+                        <select id="fpyProductionLine" required>
+                            <option value="">Select Production Line</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fpyDate">Date</label>
+                        <input type="date" id="fpyDate" required>
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Save FPY
                     </button>
                 </form>
             </div>
@@ -593,7 +620,7 @@
         <div class="history-section">
             <div class="history-header">
                 <div class="metric-icon">📈</div>
-                <div class="metric-title">Recent Entries History</div>
+                <div class="metric-title">Recent Technician Metrics History</div>
             </div>
 
             <table class="history-table">
@@ -618,11 +645,14 @@
             <a href="../index.html" class="nav-btn nav-home">
                 <i class="fas fa-home"></i> Main Dashboard
             </a>
+            <a href="technician-analytics.html" class="nav-btn nav-analytics">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
             <a href="../graphs/dashboard.html" class="nav-btn nav-dashboard">
                 <i class="fas fa-chart-bar"></i> Quality Dashboard
             </a>
-            <a href="technician-metrics.html" class="nav-btn nav-technician" style="background: linear-gradient(135deg, #8b5cf6, #5b21b6);">
-                <i class="fas fa-tools"></i> Technician Metrics
+            <a href="quality-metrics.html" class="nav-btn nav-aql">
+                <i class="fas fa-clipboard-list"></i> AQL Metrics
             </a>
             <a href="../graphs/DashPerLine/vce-tv-dashboard.html" class="nav-btn nav-tv">
                 <i class="fas fa-tv"></i> VCE TV Dashboard
@@ -630,6 +660,6 @@
         </div>
     </div>
 
-    <script src="quality-metrics.js"></script>
+    <script src="technician-metrics.js"></script>
 </body>
 </html>

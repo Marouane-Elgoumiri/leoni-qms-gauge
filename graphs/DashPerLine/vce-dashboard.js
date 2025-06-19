@@ -25,19 +25,16 @@ class VCEDashboard {
                 const manualMetrics = getQualityMetricsForLine('VCE');
                 
                 // Override mock data with manual entries if available
-                if (manualMetrics.scrapRate > 0) {
-                    vceData.qualityKPIs.scrapRate.value = manualMetrics.scrapRate.toFixed(1);
-                    vceData.qualityKPIs.scrapRate.trend = this.calculateTrend('scrap', manualMetrics.scrapRate);
+                if (manualMetrics.scrapWeight > 0) {
+                    vceData.qualityKPIs.scrapWeight.value = manualMetrics.scrapWeight.toFixed(1);
+                    vceData.qualityKPIs.scrapWeight.trend = this.calculateTrend('scrap', manualMetrics.scrapWeight);
                 }
                 
-                if (manualMetrics.reworkRate > 0) {
-                    vceData.qualityKPIs.reworkRate.value = manualMetrics.reworkRate.toFixed(1);
-                    vceData.qualityKPIs.reworkRate.trend = this.calculateTrend('rework', manualMetrics.reworkRate);
-                }
-                
-                if (manualMetrics.customerComplaints >= 0) {
-                    vceData.qualityKPIs.customerComplaints.value = manualMetrics.customerComplaints;
-                    vceData.qualityKPIs.customerComplaints.trend = this.calculateTrend('complaints', manualMetrics.customerComplaints);
+                if (manualMetrics.reworkStatus && manualMetrics.reworkStatus.includes('/')) {
+                    const [reworked, total] = manualMetrics.reworkStatus.split('/').map(n => parseInt(n));
+                    vceData.qualityKPIs.reworkStatus.reworked = reworked;
+                    vceData.qualityKPIs.reworkStatus.total = total;
+                    vceData.qualityKPIs.reworkStatus.trend = this.calculateTrend('rework', reworked);
                 }
                 
                 if (manualMetrics.defectRatePPM > 0) {
@@ -49,6 +46,26 @@ class VCEDashboard {
                 console.log('Quality metrics integrated successfully:', manualMetrics);
             } else {
                 console.warn('Quality metrics functions not available - using mock data');
+            }
+
+            // Check if technician metrics functions are available
+            if (typeof getTechnicianMetricsForLine === 'function') {
+                const technicianMetrics = getTechnicianMetricsForLine('VCE');
+                
+                // Override mock data with technician entries if available
+                if (technicianMetrics.fpy > 0) {
+                    vceData.qualityKPIs.firstPassYield.value = technicianMetrics.fpy.toFixed(1);
+                    vceData.qualityKPIs.firstPassYield.trend = this.calculateTrend('fpy', technicianMetrics.fpy);
+                }
+                
+                if (technicianMetrics.cpk > 0) {
+                    vceData.qualityKPIs.processCapability.value = technicianMetrics.cpk.toFixed(2);
+                    vceData.qualityKPIs.processCapability.trend = this.calculateTrend('cpk', technicianMetrics.cpk);
+                }
+                
+                console.log('Technician metrics integrated successfully:', technicianMetrics);
+            } else {
+                console.warn('Technician metrics functions not available - using mock data');
             }
         } catch (error) {
             console.warn('Error integrating quality metrics:', error);
@@ -109,6 +126,11 @@ class VCEDashboard {
                     valueElement.textContent = `${value} PPM`;
                 } else if (kpiName === 'defectCount') {
                     valueElement.textContent = `${value}`;
+                } else if (kpiName === 'scrapWeight') {
+                    valueElement.textContent = `${value}g`;
+                } else if (kpiName === 'reworkStatus') {
+                    const reworkData = vceData.qualityKPIs.reworkStatus;
+                    valueElement.textContent = `${reworkData.reworked}/${reworkData.total}`;
                 } else {
                     valueElement.textContent = `${value}%`;
                 }
@@ -125,13 +147,13 @@ class VCEDashboard {
             defectRate: 'defectRate',
             firstPassYield: 'firstPassYield',
             defectCount: 'totalDefectCount',
-            reworkRate: 'reworkRate',
+            reworkStatus: 'reworkStatus',
             processCapability: 'processCapability',
             customerComplaints: 'customerComplaints',
             audit5S: 'audit5S',
             auditAFP: 'auditAFP',
             lineEfficiency: 'lineEfficiency',
-            scrapRate: 'scrapRate'
+            scrapWeight: 'scrapWeight'
         };
         return mapping[kpiName] || kpiName;
     }
@@ -142,13 +164,13 @@ class VCEDashboard {
             defectRate: 'defectRate',
             firstPassYield: 'fpy',
             defectCount: 'defectCount',
-            reworkRate: 'rework',
+            reworkStatus: 'rework',
             processCapability: 'cpk',
             customerComplaints: 'customer',
             audit5S: 'audit5s',
             auditAFP: 'auditAfp',
             lineEfficiency: 'lineEfficiency',
-            scrapRate: 'scrap'
+            scrapWeight: 'scrap'
         };
         return mapping[kpiName] || kpiName;
     }

@@ -22,20 +22,17 @@ class QualityMetricsManager {
 
     // Setup calculation listeners for real-time updates
     setupCalculationListeners() {
-        // Scrap rate calculation
-        const totalScrap = document.getElementById('totalScrap');
-        const totalProduction = document.getElementById('totalProduction');
+        // Scrap weight display
+        const scrapWeight = document.getElementById('scrapWeight');
         
-        [totalScrap, totalProduction].forEach(input => {
-            input.addEventListener('input', () => this.calculateScrapRate());
-        });
+        scrapWeight.addEventListener('input', () => this.updateScrapWeight());
 
-        // Rework rate calculation
-        const totalRework = document.getElementById('totalRework');
-        const reworkTotalProduction = document.getElementById('reworkTotalProduction');
+        // Rework status calculation
+        const harnessesReworked = document.getElementById('harnessesReworked');
+        const totalHarnessesWithDefects = document.getElementById('totalHarnessesWithDefects');
         
-        [totalRework, reworkTotalProduction].forEach(input => {
-            input.addEventListener('input', () => this.calculateReworkRate());
+        [harnessesReworked, totalHarnessesWithDefects].forEach(input => {
+            input.addEventListener('input', () => this.calculateReworkStatus());
         });
 
         // Defect PPM calculation
@@ -45,32 +42,31 @@ class QualityMetricsManager {
         [totalDefects, defectTotalProduction].forEach(input => {
             input.addEventListener('input', () => this.calculateDefectPPM());
         });
+        
+        // Production line change listeners for auto-loading defects
+        document.getElementById('reworkProductionLine').addEventListener('change', (e) => {
+            this.loadDefectDataForLine(e.target.value, 'rework');
+        });
+        
+        document.getElementById('defectProductionLine').addEventListener('change', (e) => {
+            this.loadDefectDataForLine(e.target.value, 'defect');
+        });
     }
 
-    // Calculate scrap rate percentage
-    calculateScrapRate() {
-        const scrap = parseFloat(document.getElementById('totalScrap').value) || 0;
-        const production = parseFloat(document.getElementById('totalProduction').value) || 0;
-        
-        if (production > 0) {
-            const rate = (scrap / production) * 100;
-            document.getElementById('calculatedScrapRate').textContent = rate.toFixed(2) + '%';
-        } else {
-            document.getElementById('calculatedScrapRate').textContent = '0.00%';
-        }
+    // Update scrap weight display
+    updateScrapWeight() {
+        const weight = parseFloat(document.getElementById('scrapWeight').value) || 0;
+        document.getElementById('enteredScrapWeight').textContent = weight.toFixed(2) + 'g';
     }
 
-    // Calculate rework rate percentage
-    calculateReworkRate() {
-        const rework = parseFloat(document.getElementById('totalRework').value) || 0;
-        const production = parseFloat(document.getElementById('reworkTotalProduction').value) || 0;
+    // Calculate rework status (reworked vs pending)
+    calculateReworkStatus() {
+        const reworked = parseFloat(document.getElementById('harnessesReworked').value) || 0;
+        const total = parseFloat(document.getElementById('totalHarnessesWithDefects').value) || 0;
         
-        if (production > 0) {
-            const rate = (rework / production) * 100;
-            document.getElementById('calculatedReworkRate').textContent = rate.toFixed(2) + '%';
-        } else {
-            document.getElementById('calculatedReworkRate').textContent = '0.00%';
-        }
+        const pending = Math.max(0, total - reworked);
+        
+        document.getElementById('calculatedReworkStatus').textContent = `Reworked: ${reworked} | Pending: ${pending}`;
     }
 
     // Calculate defect PPM
@@ -91,41 +87,79 @@ class QualityMetricsManager {
         // Simulate auto-fetching defect count from defect system
         // In real implementation, this would fetch from the Analysis/defects system
         const simulatedDefectCount = Math.floor(Math.random() * 50) + 10; // 10-60 defects
+        
+        // Set defects for defect PPM calculation
         document.getElementById('totalDefects').value = simulatedDefectCount;
         this.calculateDefectPPM();
+        
+        // Set defects for rework calculation (1 defect = 1 potential rework)
+        document.getElementById('numberOfDefects').value = simulatedDefectCount;
+        
+        // Auto-set total harnesses with defects (assuming 1 harness can have multiple defects)
+        const harnessesWithDefects = Math.floor(simulatedDefectCount * 0.7); // ~70% of defects are on different harnesses
+        document.getElementById('totalHarnessesWithDefects').value = harnessesWithDefects;
+        this.calculateReworkStatus();
+    }
+
+    // Load defect data for a specific production line
+    loadDefectDataForLine(productionLine, formType) {
+        if (!productionLine) return;
+        
+        // Simulate fetching defects for specific production line
+        // In real implementation, this would query the database for defects by production line
+        const productionLineDefects = {
+            'VCE': Math.floor(Math.random() * 30) + 5,      // 5-35 defects
+            'HDEP-C1': Math.floor(Math.random() * 25) + 8,  // 8-33 defects
+            'HDEP-C2': Math.floor(Math.random() * 28) + 6,  // 6-34 defects
+            'HDEP-C3': Math.floor(Math.random() * 22) + 4,  // 4-26 defects
+            'MDEP': Math.floor(Math.random() * 35) + 10,    // 10-45 defects
+            'HAULER': Math.floor(Math.random() * 20) + 3    // 3-23 defects
+        };
+        
+        const defectCount = productionLineDefects[productionLine] || Math.floor(Math.random() * 30) + 5;
+        
+        if (formType === 'rework') {
+            document.getElementById('numberOfDefects').value = defectCount;
+            const harnessesWithDefects = Math.floor(defectCount * 0.7); // ~70% of defects are on different harnesses
+            document.getElementById('totalHarnessesWithDefects').value = harnessesWithDefects;
+            this.calculateReworkStatus();
+        } else if (formType === 'defect') {
+            document.getElementById('totalDefects').value = defectCount;
+            this.calculateDefectPPM();
+        }
+        
+        console.log(`Loaded ${defectCount} defects for ${productionLine} line (${formType} form)`);
     }
 
     // Setup event listeners for all forms
     setupEventListeners() {
         document.getElementById('scrapForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const scrap = parseFloat(document.getElementById('totalScrap').value);
-            const production = parseFloat(document.getElementById('totalProduction').value);
-            const rate = production > 0 ? (scrap / production) * 100 : 0;
+            const weight = parseFloat(document.getElementById('scrapWeight').value);
             
             this.saveMetric('scrap', {
-                total_scrap: scrap,
-                total_production: production,
-                rate: rate,
+                scrap_weight: weight,
                 productionLine: document.getElementById('scrapProductionLine').value,
                 date: document.getElementById('scrapDate').value,
-                unit: '%'
+                unit: 'g'
             });
         });
 
         document.getElementById('reworkForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const rework = parseFloat(document.getElementById('totalRework').value);
-            const production = parseFloat(document.getElementById('reworkTotalProduction').value);
-            const rate = production > 0 ? (rework / production) * 100 : 0;
+            const numberOfDefects = parseFloat(document.getElementById('numberOfDefects').value);
+            const harnessesReworked = parseFloat(document.getElementById('harnessesReworked').value);
+            const totalHarnessesWithDefects = parseFloat(document.getElementById('totalHarnessesWithDefects').value);
+            const pendingHarnesses = Math.max(0, totalHarnessesWithDefects - harnessesReworked);
             
             this.saveMetric('rework', {
-                total_rework: rework,
-                total_production: production,
-                rate: rate,
+                number_of_defects: numberOfDefects,
+                harnesses_reworked: harnessesReworked,
+                total_harnesses_with_defects: totalHarnessesWithDefects,
+                pending_harnesses: pendingHarnesses,
                 productionLine: document.getElementById('reworkProductionLine').value,
                 date: document.getElementById('reworkDate').value,
-                unit: '%'
+                unit: 'harnesses'
             });
         });
 
@@ -153,23 +187,27 @@ class QualityMetricsManager {
             const allData = this.getStoredData();
             
             // Create JSONB-compatible quality_data structure
-            const qualityData = {
-                scrap: {
-                    total_scrap: data.total_scrap || 0,
-                    total_production: data.total_production || 0,
-                    rate: data.rate || 0
-                },
-                rework: {
-                    total_rework: data.total_rework || 0,
-                    total_production: data.total_production || 0,
-                    rate: data.rate || 0
-                },
-                defects: {
+            const qualityData = {};
+            
+            if (metricType === 'scrap') {
+                qualityData.scrap = {
+                    scrap_weight: data.scrap_weight || 0,
+                    unit: 'g'
+                };
+            } else if (metricType === 'rework') {
+                qualityData.rework = {
+                    number_of_defects: data.number_of_defects || 0,
+                    harnesses_reworked: data.harnesses_reworked || 0,
+                    total_harnesses_with_defects: data.total_harnesses_with_defects || 0,
+                    pending_harnesses: data.pending_harnesses || 0
+                };
+            } else if (metricType === 'defect') {
+                qualityData.defects = {
                     total_defects: data.total_defects || 0,
                     total_production: data.total_production || 0,
                     rate_ppm: data.rate_ppm || 0
-                }
-            };
+                };
+            }
 
             // Create entry with JSONB structure
             const entry = {
@@ -199,8 +237,21 @@ class QualityMetricsManager {
             localStorage.setItem(this.storageKey, JSON.stringify(allData));
 
             // Update UI
-            const displayValue = metricType === 'defect' ? data.rate_ppm : data.rate;
-            const displayUnit = metricType === 'defect' ? 'PPM' : '%';
+            let displayValue, displayUnit;
+            if (metricType === 'scrap') {
+                displayValue = data.scrap_weight;
+                displayUnit = 'g';
+            } else if (metricType === 'rework') {
+                displayValue = `${data.harnesses_reworked}/${data.total_harnesses_with_defects}`;
+                displayUnit = 'harnesses';
+            } else if (metricType === 'defect') {
+                displayValue = data.rate_ppm;
+                displayUnit = 'PPM';
+            } else {
+                displayValue = data.rate;
+                displayUnit = '%';
+            }
+            
             this.updateCurrentValue(metricType, displayValue, displayUnit);
             this.showMessage(metricType, 'Metric saved successfully!', 'success');
             this.clearForm(metricType);
@@ -251,15 +302,30 @@ class QualityMetricsManager {
         };
 
         // Update UI with current values
-        this.updateCurrentValue('scrap', latestValues.scrap?.value || 0, '%');
-        this.updateCurrentValue('rework', latestValues.rework?.value || 0, '%');
+        this.updateCurrentValue('scrap', latestValues.scrap?.value || 0, 'g');
+        this.updateCurrentValue('rework', latestValues.rework?.value || '0/0', 'harnesses');
         this.updateCurrentValue('defect', latestValues.defect?.value || 0, 'PPM');
     }
 
     // Get latest value for a specific metric type
     getLatestValue(data, metricType) {
-        const filteredData = data.filter(item => item.type === metricType);
-        return filteredData.length > 0 ? filteredData[0] : null;
+        const filteredData = data.filter(item => item.metric_type === metricType);
+        if (filteredData.length === 0) return { value: 0 };
+        
+        const latest = filteredData[0];
+        let value = 0;
+        
+        if (metricType === 'scrap' && latest.quality_data?.scrap) {
+            value = latest.quality_data.scrap.scrap_weight || 0;
+        } else if (metricType === 'rework' && latest.quality_data?.rework) {
+            const reworked = latest.quality_data.rework.harnesses_reworked || 0;
+            const total = latest.quality_data.rework.total_harnesses_with_defects || 0;
+            value = `${reworked}/${total}`;
+        } else if (metricType === 'defect' && latest.quality_data?.defects) {
+            value = latest.quality_data.defects.rate_ppm || 0;
+        }
+        
+        return { value };
     }
 
     // Update current value display
@@ -267,12 +333,12 @@ class QualityMetricsManager {
         let displayValue;
         switch (metricType) {
             case 'scrap':
-                displayValue = `${value.toFixed(2)}%`;
-                document.getElementById('currentScrapRate').textContent = displayValue;
+                displayValue = `${value.toFixed(2)}g`;
+                document.getElementById('currentScrapWeight').textContent = displayValue;
                 break;
             case 'rework':
-                displayValue = `${value.toFixed(2)}%`;
-                document.getElementById('currentReworkRate').textContent = displayValue;
+                displayValue = value; // Already formatted as "x/y"
+                document.getElementById('currentReworkStatus').textContent = displayValue;
                 break;
             case 'defect':
                 displayValue = `${Math.round(value)} PPM`;
@@ -299,14 +365,16 @@ class QualityMetricsManager {
         // Clear the input fields based on metric type
         switch (metricType) {
             case 'scrap':
-                document.getElementById('totalScrap').value = '';
-                document.getElementById('totalProduction').value = '';
+                document.getElementById('scrapWeight').value = '';
                 document.getElementById('scrapProductionLine').value = '';
+                document.getElementById('enteredScrapWeight').textContent = '0.00g';
                 break;
             case 'rework':
-                document.getElementById('totalRework').value = '';
-                document.getElementById('reworkTotalProduction').value = '';
+                document.getElementById('harnessesReworked').value = '';
+                document.getElementById('totalHarnessesWithDefects').value = '';
                 document.getElementById('reworkProductionLine').value = '';
+                document.getElementById('calculatedReworkStatus').textContent = 'Reworked: 0 | Pending: 0';
+                // Don't clear numberOfDefects as it's auto-fetched
                 break;
             case 'defect':
                 // Don't clear totalDefects as it's auto-fetched
@@ -353,13 +421,15 @@ class QualityMetricsManager {
             let metricName, displayValue, unit;
             
             if (entry.metric_type === 'scrap') {
-                metricName = 'Scrap Rate';
-                displayValue = entry.quality_data.scrap.rate.toFixed(2);
-                unit = '%';
+                metricName = 'Scrap Weight';
+                displayValue = entry.quality_data.scrap.scrap_weight.toFixed(2);
+                unit = 'g';
             } else if (entry.metric_type === 'rework') {
-                metricName = 'Rework Rate';
-                displayValue = entry.quality_data.rework.rate.toFixed(2);
-                unit = '%';
+                metricName = 'Rework Status';
+                const reworked = entry.quality_data.rework.harnesses_reworked || 0;
+                const total = entry.quality_data.rework.total_harnesses_with_defects || 0;
+                displayValue = `${reworked}/${total}`;
+                unit = 'harnesses';
             } else if (entry.metric_type === 'defect') {
                 metricName = 'Defect Rate PPM';
                 displayValue = Math.round(entry.quality_data.defects.rate_ppm);
@@ -426,12 +496,16 @@ class QualityMetricsManager {
     // Get latest values for all metrics for a specific production line
     getLatestValuesForLine(productionLine) {
         const data = this.getStoredData();
-        const lineData = data.filter(entry => entry.productionLine === productionLine);
+        const lineData = data.filter(entry => entry.production_line_id === productionLine);
+
+        const scrapData = this.getLatestValue(lineData, 'scrap');
+        const reworkData = this.getLatestValue(lineData, 'rework');
+        const defectData = this.getLatestValue(lineData, 'defect');
 
         return {
-            scrapRate: this.getLatestValue(lineData, 'scrap')?.value || 0,
-            reworkRate: this.getLatestValue(lineData, 'rework')?.value || 0,
-            defectRatePPM: this.getLatestValue(lineData, 'defect')?.value || 0
+            scrapWeight: typeof scrapData?.value === 'number' ? scrapData.value : 0,
+            reworkStatus: typeof reworkData?.value === 'string' ? reworkData.value : '0/0',
+            defectRatePPM: typeof defectData?.value === 'number' ? defectData.value : 0
         };
     }
 }

@@ -32,14 +32,16 @@ class VCETVDashboard {
                 const manualMetrics = getQualityMetricsForLine('VCE');
                 
                 // Override mock data with manual entries if available
-                if (manualMetrics.scrapRate > 0) {
-                    vceData.qualityKPIs.scrapRate.value = manualMetrics.scrapRate.toFixed(1);
-                    vceData.qualityKPIs.scrapRate.trend = this.calculateTrend('scrap', manualMetrics.scrapRate);
+                if (manualMetrics.scrapWeight > 0) {
+                    vceData.qualityKPIs.scrapWeight.value = manualMetrics.scrapWeight.toFixed(1);
+                    vceData.qualityKPIs.scrapWeight.trend = this.calculateTrend('scrap', manualMetrics.scrapWeight);
                 }
                 
-                if (manualMetrics.reworkRate > 0) {
-                    vceData.qualityKPIs.reworkRate.value = manualMetrics.reworkRate.toFixed(1);
-                    vceData.qualityKPIs.reworkRate.trend = this.calculateTrend('rework', manualMetrics.reworkRate);
+                if (manualMetrics.reworkStatus && manualMetrics.reworkStatus.includes('/')) {
+                    const [reworked, total] = manualMetrics.reworkStatus.split('/').map(n => parseInt(n));
+                    vceData.qualityKPIs.reworkStatus.reworked = reworked;
+                    vceData.qualityKPIs.reworkStatus.total = total;
+                    vceData.qualityKPIs.reworkStatus.trend = this.calculateTrend('rework', reworked);
                 }
                 
                 if (manualMetrics.customerComplaints >= 0) {
@@ -56,6 +58,26 @@ class VCETVDashboard {
                 console.log('TV Dashboard - Quality metrics integrated successfully:', manualMetrics);
             } else {
                 console.warn('TV Dashboard - Quality metrics functions not available - using mock data');
+            }
+
+            // Check if technician metrics functions are available
+            if (typeof getTechnicianMetricsForLine === 'function') {
+                const technicianMetrics = getTechnicianMetricsForLine('VCE');
+                
+                // Override mock data with technician entries if available
+                if (technicianMetrics.fpy > 0) {
+                    vceData.qualityKPIs.firstPassYield.value = technicianMetrics.fpy.toFixed(1);
+                    vceData.qualityKPIs.firstPassYield.trend = this.calculateTrend('fpy', technicianMetrics.fpy);
+                }
+                
+                if (technicianMetrics.cpk > 0) {
+                    vceData.qualityKPIs.processCapability.value = technicianMetrics.cpk.toFixed(2);
+                    vceData.qualityKPIs.processCapability.trend = this.calculateTrend('cpk', technicianMetrics.cpk);
+                }
+                
+                console.log('TV Dashboard - Technician metrics integrated successfully:', technicianMetrics);
+            } else {
+                console.warn('TV Dashboard - Technician metrics functions not available - using mock data');
             }
         } catch (error) {
             console.warn('TV Dashboard - Error integrating quality metrics:', error);
@@ -162,6 +184,11 @@ class VCETVDashboard {
                     valueElement.textContent = `${value} PPM`;
                 } else if (kpiName === 'defectCount') {
                     valueElement.textContent = value;
+                } else if (kpiName === 'scrapWeight') {
+                    valueElement.textContent = `${value}g`;
+                } else if (kpiName === 'reworkStatus') {
+                    const reworkData = vceData.qualityKPIs.reworkStatus;
+                    valueElement.textContent = `${reworkData.reworked}/${reworkData.total}`;
                 } else {
                     valueElement.textContent = `${value}%`;
                 }
@@ -178,13 +205,13 @@ class VCETVDashboard {
             defectRate: 'defectRate',
             firstPassYield: 'firstPassYield',
             defectCount: 'totalDefectCount',
-            reworkRate: 'reworkRate',
+            reworkStatus: 'reworkStatus',
             processCapability: 'processCapability',
             customerComplaints: 'customerComplaints',
             audit5S: 'audit5S',
             auditAFP: 'auditAFP',
             lineEfficiency: 'lineEfficiency',
-            scrapRate: 'scrapRate'
+            scrapWeight: 'scrapWeight'
         };
         return mapping[kpiName] || kpiName;
     }
@@ -195,13 +222,13 @@ class VCETVDashboard {
             defectRate: 'defectRate',
             firstPassYield: 'fpy',
             defectCount: 'defectCount',
-            reworkRate: 'rework',
+            reworkStatus: 'rework',
             processCapability: 'cpk',
             customerComplaints: 'customer',
             audit5S: 'audit5s',
             auditAFP: 'auditAfp',
             lineEfficiency: 'lineEfficiency',
-            scrapRate: 'scrap'
+            scrapWeight: 'scrap'
         };
         return mapping[kpiName] || kpiName;
     }
@@ -243,6 +270,8 @@ class VCETVDashboard {
         if (kpiName === 'processCapability') return '';
         if (kpiName === 'defectRate' || kpiName === 'customerComplaints') return ' PPM';
         if (kpiName === 'defectCount') return '';
+        if (kpiName === 'scrapWeight') return 'g';
+        if (kpiName === 'reworkStatus') return '';
         return '%';
     }
 
@@ -779,11 +808,11 @@ class VCETVDashboard {
         // Higher first pass yield = higher quality
         const fpyScore = parseFloat(kpis.firstPassYield.value);
         
-        // Lower rework rate = higher quality
-        const reworkScore = Math.max(0, 100 - (parseFloat(kpis.reworkRate.value) * 20));
+        // Lower scrap weight = higher quality (convert grams to score)
+        const scrapScore = Math.max(0, 100 - (parseFloat(kpis.scrapWeight.value) * 1.5)); // 1.5 multiplier for grams
         
         // Average the scores
-        const overallScore = Math.round((defectScore + fpyScore + reworkScore) / 3);
+        const overallScore = Math.round((defectScore + fpyScore + scrapScore) / 3);
         
         return Math.min(100, Math.max(0, overallScore));
     }

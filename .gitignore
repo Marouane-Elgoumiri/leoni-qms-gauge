@@ -48,6 +48,7 @@ pids
 tmp/
 temp/
 LEPS/
+Leps_files/
 system_design/
 chatbot/
 start_chatbot.sh

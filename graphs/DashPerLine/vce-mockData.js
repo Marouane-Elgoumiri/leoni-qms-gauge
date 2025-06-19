@@ -31,12 +31,6 @@ const vceData = {
             trend: "down",
             trendValue: -3
         },
-        reworkRate: {
-            value: (Math.random() * 2 + 1).toFixed(1), // 1-3%
-            target: 2.5,
-            trend: "down",
-            trendValue: -0.8
-        },
         processCapability: {
             value: (Math.random() * 0.3 + 1.5).toFixed(2), // 1.5-1.8 Cpk
             target: 1.33,
@@ -67,11 +61,19 @@ const vceData = {
             trend: "up",
             trendValue: 1.8
         },
-        scrapRate: {
-            value: (Math.random() * 1.5 + 0.5).toFixed(1), // 0.5-2.0%
-            target: 1.5,
+        scrapWeight: {
+            value: (Math.random() * 50 + 25).toFixed(1), // 25-75 grams
+            unit: "g",
+            target: 60,
             trend: "down",
-            trendValue: -0.3
+            trendValue: -5.2
+        },
+        reworkStatus: {
+            reworked: Math.floor(Math.random() * 15) + 8, // 8-23 harnesses reworked
+            total: Math.floor(Math.random() * 20) + 15, // 15-35 total harnesses with defects
+            unit: "harnesses",
+            trend: "up",
+            trendValue: 2
         }
     },
 
@@ -191,13 +193,13 @@ const vceData = {
         defectRate: { excellent: 10, good: 15, warning: 25 },
         firstPassYield: { excellent: 98, good: 95, warning: 90 },
         defectCount: { excellent: 20, good: 30, warning: 45 },
-        reworkRate: { excellent: 2, good: 4, warning: 6 },
+        reworkStatus: { excellent: 5, good: 10, warning: 15 }, // Total harnesses with defects
         processCapability: { excellent: 1.67, good: 1.33, warning: 1.0 },
         customerComplaints: { excellent: 3, good: 5, warning: 10 },
         audit5S: { excellent: 95, good: 90, warning: 85 },
         auditAFP: { excellent: 95, good: 90, warning: 85 },
         lineEfficiency: { excellent: 95, good: 90, warning: 85 },
-        scrapRate: { excellent: 1, good: 2, warning: 3 }
+        scrapWeight: { excellent: 30, good: 50, warning: 70 } // grams
     },
 
     // Status calculation helper
@@ -206,7 +208,7 @@ const vceData = {
         if (!targets) return 'good';
         
         // For metrics where lower is better (defects, rework, complaints, scrap)
-        const lowerIsBetter = ['defectRate', 'defectCount', 'reworkRate', 'customerComplaints', 'scrapRate'];
+        const lowerIsBetter = ['defectRate', 'defectCount', 'reworkStatus', 'customerComplaints', 'scrapWeight'];
         
         if (lowerIsBetter.includes(kpiName)) {
             if (value <= targets.excellent) return 'excellent';
