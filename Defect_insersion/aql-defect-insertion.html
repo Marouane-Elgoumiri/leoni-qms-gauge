@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Insertion - LEONI Quality Department</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        .header {
+            background: #1a365d;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 18px;
+            color: #cbd5e0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav-button {
+                width: 100%;
+                max-width: 300px;
+                margin: 5px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            .header p {
+                font-size: 16px;
+            }
+            .section-header {
+                font-size: 18px;
+                padding: 12px 15px;
+            }
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .section-header {
+            color: white;
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .section-content {
+            padding: 20px;
+        }
+
+        /* AQL Defect Information Section */
+        .aql-defect-info {
+            background: #fff7ed;
+            border: 2px solid #f97316;
+        }
+        .aql-defect-info .section-header {
+            background: #ea580c;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .form-field {
+            background: white;
+            border: 1px solid #fb923c;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .form-field.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-field-header {
+            background: #fb923c;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form-field-content {
+            padding: 15px;
+        }
+        .form-field-content select,
+        .form-field-content input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #fb923c;
+            border-radius: 2px;
+            font-size: 12px;
+            background: #fef3f2;
+        }
+        .form-field-content textarea {
+            width: 100%;
+            min-height: 100px;
+            border: 1px solid #fb923c;
+            border-radius: 2px;
+            padding: 10px;
+            font-size: 12px;
+            resize: vertical;
+            background: #fef3f2;
+        }
+        .auto-filled {
+            background: #e5e7eb !important;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        /* Defect Details Section */
+        .defect-details {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+        }
+        .defect-details .section-header {
+            background: #0284c7;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            background: #f0fff4;
+            border: 2px solid #22c55e;
+        }
+        .submit-section .section-header {
+            background: #16a34a;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            color: white;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .btn-submit-defect {
+            background: linear-gradient(135deg, #ea580c, #fb923c);
+            box-shadow: 0 4px 8px rgba(234, 88, 12, 0.3);
+        }
+        .btn-create-qrqc {
+            background: linear-gradient(135deg, #059669, #16a34a);
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3);
+        }
+        .btn-create-qrqc:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Navigation */
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .nav-button {
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .btn-back { background: linear-gradient(135deg, #005691, #3182ce); box-shadow: 0 4px 8px rgba(0, 86, 145, 0.3); }
+        .btn-vce { background: linear-gradient(135deg, #1a365d, #2d3748); box-shadow: 0 4px 8px rgba(26, 54, 93, 0.3); }
+        .btn-vigilance { background: linear-gradient(135deg, #059669, #22c55e); box-shadow: 0 4px 8px rgba(5, 150, 105, 0.3); }
+        .btn-dashboard { background: linear-gradient(135deg, #7c3aed, #a855f7); box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3); }
+        .btn-5s { background: linear-gradient(135deg, #805ad5, #6b46c1); box-shadow: 0 4px 8px rgba(128, 90, 213, 0.3); }
+        .btn-afp { background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3); }
+        .btn-admin { background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3); }
+        .btn-qrqc { background: linear-gradient(135deg, #1a365d, #2c5282); box-shadow: 0 4px 8px rgba(26, 54, 93, 0.3); }
+        .btn-values { background: linear-gradient(135deg, #d946ef, #a855f7); box-shadow: 0 4px 8px rgba(217, 70, 239, 0.3); }
+
+        /* Status indicator */
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .status-submitted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Notes Section */
+        .notes {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #3182ce;
+        }
+        .notes h3 {
+            color: #2c5282;
+            margin-top: 0;
+        }
+        .notes ul {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>LEONI QUALITY DEPARTMENT</h1>
+            <p>Defect Insertion</p>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message">
+            <strong>✅ Defect submitted successfully!</strong> 
+            <span id="defectIdDisplay"></span>
+            <span class="status-indicator status-submitted">SUBMITTED</span>
+        </div>
+
+        <!-- 1. AQL Defect Information Section -->
+        <div class="section aql-defect-info">
+            <div class="section-header">
+                1. AQL DEFECT INFORMATION
+            </div>
+            <div class="section-content">
+                <form id="aqlDefectForm">
+                    <div class="form-grid">
+                        <!-- Row 1: Basic Info -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="form-field-header">AQL Inspector</div>
+                                <div class="form-field-content">
+                                    <input type="text" id="aql-inspector" name="aql-inspector" class="auto-filled" value="Current User Session" readonly>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Date & Time</div>
+                                <div class="form-field-content">
+                                    <input type="datetime-local" id="defect-datetime" name="defect-datetime" required>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Defect ID</div>
+                                <div class="form-field-content">
+                                    <input type="text" id="defect-id" name="defect-id" class="auto-filled" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Defect Classification -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="form-field-header">Code Defect</div>
+                                <div class="form-field-content">
+                                    <select id="code-defect" name="code-defect" required>
+                                        <option value="">Select Code Defect...</option>
+                                        <option value="CD001">CD001 - Dimensional Issue</option>
+                                        <option value="CD002">CD002 - Visual Defect</option>
+                                        <option value="CD003">CD003 - Functional Failure</option>
+                                        <option value="CD004">CD004 - Material Defect</option>
+                                        <option value="CD005">CD005 - Assembly Error</option>
+                                        <option value="CD006">CD006 - Missing Component</option>
+                                        <option value="CD007">CD007 - Wrong Component</option>
+                                        <option value="CD008">CD008 - Damage</option>
+                                        <option value="CD009">CD009 - Contamination</option>
+                                        <option value="CD010">CD010 - Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Defect Type</div>
+                                <div class="form-field-content">
+                                    <select id="defect-type" name="defect-type" required>
+                                        <option value="">Select Defect Type...</option>
+                                        <option value="Critical">Critical</option>
+                                        <option value="Major">Major</option>
+                                        <option value="Minor">Minor</option>
+                                        <option value="Dimensional">Dimensional</option>
+                                        <option value="Visual">Visual</option>
+                                        <option value="Functional">Functional</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Operator ID</div>
+                                <div class="form-field-content">
+                                    <select id="operator-id" name="operator-id" required>
+                                        <option value="">Select Operator...</option>
+                                        <option value="OP001">OP001 - Ahmed Ben Ali</option>
+                                        <option value="OP002">OP002 - Fatima Zahra</option>
+                                        <option value="OP003">OP003 - Mohamed Krim</option>
+                                        <option value="OP004">OP004 - Aicha Bennani</option>
+                                        <option value="OP005">OP005 - Youssef Tazi</option>
+                                        <option value="OP006">OP006 - Samira Alami</option>
+                                        <option value="OP007">OP007 - Rachid Idrissi</option>
+                                        <option value="OP008">OP008 - Khadija Sekkat</option>
+                                        <option value="OP009">OP009 - Hassan Berrada</option>
+                                        <option value="OP010">OP010 - Nadia Chraibi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Production Details -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="form-field-header">Project</div>
+                                <div class="form-field-content">
+                                    <select id="project" name="project" required>
+                                        <option value="">Select Project...</option>
+                                        <option value="VOLVO-XC90">Volvo XC90 - Engine Harness</option>
+                                        <option value="VOLVO-XC60">Volvo XC60 - Dashboard Harness</option>
+                                        <option value="VOLVO-V60">Volvo V60 - Body Harness</option>
+                                        <option value="VOLVO-S90">Volvo S90 - Premium Harness</option>
+                                        <option value="VOLVO-EV">Volvo Electric Vehicle - HV Harness</option>
+                                        <option value="VOLVO-HYBRID">Volvo Hybrid - Dual System Harness</option>
+                                        <option value="VOLVO-TRUCK">Volvo Truck - Heavy Duty Harness</option>
+                                        <option value="VOLVO-BUS">Volvo Bus - Public Transport Harness</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Box/Batch Number</div>
+                                <div class="form-field-content">
+                                    <input type="text" id="box-number" name="box-number" placeholder="Enter box/batch number..." required>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Pin/Terminal</div>
+                                <div class="form-field-content">
+                                    <select id="pin-terminal" name="pin-terminal" required>
+                                        <option value="">Select Pin/Terminal...</option>
+                                        <option value="PIN-A1">PIN-A1 - Power Supply</option>
+                                        <option value="PIN-A2">PIN-A2 - Ground</option>
+                                        <option value="PIN-B1">PIN-B1 - Signal Line</option>
+                                        <option value="PIN-B2">PIN-B2 - CAN High</option>
+                                        <option value="PIN-B3">PIN-B3 - CAN Low</option>
+                                        <option value="PIN-C1">PIN-C1 - Sensor Input</option>
+                                        <option value="PIN-C2">PIN-C2 - Actuator Output</option>
+                                        <option value="PIN-D1">PIN-D1 - Shield/Screen</option>
+                                        <option value="TERM-1.5">TERM-1.5 - Standard Terminal</option>
+                                        <option value="TERM-2.5">TERM-2.5 - Heavy Duty Terminal</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Supervision & Location -->
+                        <div class="form-row">
+                            <div class="form-field">
+                                <div class="form-field-header">Supervisor</div>
+                                <div class="form-field-content">
+                                    <select id="supervisor" name="supervisor" required>
+                                        <option value="">Select Supervisor...</option>
+                                        <option value="SUP001">SUP001 - Omar Benjelloun (Shift A)</option>
+                                        <option value="SUP002">SUP002 - Latifa Bennani (Shift B)</option>
+                                        <option value="SUP003">SUP003 - Youssef Alami (Shift C)</option>
+                                        <option value="SUP004">SUP004 - Nadia Chraibi (Shift D)</option>
+                                        <option value="SUP005">SUP005 - Rachid Mansouri (Weekend)</option>
+                                        <option value="SUP006">SUP006 - Amina Elkadi (Night Shift)</option>
+                                        <option value="SUP007">SUP007 - Hassan Benali (Quality Team)</option>
+                                        <option value="SUP008">SUP008 - Fatima Zahra (Production Team)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Production Line</div>
+                                <div class="form-field-content">
+                                    <select id="production-line" name="production-line" required>
+                                        <option value="">Select Production Line...</option>
+                                        <option value="VCE-LINE">🏭 VCE - Volvo Cable Engine Line (Primary)</option>
+                                        <option value="LINE-A1">Line A1 - Engine Harness Assembly</option>
+                                        <option value="LINE-A2">Line A2 - Dashboard Integration</option>
+                                        <option value="LINE-B1">Line B1 - Body Harness Production</option>
+                                        <option value="LINE-B2">Line B2 - Door Module Assembly</option>
+                                        <option value="LINE-C1">Line C1 - High Voltage Systems</option>
+                                        <option value="LINE-C2">Line C2 - Testing & Validation</option>
+                                        <option value="LINE-D1">Line D1 - Premium Product Line</option>
+                                        <option value="LINE-D2">Line D2 - Volume Production</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <div class="form-field-header">Post/Station</div>
+                                <div class="form-field-content">
+                                    <select id="post-station" name="post-station" required>
+                                        <option value="">Select Post/Station...</option>
+                                        <option value="POST-01">Post 01 - Wire Cutting</option>
+                                        <option value="POST-02">Post 02 - Terminal Crimping</option>
+                                        <option value="POST-03">Post 03 - Connector Assembly</option>
+                                        <option value="POST-04">Post 04 - Pin Insertion</option>
+                                        <option value="POST-05">Post 05 - Tape Wrapping</option>
+                                        <option value="POST-06">Post 06 - Protective Covering</option>
+                                        <option value="POST-07">Post 07 - Labeling</option>
+                                        <option value="POST-08">Post 08 - Visual Inspection</option>
+                                        <option value="POST-09">Post 09 - Electrical Testing</option>
+                                        <option value="POST-10">Post 10 - Final Packaging</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. Defect Details Section -->
+        <div class="section defect-details">
+            <div class="section-header">
+                2. DEFECT DETAILS & COMMENTS
+            </div>
+            <div class="section-content">
+                <div class="form-field full-width">
+                    <div class="form-field-header">Detailed Description & Comments</div>
+                    <div class="form-field-content">
+                        <textarea id="defect-comments" name="defect-comments" placeholder="Provide detailed description of the defect, root cause analysis, corrective actions taken, and any additional comments..." required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Submit Section -->
+        <div class="section submit-section">
+            <div class="section-header">
+                3. SUBMIT & QRQC CREATION
+            </div>
+            <div class="section-content">
+                <p style="color: #166534; font-weight: 500; margin-bottom: 20px;">
+                    After submitting this defect, you will be required to create a corresponding QRQC (Quick Response Quality Control) document for detailed analysis and corrective actions.
+                </p>
+                <div class="action-buttons">
+                    <button type="button" class="action-btn btn-submit-defect" onclick="submitDefect()">
+                        📝 Submit Defect Report
+                    </button>
+                    <button type="button" class="action-btn btn-create-qrqc" id="createQrqcBtn" onclick="createQRQC()" disabled>
+                        📋 Create QRQC Document
+                    </button>
+                </div>
+                <p style="color: #4a5568; font-size: 14px; text-align: center; margin-top: 15px;">
+                    <strong>Workflow:</strong> Submit Defect → Create QRQC → Complete Analysis → Close Issue
+                </p>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation">
+            <a href="../index.html" class="nav-button btn-back">
+                ⬅️ Main Dashboard
+            </a>
+            <a href="../graphs/DashPerLine/vce-dashboard.html" class="nav-button btn-vce">
+                🏭 VCE Production Line
+            </a>
+            <a href="../Analysis/qrqc.html" class="nav-button btn-qrqc">
+                📋 QRQC Form
+            </a>
+            <a href="../Values/quality-metrics.html" class="nav-button btn-values">
+                📊 Quality Metrics
+            </a>
+            <a href="../graphs/dashboard.html" class="nav-button btn-dashboard">
+                📈 Quality Overview
+            </a>
+            <a href="../Vigilance_test/vigilance-test.html" class="nav-button btn-vigilance">
+                👁️ Vigilance Test
+            </a>
+            <a href="../5S/5s-checklist.html" class="nav-button btn-5s">
+                🏭 5S Checklist
+            </a>
+            <a href="../AFP/afp-audit.html" class="nav-button btn-afp">
+                📋 AFP Audit
+            </a>
+            <a href="../Admin/admin.html" class="nav-button btn-admin">
+                👥 Admin Panel
+            </a>
+        </div>
+
+        <!-- Notes Section -->
+        <div class="notes">
+            
+            <ul>
+                <li><strong>🏭 VCE Line Priority:</strong> VCE (Volvo Cable Engine) line has dedicated dashboard integration</li>
+                <li><strong>🔄 Workflow Tracking:</strong> Defects automatically tracked in appropriate production dashboards</li>
+                <li><strong>📈 Real-time Monitoring:</strong> Navigate directly to VCE dashboard for real-time defect tracking</li>
+                <li><strong>🎯 Context-Aware Navigation:</strong> System highlights relevant dashboards based on production line selection</li>
+                
+                <li><strong>Section 1 - AQL Defect Information (Orange):</strong> Comprehensive defect data collection</li>
+                <li><strong>• AQL Inspector:</strong> Auto-filled with current user session (read-only)</li>
+                <li><strong>• Date & Time:</strong> Precise timestamp for defect occurrence</li>
+                <li><strong>• Defect ID:</strong> Auto-generated unique identifier for tracking</li>
+                <li><strong>• Code Defect:</strong> Predefined defect codes (CD001-CD010) for classification</li>
+                <li><strong>• Defect Type:</strong> Severity classification (Critical, Major, Minor, Dimensional, Visual, Functional)</li>
+                <li><strong>• Operator ID:</strong> Selection from registered operators for accountability</li>
+                <li><strong>• Project:</strong> Volvo product lines and harness types</li>
+                <li><strong>• Box/Batch Number:</strong> Traceability identifier for production batches</li>
+                <li><strong>• Pin/Terminal:</strong> Specific component identification for precise location</li>
+                <li><strong>• Supervisor:</strong> Shift supervisors and team leaders for escalation</li>
+                <li><strong>• Production Line:</strong> VCE line featured prominently with dedicated dashboard link</li>
+                <li><strong>• Post/Station:</strong> Detailed workstation identification (Post 01-10)</li>
+                
+                <li><strong>Section 2 - Defect Details (Blue):</strong> Detailed description and comments</li>
+                <li><strong>• Comments Section:</strong> Full-width textarea for comprehensive defect analysis</li>
+                
+                <li><strong>Section 3 - Submit & QRQC Creation (Green):</strong> Enhanced workflow management</li>
+                <li><strong>• Submit Defect:</strong> Primary action with dashboard context detection</li>
+                <li><strong>• Create QRQC:</strong> Enhanced with dashboard navigation recommendations</li>
+                
+                <li><strong>🔧 Smart Features:</strong></li>
+                <li><strong>• Context-Aware Navigation:</strong> Navigation buttons adapt based on selected production line</li>
+                <li><strong>• Real-time Notifications:</strong> Contextual messages guide users to appropriate dashboards</li>
+                <li><strong>• Enhanced QRQC Integration:</strong> Dashboard context passed to QRQC form for follow-up tracking</li>
+                <li><strong>• Responsive Design:</strong> Full-width layout optimized for all devices and screen sizes</li>
+                
+                <li><strong>⌨️ Keyboard Shortcuts:</strong></li>
+                <li><strong>• Ctrl+S:</strong> Save draft</li>
+                <li><strong>• Ctrl+Enter:</strong> Submit defect (when form is complete)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for workflow management
+        let currentDefectStatus = 'pending'; // pending, submitted, qrqc_created
+        let workflowData = {};
+
+        // Initialize form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            setupFormValidation();
+            loadDraftData();
+            setupAutoSave();
+            setupSmartNavigation();
+        });
+
+        function initializeForm() {
+            // Set current date and time
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('defect-datetime').value = localDateTime;
+            
+            // Generate unique defect ID
+            generateDefectId();
+            
+            // Initialize workflow status
+            updateWorkflowStatus();
+        }
+
+        // Smart Navigation - Context-aware dashboard links
+        function setupSmartNavigation() {
+            const productionLineSelect = document.getElementById('production-line');
+            const vceNavButton = document.querySelector('.btn-vce');
+            
+            productionLineSelect.addEventListener('change', function() {
+                updateNavigationContext(this.value);
+            });
+        }
+
+        function updateNavigationContext(selectedLine) {
+            const vceNavButton = document.querySelector('.btn-vce');
+            
+            if (selectedLine === 'VCE-LINE') {
+                // Highlight VCE-specific navigation
+                vceNavButton.style.background = 'linear-gradient(135deg, #059669, #16a34a)';
+                vceNavButton.innerHTML = '🏭 VCE Dashboard (Selected Line)';
+                
+                // Show contextual message
+                showContextualMessage('VCE Line Selected', 'Defect will be tracked in VCE Production Dashboard');
+            } else {
+                // Reset to default styling
+                vceNavButton.style.background = 'linear-gradient(135deg, #1a365d, #2d3748)';
+                vceNavButton.innerHTML = '🏭 VCE Production Line';
+                
+                if (selectedLine && selectedLine !== '') {
+                    showContextualMessage('Production Line Selected', `Defect will be tracked for ${selectedLine}`);
+                }
+            }
+        }
+
+        function showContextualMessage(title, message) {
+            // Create or update contextual message
+            let contextMsg = document.getElementById('contextualMessage');
+            if (!contextMsg) {
+                contextMsg = document.createElement('div');
+                contextMsg.id = 'contextualMessage';
+                contextMsg.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                    color: white;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 1000;
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.3s ease;
+                `;
+                document.body.appendChild(contextMsg);
+            }
+            
+            contextMsg.innerHTML = `<strong>${title}:</strong><br>${message}`;
+            
+            // Animate in
+            setTimeout(() => {
+                contextMsg.style.opacity = '1';
+                contextMsg.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                contextMsg.style.opacity = '0';
+                contextMsg.style.transform = 'translateX(100%)';
+            }, 3000);
+        }
+
+        function generateDefectId() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = ('0' + (now.getMonth() + 1)).slice(-2);
+            const day = ('0' + now.getDate()).slice(-2);
+            const timestamp = Date.now().toString().slice(-6);
+            const defectId = `AQL-DEF-${year}${month}${day}-${timestamp}`;
+            document.getElementById('defect-id').value = defectId;
+            return defectId;
+        }
+
+        function setupFormValidation() {
+            const requiredFields = [
+                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
+                'project', 'box-number', 'pin-terminal', 'supervisor',
+                'production-line', 'post-station', 'defect-comments'
+            ];
+
+            // Add real-time validation
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', validateField);
+                    field.addEventListener('change', validateField);
+                }
+            });
+
+            // Overall form validation check
+            document.getElementById('aqlDefectForm').addEventListener('input', checkFormCompletion);
+        }
+
+        function validateField(event) {
+            const field = event.target;
+            const isValid = field.value.trim() !== '';
+            
+            if (isValid) {
+                field.style.borderColor = '#10b981';
+                field.style.backgroundColor = '#f0fff4';
+            } else {
+                field.style.borderColor = '#fb923c';
+                field.style.backgroundColor = '#fef3f2';
+            }
+        }
+
+        function checkFormCompletion() {
+            const requiredFields = [
+                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
+                'project', 'box-number', 'pin-terminal', 'supervisor',
+                'production-line', 'post-station', 'defect-comments'
+            ];
+
+            const allFilled = requiredFields.every(fieldId => {
+                const field = document.getElementById(fieldId);
+                return field && field.value.trim() !== '';
+            });
+
+            // Update submit button state
+            const submitBtn = document.querySelector('.btn-submit-defect');
+            if (allFilled) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.innerHTML = '📝 Submit Defect Report (Ready)';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.innerHTML = '📝 Submit Defect Report (Complete all fields)';
+            }
+        }
+
+        function submitDefect() {
+            const form = document.getElementById('aqlDefectForm');
+            const defectComments = document.getElementById('defect-comments');
+            
+            // Comprehensive validation
+            if (!validateAllFields()) {
+                showValidationError();
+                return;
+            }
+
+            // Collect comprehensive form data
+            const defectData = collectFormData();
+            
+            // Simulate API submission
+            submitToDatabase(defectData);
+            
+            // Update UI and workflow status
+            showSuccessMessage(defectData);
+            updateWorkflowStatus('submitted');
+            enableQRQCCreation(defectData);
+            
+            // Store data for QRQC integration
+            sessionStorage.setItem('currentDefectData', JSON.stringify(defectData));
+            localStorage.setItem('lastSubmittedDefect', JSON.stringify(defectData));
+            
+            // Clear draft data
+            localStorage.removeItem('aqlDefectDraft');
+        }
+
+        function validateAllFields() {
+            const requiredFields = [
+                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
+                'project', 'box-number', 'pin-terminal', 'supervisor',
+                'production-line', 'post-station', 'defect-comments'
+            ];
+
+            return requiredFields.every(fieldId => {
+                const field = document.getElementById(fieldId);
+                return field && field.value.trim() !== '';
+            });
+        }
+
+        function collectFormData() {
+            return {
+                // Auto-generated fields
+                defectId: document.getElementById('defect-id').value,
+                aqlInspector: document.getElementById('aql-inspector').value,
+                submittedAt: new Date().toISOString(),
+                
+                // User input fields
+                datetime: document.getElementById('defect-datetime').value,
+                codeDefect: document.getElementById('code-defect').value,
+                defectType: document.getElementById('defect-type').value,
+                operatorId: document.getElementById('operator-id').value,
+                project: document.getElementById('project').value,
+                boxNumber: document.getElementById('box-number').value,
+                pinTerminal: document.getElementById('pin-terminal').value,
+                supervisor: document.getElementById('supervisor').value,
+                productionLine: document.getElementById('production-line').value,
+                postStation: document.getElementById('post-station').value,
+                comments: document.getElementById('defect-comments').value,
+                
+                // Additional metadata
+                status: 'submitted',
+                requiresQRQC: true,
+                priority: getPriorityFromDefectType(document.getElementById('defect-type').value)
+            };
+        }
+
+        function getPriorityFromDefectType(defectType) {
+            const priorityMap = {
+                'Critical': 'High',
+                'Major': 'High',
+                'Minor': 'Medium',
+                'Dimensional': 'Medium',
+                'Visual': 'Low',
+                'Functional': 'High'
+            };
+            return priorityMap[defectType] || 'Medium';
+        }
+
+        function submitToDatabase(defectData) {
+            // Simulate API call to database
+            console.log('🔄 Submitting defect to database...', defectData);
+            
+            // In a real implementation, this would be an actual API call:
+            // fetch('/api/defects', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(defectData)
+            // });
+        }
+
+        function showSuccessMessage(defectData) {
+            const successMessage = document.getElementById('successMessage');
+            const defectIdDisplay = document.getElementById('defectIdDisplay');
+            
+            defectIdDisplay.innerHTML = `
+                <strong>Defect ID:</strong> ${defectData.defectId}<br>
+                <strong>Priority:</strong> ${defectData.priority}<br>
+                <strong>Status:</strong> Awaiting QRQC Creation
+            `;
+            
+            successMessage.classList.add('show');
+            successMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showValidationError() {
+            alert('❌ Please complete all required fields:\n\n' +
+                  '• Date & Time\n' +
+                  '• Code Defect (CD001-CD010)\n' +
+                  '• Defect Type\n' +
+                  '• Operator ID\n' +
+                  '• Project\n' +
+                  '• Box/Batch Number\n' +
+                  '• Pin/Terminal\n' +
+                  '• Supervisor\n' +
+                  '• Production Line\n' +
+                  '• Post/Station\n' +
+                  '• Detailed Comments');
+        }
+
+        function updateWorkflowStatus(status = 'pending') {
+            currentDefectStatus = status;
+            
+            // Update visual indicators and button states based on status
+            const submitBtn = document.querySelector('.btn-submit-defect');
+            const qrqcBtn = document.getElementById('createQrqcBtn');
+            
+            switch(status) {
+                case 'pending':
+                    submitBtn.disabled = !validateAllFields();
+                    qrqcBtn.disabled = true;
+                    qrqcBtn.textContent = '📋 Create QRQC Document (Submit defect first)';
+                    break;
+                    
+                case 'submitted':
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = '✅ Defect Submitted Successfully';
+                    qrqcBtn.disabled = false;
+                    qrqcBtn.textContent = '📋 Create QRQC Document';
+                    qrqcBtn.style.background = 'linear-gradient(135deg, #059669, #16a34a)';
+                    break;
+                    
+                case 'qrqc_created':
+                    qrqcBtn.textContent = '✅ QRQC Document Created';
+                    qrqcBtn.disabled = true;
+                    break;
+            }
+        }
+
+        function enableQRQCCreation(defectData) {
+            const qrqcBtn = document.getElementById('createQrqcBtn');
+            qrqcBtn.disabled = false;
+            qrqcBtn.style.opacity = '1';
+            qrqcBtn.style.cursor = 'pointer';
+            
+            // Add success styling
+            qrqcBtn.classList.add('btn-ready');
+        }
+
+        function createQRQC() {
+            const defectData = JSON.parse(sessionStorage.getItem('currentDefectData'));
+            
+            if (!defectData) {
+                alert('❌ No defect data found. Please submit a defect first.');
+                return;
+            }
+
+            // Prepare QRQC data with defect pre-population
+            const qrqcData = {
+                defectId: defectData.defectId,
+                createdFrom: 'AQL_DEFECT_INSERTION',
+                project: defectData.project,
+                operator: defectData.operatorId,
+                supervisor: defectData.supervisor,
+                productionLine: defectData.productionLine,
+                postStation: defectData.postStation,
+                defectDescription: `${defectData.codeDefect}: ${defectData.defectType}`,
+                rootCauseHypothesis: defectData.comments,
+                priority: defectData.priority,
+                createdAt: new Date().toISOString(),
+                dashboardContext: defectData.productionLine === 'VCE-LINE' ? 'VCE_DASHBOARD' : 'GENERAL_DASHBOARD'
+            };
+
+            // Store QRQC pre-fill data
+            sessionStorage.setItem('qrqcPreFillData', JSON.stringify(qrqcData));
+            
+            // Update workflow status
+            updateWorkflowStatus('qrqc_created');
+            
+            // Determine appropriate dashboard link for follow-up
+            const dashboardLink = defectData.productionLine === 'VCE-LINE' 
+                ? '../graphs/DashPerLine/vce-dashboard.html' 
+                : '../graphs/dashboard.html';
+            
+            const dashboardName = defectData.productionLine === 'VCE-LINE' 
+                ? 'VCE Production Dashboard' 
+                : 'Quality Overview Dashboard';
+            
+            // Show enhanced confirmation with navigation options
+            const proceed = confirm(
+                '🔄 Ready to Create QRQC Document\n\n' +
+                `Defect ID: ${defectData.defectId}\n` +
+                `Production Line: ${defectData.productionLine}\n` +
+                `Project: ${defectData.project}\n` +
+                `Priority: ${defectData.priority}\n\n` +
+                'The QRQC form will be pre-filled with defect data.\n' +
+                `After QRQC completion, you can track this defect in the ${dashboardName}.\n\n` +
+                'Click OK to proceed to QRQC creation.'
+            );
+            
+            if (proceed) {
+                // Store dashboard context for post-QRQC navigation
+                sessionStorage.setItem('postQrqcDashboard', dashboardLink);
+                sessionStorage.setItem('postQrqcDashboardName', dashboardName);
+                
+                // Navigate to QRQC form with context parameters
+                window.location.href = `../Analysis/qrqc.html?source=aql_defect&defect_id=${defectData.defectId}&line=${defectData.productionLine}&priority=${defectData.priority}`;
+            }
+        }
+
+        // Quick Navigation Functions
+        function navigateToVCEDashboard() {
+            const defectData = JSON.parse(sessionStorage.getItem('currentDefectData'));
+            if (defectData && defectData.productionLine === 'VCE-LINE') {
+                window.open('../graphs/DashPerLine/vce-dashboard.html', '_blank');
+                showContextualMessage('VCE Dashboard Opened', 'Monitor your submitted defect in real-time');
+            } else {
+                window.location.href = '../graphs/DashPerLine/vce-dashboard.html';
+            }
+        }
+
+        function navigateToQualityDashboard() {
+            const defectData = JSON.parse(sessionStorage.getItem('currentDefectData'));
+            if (defectData) {
+                window.open('../graphs/dashboard.html', '_blank');
+                showContextualMessage('Quality Dashboard Opened', 'Track defect trends and metrics');
+            } else {
+                window.location.href = '../graphs/dashboard.html';
+            }
+        }
+
+        // Auto-save functionality
+        function setupAutoSave() {
+            let autoSaveTimer;
+            const form = document.getElementById('aqlDefectForm');
+            
+            form.addEventListener('input', function() {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = setTimeout(function() {
+                    saveDraft();
+                }, 2000); // Auto-save after 2 seconds of inactivity
+            });
+        }
+
+        function saveDraft() {
+            const formData = new FormData(document.getElementById('aqlDefectForm'));
+            const data = Object.fromEntries(formData);
+            data['defect-comments'] = document.getElementById('defect-comments').value;
+            data['lastSaved'] = new Date().toISOString();
+            
+            localStorage.setItem('aqlDefectDraft', JSON.stringify(data));
+            console.log('📁 Draft auto-saved at', new Date().toLocaleTimeString());
+        }
+
+        function loadDraftData() {
+            const draft = localStorage.getItem('aqlDefectDraft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                const confirm = window.confirm(
+                    '📋 Draft data found!\n\n' +
+                    `Last saved: ${new Date(data.lastSaved).toLocaleString()}\n\n` +
+                    'Would you like to restore your previous work?'
+                );
+                
+                if (confirm) {
+                    Object.keys(data).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element && key !== 'defect-id' && key !== 'aql-inspector' && key !== 'lastSaved') {
+                            element.value = data[key];
+                        }
+                    });
+                    
+                    // Trigger validation check
+                    checkFormCompletion();
+                }
+            }
+        }
+
+        // Export functionality for debugging/admin
+        function exportDefectData() {
+            const defectData = JSON.parse(sessionStorage.getItem('currentDefectData') || '{}');
+            const dataStr = JSON.stringify(defectData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `defect_${defectData.defectId || 'export'}.json`;
+            link.click();
+        }
+
+        // Keyboard shortcuts for efficiency
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S to save draft
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                saveDraft();
+                alert('📁 Draft saved successfully!');
+            }
+            
+            // Ctrl+Enter to submit form
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                if (!document.querySelector('.btn-submit-defect').disabled) {
+                    submitDefect();
+                }
+            }
+        });
+
+        // Initial form completion check
+        window.addEventListener('load', function() {
+            setTimeout(checkFormCompletion, 500);
+        });
+    </script>
+</body>
+</html>

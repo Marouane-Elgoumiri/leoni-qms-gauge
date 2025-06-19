@@ -3,598 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEONI QMS Defect Gauge</title>
-    <link rel="icon" href="assets/logo.png?v=2025" type="image/png">
-    <link rel="shortcut icon" href="assets/logo.png?v=2025" type="image/png">
-    <link rel="apple-touch-icon" href="assets/logo.png?v=2025">
-    <link rel="mask-icon" href="assets/logo.png?v=2025" color="#1a365d">
-    <meta name="msapplication-TileImage" content="assets/logo.png?v=2025">
-    <meta name="msapplication-TileColor" content="#1a365d">
-    <link rel="stylesheet" href="styles.css">
-    <!-- Load D3.js with fallback -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>
-        // Check if D3 loaded, if not try alternative CDN
-        if (typeof d3 === 'undefined') {
-            document.write('<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"><\/script>');
+    <title>LEONI QMS - Quality Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    </script>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .welcome-container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 3rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-section {
+            margin-bottom: 3rem;
+        }
+
+        .logo-section img {
+            height: 120px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .nav-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-description {
+            font-size: 1rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .footer-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .version-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .version-badge {
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .navigation-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nav-card {
+                padding: 1.5rem;
+            }
+
+            .nav-icon {
+                font-size: 2.5rem;
+            }
+
+            .version-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-section img {
+                height: 80px;
+            }
+
+            .welcome-title {
+                font-size: 1.6rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1><img src="assets/logo.png" alt="LEONI Logo" style="height: 150px; width: auto; margin-right: 12px; vertical-align: middle;">LEONI Wiring Systems QMS</h1>
-        <h2>VOLVO Project - Production Line Defect Status</h2>
-        <div id="gauge-container">
-            <div id="gauge">
-                <!-- Loading indicator -->
-                <div id="loading-indicator" style="
-                    text-align: center; 
-                    padding: 100px 50px;
-                    color: #666;
-                ">
-                    <div style="font-size: 24px; margin-bottom: 15px;">⏳</div>
-                    <h3>Loading LEONI QMS Gauge...</h3>
-                    <p style="opacity: 0.7;">Initializing visualization components</p>
-                </div>
-            </div>
-            <div id="tooltip" class="hidden">
-                <div id="tooltip-content"></div>
-            </div>
-            
-            <div id="highlight-container">
-                <div id="status-highlight">
-                    <div>Project: <span id="current-project">VOLVO</span> | Line: <span id="current-line">MDEP</span></div>
-                    <div>Status: <span id="current-status">Low</span> <span id="fun-comment">😊 All good!</span></div>
-                </div>
-            </div>
-            
+    <div class="welcome-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <img src="assets/logo.png" alt="LEONI Logo">
+            <h1 class="welcome-title">Welcome to LEONI QMS</h1>
+            <p class="welcome-subtitle">Quality Management System - Production Excellence Platform</p>
         </div>
-        
-        <div id="metrics-container">
-            <h3>Top 3 Production Lines by Defects</h3>
-            <div class="metrics-grid">
-                <div class="metric-card high">
-                    <div class="metric-title">#1: Production Line</div>
-                    <div class="emoji">🥇</div>
-                    <div class="metric-value" id="low-defects">0</div>
-                </div>
-                <div class="metric-card medium">
-                    <div class="metric-title">#2: Production Line</div>
-                    <div class="emoji">🥈</div>
-                    <div class="metric-value" id="medium-defects">0</div>
-                </div>
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-              
-                <div class="metric-card low">
-                    <div class="metric-title">#3: Production Line</div>
-                    <div class="emoji">🥉</div>
-                    <div class="metric-value" id="high-defects">0</div>
-                </div>
-            </div>
-            <div id="navigation-container">
-                <button id="qrqc-btn" class="nav-button">
-                    📋 Open QRQC Analysis
-                </button>
-                <button id="vigilance-btn" class="nav-button">
-                    👁️ Vigilance Test
-                </button>
-                <button id="dashboard-btn" class="nav-button">
-                    📊 Quality Dashboard
-                </button>
-                <button id="5s-btn" class="nav-button">
-                    🏭 5S Checklist
-                </button>
-                <button id="afp-btn" class="nav-button">
-                    📋 AFP Audit
-                </button>
-                <button id="diagrams-btn" class="nav-button">
-                    📐 System Diagrams
-                </button>
-                <button id="admin-btn" class="nav-button">
-                    👥 Admin
-                </button>
+
+        <!-- Navigation Grid -->
+        <div class="navigation-grid">
+            <!-- Volvo Dashboard -->
+            <a href="graphs/dashboard.html" class="nav-card">
+                <div class="nav-icon">🚚</div>
+                <div class="nav-title">Volvo Dashboard</div>
+                <div class="nav-description">Production line monitoring, quality metrics, and real-time analytics</div>
+            </a>
+
+            <!-- System Design -->
+            <a href="Diagrams/LEONI_QMS_FLOWCHART.html" class="nav-card">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-title">System Design</div>
+                <div class="nav-description">Quality system configuration and process optimization</div>
+            </a>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <p>&copy; 2025 LEONI AG - Quality Management System</p>
+            <div class="version-info">
+                <span class="version-badge">Version 2.1.0</span>
+                <span>Last Updated: June 2025</span>
+                <span>Production Ready</span>
             </div>
         </div>
     </div>
-    <script src="mockData.js"></script>
-    <script src="gauge.js"></script>
+
+    <script>
+        // Enhanced navigation with smooth loading effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const navCards = document.querySelectorAll('.nav-card');
+            
+            navCards.forEach((card, index) => {
+                // Staggered animation on load
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+                
+                // Enhanced click feedback
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Add loading state
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        window.location.href = card.href;
+                    }, 150);
+                });
+            });
+            
+            // Initialize cards with hidden state for animation
+            navCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+            });
+        });
+    </script>
 </body>
 </html>
