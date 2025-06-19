@@ -49,3 +49,6 @@ tmp/
 temp/
 LEPS/
 system_design/
+chatbot/
+start_chatbot.sh
+requirements.txt

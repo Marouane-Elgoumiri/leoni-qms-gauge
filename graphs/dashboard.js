@@ -418,6 +418,8 @@ class ProductionDashboard {
 // Initialize dashboard when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     const dashboard = new ProductionDashboard();
+    // Initialize the chatbot
+    const chatbot = new LEONIChatbot();
     
     // Manual refresh button (optional - could be added to HTML)
     window.refreshDashboard = () => dashboard.refreshDashboard();
@@ -442,4 +444,255 @@ function getStatusColor(status) {
         'critical': '#F44336'
     };
     return colors[status] || '#6B7280';
+}
+
+// LEONI Quality Management Chatbot Integration
+class LEONIChatbot {
+    constructor() {
+        this.apiUrl = 'http://localhost:5000/api';
+        this.isOpen = false;
+        this.isTyping = false;
+        this.conversationHistory = [];
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.loadSuggestions();
+        this.addWelcomeMessage();
+    }
+
+    setupEventListeners() {
+        // Chat button toggle
+        const chatButton = document.querySelector('.chat-button');
+        const chatContainer = document.querySelector('.chat-container');
+        const chatClose = document.querySelector('.chat-close');
+        const chatSend = document.querySelector('.chat-send');
+        const chatInput = document.querySelector('.chat-input');
+
+        if (chatButton) {
+            chatButton.addEventListener('click', () => this.toggleChat());
+        }
+
+        if (chatClose) {
+            chatClose.addEventListener('click', () => this.closeChat());
+        }
+
+        if (chatSend) {
+            chatSend.addEventListener('click', () => this.sendMessage());
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
+
+            // Auto-resize textarea
+            chatInput.addEventListener('input', () => {
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+            });
+        }
+
+        // Suggestion clicks
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('chat-suggestion')) {
+                this.sendMessage(e.target.textContent);
+            }
+        });
+    }
+
+    toggleChat() {
+        const chatContainer = document.querySelector('.chat-container');
+        const chatButton = document.querySelector('.chat-button');
+        
+        if (this.isOpen) {
+            this.closeChat();
+        } else {
+            this.openChat();
+        }
+    }
+
+    openChat() {
+        const chatContainer = document.querySelector('.chat-container');
+        const chatButton = document.querySelector('.chat-button');
+        
+        chatContainer.classList.add('open');
+        chatButton.classList.add('active');
+        this.isOpen = true;
+        
+        // Focus on input
+        setTimeout(() => {
+            const chatInput = document.querySelector('.chat-input');
+            if (chatInput) chatInput.focus();
+        }, 300);
+    }
+
+    closeChat() {
+        const chatContainer = document.querySelector('.chat-container');
+        const chatButton = document.querySelector('.chat-button');
+        
+        chatContainer.classList.remove('open');
+        chatButton.classList.remove('active');
+        this.isOpen = false;
+    }
+
+    async loadSuggestions() {
+        try {
+            const response = await fetch(`${this.apiUrl}/suggestions`);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                this.displaySuggestions(data.suggestions);
+            }
+        } catch (error) {
+            console.warn('Could not load suggestions:', error);
+            // Use fallback suggestions
+            const fallbackSuggestions = [
+                "How do I perform a 5S audit?",
+                "What are the steps for QRQC analysis?",
+                "Explain AFP quality checkpoints",
+                "How to reduce crimping defects?"
+            ];
+            this.displaySuggestions(fallbackSuggestions);
+        }
+    }
+
+    displaySuggestions(suggestions) {
+        const suggestionsContainer = document.querySelector('.chat-suggestions');
+        if (!suggestionsContainer) return;
+
+        suggestionsContainer.innerHTML = '';
+        suggestions.slice(0, 4).forEach(suggestion => {
+            const suggestionBtn = document.createElement('button');
+            suggestionBtn.className = 'chat-suggestion';
+            suggestionBtn.textContent = suggestion;
+            suggestionsContainer.appendChild(suggestionBtn);
+        });
+    }
+
+    addWelcomeMessage() {
+        const welcomeMessage = `
+            <span class="bot-name">LEONI QMS Assistant</span>
+            Hello! I'm your LEONI Quality Management System assistant. I can help you with:
+            <br><br>
+            • 5S Implementation & Audits
+            • AFP Quality Processes  
+            • QRQC Analysis
+            • Production Line Quality
+            • Defect Analysis & Solutions
+            <br><br>
+            How can I assist you today?
+        `;
+        this.addMessage(welcomeMessage, 'bot');
+    }
+
+    async sendMessage(messageText = null) {
+        const chatInput = document.querySelector('.chat-input');
+        const message = messageText || chatInput.value.trim();
+        
+        if (!message) return;
+
+        // Clear input if using input field
+        if (!messageText) {
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+        }
+
+        // Add user message to chat
+        this.addMessage(message, 'user');
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+
+        try {
+            const response = await fetch(`${this.apiUrl}/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            
+            // Hide typing indicator
+            this.hideTypingIndicator();
+
+            if (data.status === 'success') {
+                this.addMessage(data.response, 'bot');
+                this.conversationHistory.push({
+                    user: message,
+                    bot: data.response,
+                    timestamp: data.timestamp
+                });
+            } else {
+                throw new Error(data.error || 'Unknown error');
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            this.hideTypingIndicator();
+            
+            // Show fallback message
+            const fallbackMessage = `
+                <span class="bot-name">LEONI QMS Assistant</span>
+                I'm currently unable to connect to the server. Please try again later or contact your system administrator.
+                <br><br>
+                In the meantime, you can:
+                • Check the 5S checklist for quality standards
+                • Review the AFP audit procedures
+                • Access the QRQC analysis tools
+            `;
+            this.addMessage(fallbackMessage, 'bot');
+        }
+    }
+
+    addMessage(message, sender) {
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (!messagesContainer) return;
+
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${sender}`;
+        
+        if (sender === 'bot') {
+            messageElement.innerHTML = message;
+        } else {
+            messageElement.textContent = message;
+        }
+        
+        messagesContainer.appendChild(messageElement);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    showTypingIndicator() {
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (!messagesContainer) return;
+
+        const typingElement = document.createElement('div');
+        typingElement.className = 'chat-typing';
+        typingElement.innerHTML = `
+            <div class="chat-typing-dots">
+                <div class="chat-typing-dot"></div>
+                <div class="chat-typing-dot"></div>
+                <div class="chat-typing-dot"></div>
+            </div>
+        `;
+        
+        messagesContainer.appendChild(typingElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        this.isTyping = true;
+    }
+
+    hideTypingIndicator() {
+        const typingElement = document.querySelector('.chat-typing');
+        if (typingElement) {
+            typingElement.remove();
+        }
+        this.isTyping = false;
+    }
 }
