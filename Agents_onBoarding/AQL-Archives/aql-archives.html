@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQL Archives - LEONI Quality Management System</title>
+    <link rel="icon" href="../../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="aql-archives.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../../assets/logo.png" alt="LEONI Logo" class="logo">
+                </div>
+                <div class="title-section">
+                    <h1 class="page-title">
+                        <i class="fas fa-archive"></i> AQL Quality Archives
+                    </h1>
+                    <p class="page-subtitle">Historical Quality Data & Audit Reports Access</p>
+                </div>
+                <div class="status-section">
+                    <div class="role-badge">
+                        <i class="fas fa-user-check"></i> AQL Agent
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <div class="search-header">
+                <h2><i class="fas fa-search"></i> Search Archives</h2>
+                <p>Filter and access historical audit data for client audits and quality reviews</p>
+            </div>
+            
+            <div class="search-controls">
+                <div class="search-grid">
+                    <div class="filter-group">
+                        <label for="auditType">Audit Type</label>
+                        <select id="auditType" class="filter-select">
+                            <option value="">All Audit Types</option>
+                            <option value="5s">5S Workplace Assessment</option>
+                            <option value="afp">AFP - Audit Fabrication Process</option>
+                            <option value="tram">TRAM - Quality Metrics</option>
+                            <option value="qk">QK - Audit Produit Faisceaux & Cables</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="dateFrom">Date From</label>
+                        <input type="date" id="dateFrom" class="filter-input">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="dateTo">Date To</label>
+                        <input type="date" id="dateTo" class="filter-input">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="productionLine">Production Line</label>
+                        <select id="productionLine" class="filter-select">
+                            <option value="">All Lines</option>
+                            <option value="VCE">VCE Line</option>
+                            <option value="HDEP-C1">HDEP C1</option>
+                            <option value="HDEP-C2">HDEP C2</option>
+                            <option value="HDEP-C3">HDEP C3</option>
+                            <option value="MDEP">MDEP</option>
+                            <option value="HAULER">HAULER</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="auditeur">Auditeur</label>
+                        <input type="text" id="auditeur" class="filter-input" placeholder="Search by auditor name">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="completed">Completed</option>
+                            <option value="validated">Validated</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-actions">
+                    <button id="searchBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search Archives
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <i class="fas fa-undo"></i> Reset Filters
+                    </button>
+                    <button id="exportAllBtn" class="btn btn-success">
+                        <i class="fas fa-download"></i> Export Results
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Archive Categories Overview -->
+        <div class="overview-section">
+            <div class="overview-header">
+                <h2><i class="fas fa-chart-bar"></i> Archive Statistics</h2>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card stat-5s">
+                    <div class="stat-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="count5S">0</div>
+                        <div class="stat-label">5S Audits</div>
+                        <div class="stat-period">Last 30 days</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-afp">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="countAFP">0</div>
+                        <div class="stat-label">AFP Audits</div>
+                        <div class="stat-period">Last 30 days</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-tram">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="countTRAM">0</div>
+                        <div class="stat-label">TRAM Reports</div>
+                        <div class="stat-period">Last 30 days</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-qk">
+                    <div class="stat-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="countQK">0</div>
+                        <div class="stat-label">QK Audits</div>
+                        <div class="stat-period">Last 30 days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="results-section">
+            <div class="results-header">
+                <h2><i class="fas fa-list"></i> Archive Results</h2>
+                <div class="results-count">
+                    <span id="resultsCount">0</span> records found
+                </div>
+            </div>
+
+            <div class="results-table-container">
+                <table class="results-table" id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll" class="select-checkbox">
+                            </th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Reference</th>
+                            <th>Auditeur</th>
+                            <th>Production Line</th>
+                            <th>Score/Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Results will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bulk Actions -->
+            <div class="bulk-actions" id="bulkActions" style="display: none;">
+                <div class="bulk-info">
+                    <span id="selectedCount">0</span> items selected
+                </div>
+                <div class="bulk-buttons">
+                    <button class="btn btn-info" id="bulkViewBtn">
+                        <i class="fas fa-eye"></i> View Selected
+                    </button>
+                    <button class="btn btn-warning" id="bulkPrintBtn">
+                        <i class="fas fa-print"></i> Print Selected
+                    </button>
+                    <button class="btn btn-success" id="bulkExportBtn">
+                        <i class="fas fa-download"></i> Export Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access Section -->
+        <div class="quick-access-section">
+            <div class="quick-access-header">
+                <h2><i class="fas fa-bolt"></i> Quick Access</h2>
+                <p>Frequently accessed audit reports for client presentations</p>
+            </div>
+
+            <div class="quick-access-grid">
+                <div class="quick-card">
+                    <div class="quick-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <div class="quick-title">Last 7 Days</div>
+                    <div class="quick-description">Recent audit reports</div>
+                    <button class="quick-btn" onclick="quickSearch('week')">
+                        <i class="fas fa-search"></i> View
+                    </button>
+                </div>
+
+                <div class="quick-card">
+                    <div class="quick-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="quick-title">This Month</div>
+                    <div class="quick-description">Monthly audit summary</div>
+                    <button class="quick-btn" onclick="quickSearch('month')">
+                        <i class="fas fa-search"></i> View
+                    </button>
+                </div>
+
+                <div class="quick-card">
+                    <div class="quick-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="quick-title">High Priority</div>
+                    <div class="quick-description">Critical audit findings</div>
+                    <button class="quick-btn" onclick="quickSearch('priority')">
+                        <i class="fas fa-search"></i> View
+                    </button>
+                </div>
+
+                <div class="quick-card">
+                    <div class="quick-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <div class="quick-title">Export Package</div>
+                    <div class="quick-description">Client audit package</div>
+                    <button class="quick-btn" onclick="createExportPackage()">
+                        <i class="fas fa-download"></i> Create
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation-section">
+            <div class="nav-buttons">
+                <a href="../aql-onboarding.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a href="../../index.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Main Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="modalTitle">
+                    <i class="fas fa-eye"></i> Audit Report Details
+                </h3>
+                <button class="modal-close" onclick="closeModal('viewModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Audit details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" id="printModalBtn">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+                <button class="btn btn-success" id="exportModalBtn">
+                    <i class="fas fa-download"></i> Export PDF
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('viewModal')">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-print"></i> Print Options
+                </h3>
+                <button class="modal-close" onclick="closeModal('printModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="print-options">
+                    <div class="option-group">
+                        <label>
+                            <input type="radio" name="printType" value="summary" checked>
+                            Summary Report
+                        </label>
+                        <p class="option-description">Key metrics and findings only</p>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label>
+                            <input type="radio" name="printType" value="detailed">
+                            Detailed Report
+                        </label>
+                        <p class="option-description">Complete audit data and analysis</p>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label>
+                            <input type="radio" name="printType" value="client">
+                            Client Presentation
+                        </label>
+                        <p class="option-description">Formatted for client audit presentation</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" id="confirmPrintBtn">
+                    <i class="fas fa-print"></i> Print Now
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('printModal')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading archives...</p>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message" style="display: none;">
+        <div class="message-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText">Operation completed successfully</span>
+        </div>
+    </div>
+
+    <script src="aql-archives.js"></script>
+</body>
+</html>

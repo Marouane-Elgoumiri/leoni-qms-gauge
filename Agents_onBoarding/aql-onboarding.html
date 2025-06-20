@@ -188,6 +188,16 @@
             color: white;
         }
 
+        .qk-card .nav-icon {
+            background: linear-gradient(135deg, #38b2ac, #319795);
+            color: white;
+        }
+
+        .agenda-card .nav-icon {
+            background: linear-gradient(135deg, #d69e2e, #b7791f);
+            color: white;
+        }
+
         .nav-title {
             font-size: 1.4rem;
             font-weight: 600;
@@ -338,6 +348,8 @@
         .nav-card:nth-child(4) { animation-delay: 0.4s; }
         .nav-card:nth-child(5) { animation-delay: 0.5s; }
         .nav-card:nth-child(6) { animation-delay: 0.6s; }
+        .nav-card:nth-child(7) { animation-delay: 0.7s; }
+        .nav-card:nth-child(8) { animation-delay: 0.8s; }
 
         @keyframes fadeInUp {
             to {
@@ -363,7 +375,9 @@
                     <li>Monitor and record quality defects on production lines</li>
                     <li>Perform 5S audits and workplace organization assessments</li>
                     <li>Conduct AFP (Audit Fabrication Process) quality checks</li>
+                    <li>Execute QK audits for wire harnesses and cable products</li>
                     <li>Track TRAM metrics (Scrap, Rework, PPM calculations)</li>
+                    <li>Manage standardized agenda and quality control scheduling</li>
                     <li>Complete vigilance tests and safety protocols</li>
                     <li>Access historical data and quality archives</li>
                 </ul>
@@ -448,7 +462,7 @@
             </a>
 
             <!-- Archives -->
-            <a href="../Archives/aql-archives.html" class="nav-card archives-card">
+            <a href="./AQL-Archives/aql-archives.html" class="nav-card archives-card">
                 <div class="nav-icon">
                     <i class="fas fa-archive"></i>
                 </div>
@@ -459,6 +473,36 @@
                     <li>Audit reports</li>
                     <li>Trend analysis</li>
                     <li>Export capabilities</li>
+                </ul>
+            </a>
+
+            <!-- QK Audit -->
+            <a href="../QK/qk-audit.html" class="nav-card qk-card">
+                <div class="nav-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="nav-title">QK - Audit Produit</div>
+                <div class="nav-description">Audit Produit Faisceaux & Cables - Product quality verification and testing</div>
+                <ul class="nav-features">
+                    <li>Wire harness inspection</li>
+                    <li>Cable quality testing</li>
+                    <li>Product compliance check</li>
+                    <li>Technical documentation</li>
+                </ul>
+            </a>
+
+            <!-- Agenda Standard -->
+            <a href="../Agenda/agenda-standard.html" class="nav-card agenda-card">
+                <div class="nav-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-title">Agenda Standard</div>
+                <div class="nav-description">Standardized scheduling and planning for quality control activities</div>
+                <ul class="nav-features">
+                    <li>Quality control scheduling</li>
+                    <li>Audit planning</li>
+                    <li>Task management</li>
+                    <li>Timeline coordination</li>
                 </ul>
             </a>
         </div>
