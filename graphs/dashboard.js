@@ -418,8 +418,17 @@ class ProductionDashboard {
 // Initialize dashboard when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     const dashboard = new ProductionDashboard();
-    // Initialize the chatbot
-    const chatbot = new LEONIChatbot();
+    
+    // Initialize the chatbot with a delay to ensure all DOM elements are ready
+    setTimeout(() => {
+        console.log('🚀 Initializing LEONI QMS Chatbot...');
+        const chatbot = new LEONIChatbot();
+        
+        // Make chatbot globally accessible for debugging
+        window.leonichatbot = chatbot;
+        
+        console.log('✅ Chatbot initialized and accessible via window.leonichatbot');
+    }, 1000);
     
     // Manual refresh button (optional - could be added to HTML)
     window.refreshDashboard = () => dashboard.refreshDashboard();
@@ -453,13 +462,71 @@ class LEONIChatbot {
         this.isOpen = false;
         this.isTyping = false;
         this.conversationHistory = [];
+        
+        // Typing animation configuration
+        this.typingConfig = {
+            baseSpeed: 3,  // Much faster typing speed (3ms per character)
+            htmlTagSpeed: 1, // Very fast for HTML tags
+            punctuationDelay: 20, // Minimal delay after punctuation
+            soundEnabled: false // Optional typing sound (disabled by default)
+        };
+
+        // Markdown configuration
+        this.markdownConfig = {
+            enabled: true,
+            renderer: null
+        };
+        
         this.init();
     }
 
     init() {
+        this.setupMarkdown();
         this.setupEventListeners();
         this.loadSuggestions();
-        this.addWelcomeMessage();
+        
+        // Add a small delay to ensure DOM is ready
+        setTimeout(() => {
+            this.addWelcomeMessage();
+        }, 500);
+    }
+
+    setupMarkdown() {
+        // Configure marked.js for optimal chatbot rendering
+        if (typeof marked !== 'undefined') {
+            // Configure marked options for security and performance
+            marked.setOptions({
+                breaks: true,        // Convert \n to <br>
+                gfm: true,          // GitHub Flavored Markdown
+                sanitize: false,    // We'll handle sanitization
+                smartLists: true,   // Use smarter list behavior
+                smartypants: false, // Don't use smart quotes
+                xhtml: false        // Don't self-close tags
+            });
+
+            // Create custom renderer
+            this.markdownConfig.renderer = new marked.Renderer();
+            
+            // Custom renderer overrides for better chatbot formatting
+            this.markdownConfig.renderer.heading = function(text, level) {
+                const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+                return `<h${level} id="${escapedText}">${text}</h${level}>`;
+            };
+
+            this.markdownConfig.renderer.code = function(code, language) {
+                if (language) {
+                    return `<pre><code class="language-${language}">${code}</code></pre>`;
+                }
+                return `<pre><code>${code}</code></code></pre>`;
+            };
+
+            this.markdownConfig.renderer.blockquote = function(quote) {
+                return `<blockquote>${quote}</blockquote>`;
+            };
+        } else {
+            console.warn('Marked.js library not loaded - Markdown support disabled');
+            this.markdownConfig.enabled = false;
+        }
     }
 
     setupEventListeners() {
@@ -503,6 +570,163 @@ class LEONIChatbot {
                 this.sendMessage(e.target.textContent);
             }
         });
+
+        // Setup resize functionality
+        this.setupChatResize();
+    }
+
+    setupChatResize() {
+        const chatContainer = document.querySelector('.chat-container');
+        const resizeHandle = document.querySelector('.chat-resize-handle');
+        
+        if (!chatContainer || !resizeHandle) return;
+
+        // Load saved dimensions
+        this.loadChatDimensions();
+
+        let isResizing = false;
+        let startX, startY, startWidth, startHeight;
+
+        const startResize = (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = parseInt(window.getComputedStyle(chatContainer).width, 10);
+            startHeight = parseInt(window.getComputedStyle(chatContainer).height, 10);
+            
+            document.addEventListener('mousemove', doResize);
+            document.addEventListener('mouseup', stopResize);
+            
+            // Disable text selection during resize
+            document.body.style.userSelect = 'none';
+            chatContainer.style.transition = 'none';
+        };
+
+        const doResize = (e) => {
+            if (!isResizing) return;
+            
+            // For left handle: width increases when moving left (negative X change)
+            const newWidth = startWidth + (startX - e.clientX);
+            const newHeight = startHeight + (e.clientY - startY);
+            
+            // Apply constraints
+            const minWidth = 320;
+            const maxWidth = window.innerWidth * 0.8;
+            const minHeight = 400;
+            const maxHeight = window.innerHeight * 0.8;
+            
+            const constrainedWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+            const constrainedHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+            
+            chatContainer.style.width = constrainedWidth + 'px';
+            chatContainer.style.height = constrainedHeight + 'px';
+            
+            // Adjust position to keep it on screen
+            const containerRect = chatContainer.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // For left resize, we need to adjust the right position to maintain the right edge
+            if (containerRect.left < 0) {
+                chatContainer.style.right = (viewportWidth - constrainedWidth - 10) + 'px';
+            }
+            if (containerRect.bottom > viewportHeight) {
+                chatContainer.style.bottom = '10px';
+            }
+        };
+
+        const stopResize = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', doResize);
+            document.removeEventListener('mouseup', stopResize);
+            
+            // Re-enable text selection
+            document.body.style.userSelect = '';
+            chatContainer.style.transition = '';
+            
+            // Save dimensions
+            this.saveChatDimensions();
+        };
+
+        // Add event listeners
+        resizeHandle.addEventListener('mousedown', startResize);
+        
+        // Handle window resize to maintain responsive behavior
+        window.addEventListener('resize', () => {
+            this.adjustChatPosition();
+        });
+    }
+
+    loadChatDimensions() {
+        const chatContainer = document.querySelector('.chat-container');
+        if (!chatContainer) return;
+
+        try {
+            const saved = localStorage.getItem('leonichat-dimensions');
+            if (saved) {
+                const dimensions = JSON.parse(saved);
+                
+                // Apply constraints for current viewport
+                const minWidth = 320;
+                const maxWidth = window.innerWidth * 0.8;
+                const minHeight = 400;
+                const maxHeight = window.innerHeight * 0.8;
+                
+                const width = Math.max(minWidth, Math.min(maxWidth, dimensions.width));
+                const height = Math.max(minHeight, Math.min(maxHeight, dimensions.height));
+                
+                chatContainer.style.width = width + 'px';
+                chatContainer.style.height = height + 'px';
+            }
+        } catch (error) {
+            console.warn('Failed to load chat dimensions:', error);
+        }
+    }
+
+    saveChatDimensions() {
+        const chatContainer = document.querySelector('.chat-container');
+        if (!chatContainer) return;
+
+        try {
+            const dimensions = {
+                width: parseInt(chatContainer.style.width, 10) || 480,
+                height: parseInt(chatContainer.style.height, 10) || 650,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('leonichat-dimensions', JSON.stringify(dimensions));
+        } catch (error) {
+            console.warn('Failed to save chat dimensions:', error);
+        }
+    }
+
+    adjustChatPosition() {
+        const chatContainer = document.querySelector('.chat-container');
+        if (!chatContainer) return;
+
+        const containerRect = chatContainer.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Adjust if container is off-screen
+        if (containerRect.right > viewportWidth) {
+            chatContainer.style.right = '10px';
+        }
+        if (containerRect.bottom > viewportHeight) {
+            chatContainer.style.bottom = '10px';
+        }
+        
+        // Apply responsive constraints
+        const maxWidth = viewportWidth * 0.8;
+        const maxHeight = viewportHeight * 0.8;
+        const currentWidth = parseInt(chatContainer.style.width, 10) || 480;
+        const currentHeight = parseInt(chatContainer.style.height, 10) || 650;
+        
+        if (currentWidth > maxWidth) {
+            chatContainer.style.width = maxWidth + 'px';
+        }
+        if (currentHeight > maxHeight) {
+            chatContainer.style.height = maxHeight + 'px';
+        }
     }
 
     toggleChat() {
@@ -574,20 +798,23 @@ class LEONIChatbot {
         });
     }
 
-    addWelcomeMessage() {
-        const welcomeMessage = `
-            <span class="bot-name">LEONI QMS Assistant</span>
-            Hello! I'm your LEONI Quality Management System assistant. I can help you with:
-            <br><br>
-            • 5S Implementation & Audits
-            • AFP Quality Processes  
-            • QRQC Analysis
-            • Production Line Quality
-            • Defect Analysis & Solutions
-            <br><br>
-            How can I assist you today?
-        `;
-        this.addMessage(welcomeMessage, 'bot');
+    async addWelcomeMessage() {
+        try {
+            // Fetch welcome message from API
+            const response = await fetch(`${this.apiUrl}/welcome`);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                this.addMessage(data.message, 'bot', data.isMarkdown);
+            } else {
+                // Fallback welcome message
+                this.addMessage('# LEONI QMS Assistant\n\nHello! I\'m your LEONI Quality Management System assistant. How can I help you?', 'bot', true);
+            }
+        } catch (error) {
+            console.error('Error fetching welcome message:', error);
+            // Fallback welcome message
+            this.addMessage('# LEONI QMS Assistant\n\nHello! I\'m your LEONI Quality Management System assistant. How can I help you?', 'bot', true);
+        }
     }
 
     async sendMessage(messageText = null) {
@@ -609,25 +836,41 @@ class LEONIChatbot {
         this.showTypingIndicator();
 
         try {
+            // Get current page context for better responses
+            const currentPage = this.getCurrentPageContext();
+            
             const response = await fetch(`${this.apiUrl}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ 
+                    message: message,
+                    context: {
+                        currentPage: currentPage,
+                        userRole: 'quality_manager', // Could be dynamic
+                        timestamp: new Date().toISOString()
+                    }
+                })
             });
 
             const data = await response.json();
             
-            // Hide typing indicator
+            // Hide typing indicator before showing response
             this.hideTypingIndicator();
 
             if (data.status === 'success') {
-                this.addMessage(data.response, 'bot');
+                // Use the isMarkdown flag from API response, fallback to detection
+                const isMarkdownResponse = data.isMarkdown !== undefined ? data.isMarkdown : this.detectMarkdown(data.response);
+                
+                // Add bot response with typing animation and Markdown support
+                this.addMessage(data.response, 'bot', isMarkdownResponse);
+                
                 this.conversationHistory.push({
                     user: message,
                     bot: data.response,
-                    timestamp: data.timestamp
+                    timestamp: data.timestamp,
+                    format: isMarkdownResponse ? 'markdown' : 'html'
                 });
             } else {
                 throw new Error(data.error || 'Unknown error');
@@ -636,37 +879,270 @@ class LEONIChatbot {
             console.error('Chat error:', error);
             this.hideTypingIndicator();
             
-            // Show fallback message
-            const fallbackMessage = `
-                <span class="bot-name">LEONI QMS Assistant</span>
-                I'm currently unable to connect to the server. Please try again later or contact your system administrator.
-                <br><br>
-                In the meantime, you can:
-                • Check the 5S checklist for quality standards
-                • Review the AFP audit procedures
-                • Access the QRQC analysis tools
-            `;
-            this.addMessage(fallbackMessage, 'bot');
+            // Show fallback message with Markdown formatting
+            const fallbackMessage = `**LEONI QMS Assistant**
+
+⚠️ **Connection Issue**
+
+I'm currently unable to connect to the server. Please try again later or contact your system administrator.
+
+### 🔧 In the meantime, you can:
+* Check the **5S checklist** for quality standards
+* Review the **AFP audit procedures**  
+* Access the **QRQC analysis tools**
+
+### 📞 Support
+> If this issue persists, please contact the IT support team.
+
+---
+*System Status: Offline Mode*`;
+            
+            this.addMessage(fallbackMessage, 'bot', true); // Enable Markdown for fallback
         }
     }
 
-    addMessage(message, sender) {
+    getCurrentPageContext() {
+        const currentPath = window.location.pathname;
+        const currentURL = window.location.href;
+        
+        if (currentPath.includes('dashboard') || currentPath.includes('graphs')) {
+            return 'Dashboard';
+        } else if (currentURL.includes('5S') || currentPath.includes('5s')) {
+            return '5S System';
+        } else if (currentURL.includes('AFP') || currentPath.includes('afp')) {
+            return 'AFP System';
+        } else if (currentURL.includes('QRQC') || currentPath.includes('qrqc')) {
+            return 'QRQC Analysis';
+        } else if (currentURL.includes('defect') || currentPath.includes('Defect')) {
+            return 'Defect Management';
+        }
+        return 'General System';
+    }
+
+    // Convert Markdown to HTML for better visualization
+    parseMarkdown(markdownText) {
+        if (!this.markdownConfig.enabled || typeof marked === 'undefined') {
+            // Fallback: basic HTML formatting if Markdown is not available
+            return this.basicMarkdownFallback(markdownText);
+        }
+
+        try {
+            // Parse Markdown to HTML
+            const htmlContent = marked.parse(markdownText, {
+                renderer: this.markdownConfig.renderer
+            });
+            
+            return htmlContent;
+        } catch (error) {
+            console.error('Markdown parsing error:', error);
+            return this.basicMarkdownFallback(markdownText);
+        }
+    }
+
+    // Basic Markdown fallback for essential formatting
+    basicMarkdownFallback(text) {
+        return text
+            // Headers
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            // Bold and italic
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Code blocks
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            // Line breaks
+            .replace(/\n/g, '<br>')
+            // Lists (basic)
+            .replace(/^\* (.*$)/gim, '<li>$1</li>')
+            .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    }
+
+    // Enhanced message processing with Markdown support
+    processMessageContent(content, isMarkdown = false) {
+        if (isMarkdown || this.detectMarkdown(content)) {
+            return this.parseMarkdown(content);
+        }
+        
+        // Check if content is already HTML
+        if (/<[^>]*>/.test(content)) {
+            return content;
+        }
+        
+        // Plain text - convert line breaks to <br>
+        return content.replace(/\n/g, '<br>');
+    }
+
+    // Detect if content contains Markdown syntax
+    detectMarkdown(text) {
+        const markdownPatterns = [
+            /^#{1,6}\s/m,           // Headers
+            /\*\*.*?\*\*/,          // Bold
+            /\*.*?\*/,              // Italic
+            /`.*?`/,                // Inline code
+            /```[\s\S]*?```/,       // Code blocks
+            /^\* /m,                // Unordered lists
+            /^\d+\. /m,             // Ordered lists
+            /^\> /m,                // Blockquotes
+            /\[.*?\]\(.*?\)/,       // Links
+            /!\[.*?\]\(.*?\)/       // Images
+        ];
+        
+        return markdownPatterns.some(pattern => pattern.test(text));
+    }
+
+    addMessage(message, sender, isMarkdown = false) {
+        console.log('📧 Adding message:', { sender, isMarkdown, messageLength: message.length });
+        
         const messagesContainer = document.querySelector('.chat-messages');
-        if (!messagesContainer) return;
+        if (!messagesContainer) {
+            console.error('❌ Messages container not found!');
+            return;
+        }
 
         const messageElement = document.createElement('div');
         messageElement.className = `chat-message ${sender}`;
         
         if (sender === 'bot') {
-            messageElement.innerHTML = message;
+            // Process message content with Markdown support
+            const processedContent = this.processMessageContent(message, isMarkdown);
+            console.log('🔄 Processed content:', processedContent.substring(0, 100) + '...');
+            
+            // For bot messages, implement fast typing animation
+            messageElement.innerHTML = '';
+            messagesContainer.appendChild(messageElement);
+            
+            // Set initial styling to ensure proper expansion
+            messageElement.style.minHeight = 'auto';
+            messageElement.style.height = 'auto';
+            messageElement.style.maxHeight = 'none';
+            messageElement.style.overflow = 'visible';
+            messageElement.style.flexShrink = '0';
+            
+            // Start monitoring message expansion
+            this.startMessageMonitoring(messageElement);
+            
+            // Use HTML typing for processed content
+            this.typeHTMLMessage(messageElement, processedContent);
         } else {
+            // User messages appear instantly
             messageElement.textContent = message;
+            messagesContainer.appendChild(messageElement);
+            // Immediate scroll for user messages
+            this.scrollToBottom();
         }
+    }
+
+    scrollToBottom() {
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (messagesContainer) {
+            // Use smooth scrolling and ensure we're at the very bottom
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 10);
+        }
+    }
+
+    typeMessage(element, message, speed = null) {
+        // Use configured speed or default
+        speed = speed || this.typingConfig.baseSpeed;
         
-        messagesContainer.appendChild(messageElement);
+        let index = 0;
+        const isHTML = /<[^>]*>/.test(message); // Check if message contains HTML
         
-        // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Add typing class for shimmer effect
+        element.classList.add('typing');
+        
+        if (isHTML) {
+            // For HTML content, type it as HTML
+            this.typeHTMLMessage(element, message, speed);
+        } else {
+            // For plain text, type character by character
+            const typeChar = () => {
+                if (index < message.length) {
+                    const char = message.charAt(index);
+                    element.textContent += char;
+                    index++;
+                    
+                    // Add extra delay after punctuation for natural rhythm
+                    let nextDelay = speed;
+                    if (/[.!?]/.test(char)) {
+                        nextDelay += this.typingConfig.punctuationDelay;
+                    }
+                    
+                    // Scroll to bottom every few characters for smooth scrolling
+                    if (index % 5 === 0) {
+                        this.scrollToBottom();
+                    }
+                    
+                    setTimeout(typeChar, nextDelay);
+                } else {
+                    // Remove typing class when done and ensure final scroll
+                    element.classList.remove('typing');
+                    // Force a reflow to ensure proper sizing
+                    this.ensureMessageVisibility(element);
+                    this.scrollToBottom();
+                }
+            };
+            typeChar();
+        }
+    }
+
+    typeHTMLMessage(element, htmlMessage, speed = null) {
+        // Use configured speed or default
+        speed = speed || this.typingConfig.baseSpeed;
+        
+        let index = 0;
+        let currentHTML = '';
+        let isInsideTag = false;
+        let charCount = 0;
+        
+        const typeChar = () => {
+            if (index < htmlMessage.length) {
+                const char = htmlMessage.charAt(index);
+                
+                if (char === '<') {
+                    isInsideTag = true;
+                }
+                
+                currentHTML += char;
+                
+                if (char === '>') {
+                    isInsideTag = false;
+                    element.innerHTML = currentHTML;
+                } else if (!isInsideTag) {
+                    // Only update display for visible characters
+                    element.innerHTML = currentHTML;
+                    charCount++;
+                    
+                    // Scroll periodically during typing for smooth scrolling
+                    if (charCount % 10 === 0) {
+                        this.scrollToBottom();
+                    }
+                }
+                
+                index++;
+                
+                // Faster typing for HTML tags, normal speed for text
+                // Add punctuation delays for visible text
+                let nextSpeed = speed;
+                if (isInsideTag) {
+                    nextSpeed = this.typingConfig.htmlTagSpeed;
+                } else if (/[.!?]/.test(char)) {
+                    nextSpeed += this.typingConfig.punctuationDelay;
+                }
+                
+                setTimeout(typeChar, nextSpeed);
+            } else {
+                // Remove typing class when done and ensure final scroll
+                element.classList.remove('typing');
+                // Force a reflow to ensure proper sizing
+                this.ensureMessageVisibility(element);
+                this.scrollToBottom();
+            }
+        };
+        
+        typeChar();
     }
 
     showTypingIndicator() {
@@ -694,5 +1170,163 @@ class LEONIChatbot {
             typingElement.remove();
         }
         this.isTyping = false;
+    }
+
+    // Utility methods for typing configuration
+    setTypingSpeed(speed) {
+        this.typingConfig.baseSpeed = Math.max(1, Math.min(20, speed)); // Clamp between 1-20ms for very fast typing
+        this.typingConfig.htmlTagSpeed = Math.max(1, Math.floor(speed / 3)); // Proportional HTML tag speed
+        console.log(`Chatbot typing speed set to ${this.typingConfig.baseSpeed}ms per character`);
+    }
+
+    toggleTypingSound() {
+        this.typingConfig.soundEnabled = !this.typingConfig.soundEnabled;
+        console.log(`Chatbot typing sound ${this.typingConfig.soundEnabled ? 'enabled' : 'disabled'}`);
+    }
+
+    // Enhanced debugging/development method
+    getTypingStats() {
+        return {
+            baseSpeed: this.typingConfig.baseSpeed,
+            htmlTagSpeed: this.typingConfig.htmlTagSpeed,
+            punctuationDelay: this.typingConfig.punctuationDelay,
+            soundEnabled: this.typingConfig.soundEnabled,
+            conversationCount: this.conversationHistory.length,
+            isCurrentlyTyping: this.isTyping,
+            markdownEnabled: this.markdownConfig.enabled,
+            markdownLibraryLoaded: typeof marked !== 'undefined',
+            lastMessageFormat: this.conversationHistory.length > 0 ? 
+                this.conversationHistory[this.conversationHistory.length - 1].format : 'none'
+        };
+    }
+
+    // Method to instantly show response (for testing or user preference)
+    setInstantMode(enabled = true) {
+        if (enabled) {
+            this.typingConfig.baseSpeed = 1;
+            this.typingConfig.htmlTagSpeed = 1;
+            this.typingConfig.punctuationDelay = 0;
+            console.log('Chatbot set to instant mode');
+        } else {
+            this.typingConfig.baseSpeed = 3;
+            this.typingConfig.htmlTagSpeed = 1;
+            this.typingConfig.punctuationDelay = 20;
+            console.log('Chatbot set to normal typing mode');
+        }
+    }
+
+    // Markdown management utilities
+    toggleMarkdown(enabled = null) {
+        if (enabled === null) {
+            this.markdownConfig.enabled = !this.markdownConfig.enabled;
+        } else {
+            this.markdownConfig.enabled = enabled;
+        }
+        return this.markdownConfig.enabled;
+    }
+
+    isMarkdownEnabled() {
+        return this.markdownConfig.enabled && typeof marked !== 'undefined';
+    }
+
+    // Missing utility methods for message monitoring and expansion
+    startMessageMonitoring(messageElement) {
+        if (!messageElement) {
+            console.warn('No message element provided for monitoring');
+            return;
+        }
+
+        // Set up a ResizeObserver to monitor the message element
+        if (typeof ResizeObserver !== 'undefined') {
+            const resizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    this.ensureMessageVisibility(entry.target);
+                }
+            });
+            
+            resizeObserver.observe(messageElement);
+            
+            // Store the observer on the element for cleanup if needed
+            messageElement._resizeObserver = resizeObserver;
+        } else {
+            // Fallback for browsers without ResizeObserver
+            setTimeout(() => {
+                this.ensureMessageVisibility(messageElement);
+            }, 100);
+        }
+    }
+
+    ensureMessageVisibility(messageElement) {
+        if (!messageElement) {
+            console.warn('No message element provided for visibility check');
+            return;
+        }
+
+        const messagesContainer = document.querySelector('.chat-messages');
+        if (!messagesContainer) {
+            console.warn('Messages container not found');
+            return;
+        }
+
+        // Check if the message is fully visible
+        const containerRect = messagesContainer.getBoundingClientRect();
+        const messageRect = messageElement.getBoundingClientRect();
+        
+        const isFullyVisible = (
+            messageRect.top >= containerRect.top &&
+            messageRect.bottom <= containerRect.bottom
+        );
+
+        if (!isFullyVisible) {
+            this.scrollToBottom();
+        }
+
+        // Ensure proper styling for expanded content
+        this.fixMessageExpansion(messageElement);
+    }
+
+    fixMessageExpansion(messageElement) {
+        if (!messageElement) return;
+
+        // Remove any height constraints that might interfere with content
+        messageElement.style.minHeight = 'auto';
+        messageElement.style.height = 'auto';
+        messageElement.style.maxHeight = 'none';
+        messageElement.style.overflow = 'visible';
+        
+        // Ensure the element can expand properly
+        messageElement.style.flexShrink = '0';
+        messageElement.style.flexGrow = '1';
+        
+        // Fix any nested content expansion issues
+        const contentElements = messageElement.querySelectorAll('*');
+        contentElements.forEach(element => {
+            if (element.style.height && element.style.height !== 'auto') {
+                element.style.height = 'auto';
+            }
+        });
+    }
+
+    fixAllMessageExpansion() {
+        const allMessages = document.querySelectorAll('.chat-message');
+        allMessages.forEach(message => {
+            this.fixMessageExpansion(message);
+        });
+        
+        // Ensure the container scrolls to show the latest content
+        setTimeout(() => {
+            this.scrollToBottom();
+        }, 100);
+    }
+
+    // Cleanup method for observers
+    cleanupMessageObservers() {
+        const allMessages = document.querySelectorAll('.chat-message');
+        allMessages.forEach(message => {
+            if (message._resizeObserver) {
+                message._resizeObserver.disconnect();
+                delete message._resizeObserver;
+            }
+        });
     }
 }

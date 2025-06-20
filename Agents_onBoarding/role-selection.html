@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Selection - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .selection-container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+        }
+
+        .header-section {
+            margin-bottom: 3rem;
+        }
+
+        .logo-section {
+            margin-bottom: 2rem;
+        }
+
+        .logo-section img {
+            height: 120px;
+            width: auto;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .selection-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .selection-subtitle {
+            font-size: 1.4rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .selection-description {
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            border: 2px solid #3182ce;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .selection-description h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .selection-description p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .role-card:hover::before {
+            left: 100%;
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .role-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 25px;
+            margin: 0 auto 1.5rem auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+
+        .role-card:hover .role-icon::after {
+            transform: rotate(90deg);
+        }
+
+        /* Role-specific color schemes */
+        .aql-card .role-icon {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+        }
+
+        .technician-card .role-icon {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+
+        .leader-card .role-icon {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+
+        .manager-card .role-icon {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.4);
+        }
+
+        .role-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-subtitle {
+            font-size: 1rem;
+            color: #718096;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .role-features {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .role-features li {
+            padding: 0.4rem 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.95rem;
+        }
+
+        .role-features li:before {
+            content: "✓";
+            color: #38a169;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .access-badge {
+            background: #f0f8ff;
+            color: #3182ce;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .footer-section {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        .back-nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+        }
+
+        /* Coming Soon overlay for future roles */
+        .coming-soon {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .coming-soon::after {
+            content: 'Coming Soon';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(233, 113, 113, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .selection-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .selection-title {
+                font-size: 2.2rem;
+            }
+
+            .selection-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .role-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .role-icon {
+                font-size: 3rem;
+                width: 80px;
+                height: 80px;
+            }
+
+            .back-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .selection-container {
+                padding: 1.5rem;
+            }
+
+            .logo-section img {
+                height: 80px;
+            }
+
+            .selection-title {
+                font-size: 1.8rem;
+            }
+
+            .role-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Animation for role cards */
+        .role-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .role-card:nth-child(1) { animation-delay: 0.1s; }
+        .role-card:nth-child(2) { animation-delay: 0.2s; }
+        .role-card:nth-child(3) { animation-delay: 0.3s; }
+        .role-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="selection-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="logo-section">
+                <img src="../assets/logo.png" alt="LEONI Logo">
+            </div>
+            <h1 class="selection-title">Select Your Role</h1>
+            <p class="selection-subtitle">Choose your position to access personalized quality management tools</p>
+            
+            <div class="selection-description">
+                <h3><i class="fas fa-info-circle"></i> Role-Based Access Control</h3>
+                <p>
+                    Our Quality Management System provides customized interfaces based on your role and responsibilities. 
+                    Each role has access to specific tools, dashboards, and functionalities designed to optimize your 
+                    workflow and ensure compliance with LEONI quality standards.
+                </p>
+            </div>
+        </div>
+
+        <!-- Roles Grid -->
+        <div class="roles-grid">
+            <!-- AQL - Agent Quality Ligne -->
+            <a href="aql-onboarding.html" class="role-card aql-card">
+                <div class="role-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="role-title">AQL</div>
+                <div class="role-subtitle">Agent Quality Ligne</div>
+                <ul class="role-features">
+                    <li>Defect insertion & tracking</li>
+                    <li>5S workplace audits</li>
+                    <li>AFP quality assessments</li>
+                    <li>TRAM metrics (Scrap/Rework/PPM)</li>
+                    <li>Vigilance testing</li>
+                    <li>Quality archives access</li>
+                </ul>
+                <div class="access-badge">6 Tools Available</div>
+            </a>
+
+            <!-- Technicians -->
+            <a href="technician-onboarding.html" class="role-card technician-card coming-soon">
+                <div class="role-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="role-title">Technician</div>
+                <div class="role-subtitle">Production Line Technician</div>
+                <ul class="role-features">
+                    <li>Equipment maintenance logs</li>
+                    <li>Technical issue reporting</li>
+                    <li>Process documentation</li>
+                    <li>Calibration tracking</li>
+                    <li>Technical training modules</li>
+                    <li>Work order management</li>
+                </ul>
+                <div class="access-badge">6 Tools Available</div>
+            </a>
+
+            <!-- Team Leaders -->
+            <a href="leader-onboarding.html" class="role-card leader-card coming-soon">
+                <div class="role-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <div class="role-title">Team Leader</div>
+                <div class="role-subtitle">Production Team Leader</div>
+                <ul class="role-features">
+                    <li>Team performance metrics</li>
+                    <li>Schedule management</li>
+                    <li>Quality trend analysis</li>
+                    <li>Team training oversight</li>
+                    <li>Issue escalation</li>
+                    <li>Resource allocation</li>
+                </ul>
+                <div class="access-badge">8 Tools Available</div>
+            </a>
+
+            <!-- Manager -->
+            <a href="manager-onboarding.html" class="role-card manager-card coming-soon">
+                <div class="role-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="role-title">Manager</div>
+                <div class="role-subtitle">Quality Manager</div>
+                <ul class="role-features">
+                    <li>Executive dashboards</li>
+                    <li>Strategic planning tools</li>
+                    <li>Cross-functional reports</li>
+                    <li>Budget management</li>
+                    <li>Compliance oversight</li>
+                    <li>System administration</li>
+                </ul>
+                <div class="access-badge">12+ Tools Available</div>
+            </a>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            
+            <div class="back-nav">
+                <a href="../index.html" class="nav-btn secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Main
+                </a>
+                <a href="../graphs/dashboard.html" class="nav-btn primary">
+                    <i class="fas fa-chart-bar"></i> Quality Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced click feedback for role cards
+            const roleCards = document.querySelectorAll('.role-card:not(.coming-soon)');
+            
+            roleCards.forEach((card) => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Determine role from card class
+                    let selectedRole = '';
+                    if (card.classList.contains('aql-card')) {
+                        selectedRole = 'AQL';
+                    } else if (card.classList.contains('technician-card')) {
+                        selectedRole = 'Technician';
+                    } else if (card.classList.contains('leader-card')) {
+                        selectedRole = 'Team Leader';
+                    } else if (card.classList.contains('manager-card')) {
+                        selectedRole = 'Manager';
+                    }
+                    
+                    // Store role selection
+                    localStorage.setItem('userRole', selectedRole);
+                    localStorage.setItem('roleSelectedAt', new Date().toISOString());
+                    
+                    // Add loading state
+                    card.style.transform = 'scale(0.95)';
+                    
+                    // Visual feedback
+                    const icon = card.querySelector('.role-icon');
+                    icon.style.transform = 'scale(1.1)';
+                    
+                    setTimeout(() => {
+                        window.location.href = card.href;
+                    }, 300);
+                });
+            });
+
+            // Handle coming soon cards
+            const comingSoonCards = document.querySelectorAll('.coming-soon');
+            comingSoonCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Show temporary notification
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white;
+                        padding: 1rem 2rem;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        z-index: 1000;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                    `;
+                    notification.textContent = 'This role interface is coming soon!';
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 2000);
+                });
+            });
+
+            // Navigation buttons enhancement
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    btn.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        window.location.href = btn.href;
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

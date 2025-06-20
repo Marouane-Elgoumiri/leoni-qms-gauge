@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQL Onboarding - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .role-description {
+            background: #f0f8ff;
+            border: 2px solid #3182ce;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .role-description h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .role-description ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .role-description li {
+            padding: 0.3rem 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .role-description li:before {
+            content: "✓";
+            color: #38a169;
+            font-weight: bold;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            margin: 0 auto 1rem auto;
+        }
+
+        /* Color schemes for different functions */
+        .defect-card .nav-icon {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+            color: white;
+        }
+
+        .audit-5s-card .nav-icon {
+            background: linear-gradient(135deg, #68d391, #38a169);
+            color: white;
+        }
+
+        .audit-afp-card .nav-icon {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+        }
+
+        .tram-card .nav-icon {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: white;
+        }
+
+        .vigilance-card .nav-icon {
+            background: linear-gradient(135deg, #fbb042, #ed8936);
+            color: white;
+        }
+
+        .archives-card .nav-icon {
+            background: linear-gradient(135deg, #718096, #4a5568);
+            color: white;
+        }
+
+        .nav-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .nav-description {
+            font-size: 1rem;
+            color: #718096;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .nav-features {
+            list-style: none;
+            padding: 0;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .nav-features li {
+            padding: 0.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-features li:before {
+            content: "•";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .footer-navigation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+        }
+
+        .nav-btn.danger {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navigation-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .nav-card {
+                padding: 1.5rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .nav-icon {
+                font-size: 2.5rem;
+                width: 60px;
+                height: 60px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header-section,
+            .footer-navigation {
+                padding: 1.5rem;
+            }
+
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Animation for cards */
+        .nav-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .nav-card:nth-child(1) { animation-delay: 0.1s; }
+        .nav-card:nth-child(2) { animation-delay: 0.2s; }
+        .nav-card:nth-child(3) { animation-delay: 0.3s; }
+        .nav-card:nth-child(4) { animation-delay: 0.4s; }
+        .nav-card:nth-child(5) { animation-delay: 0.5s; }
+        .nav-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="role-badge">
+                <i class="fas fa-user-check"></i> AQL - Agent Quality Ligne
+            </div>
+            <h1 class="welcome-title">Welcome to Your Quality Dashboard</h1>
+            <p class="welcome-subtitle">Quality Line Agent - Production Quality Control & Monitoring</p>
+            
+            <div class="role-description">
+                <h3><i class="fas fa-clipboard-list"></i> Your Responsibilities & Access</h3>
+                <ul>
+                    <li>Monitor and record quality defects on production lines</li>
+                    <li>Perform 5S audits and workplace organization assessments</li>
+                    <li>Conduct AFP (Audit Fabrication Process) quality checks</li>
+                    <li>Track TRAM metrics (Scrap, Rework, PPM calculations)</li>
+                    <li>Complete vigilance tests and safety protocols</li>
+                    <li>Access historical data and quality archives</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navigation Grid -->
+        <div class="navigation-grid">
+            <!-- Defect Insertion -->
+            <a href="../Defect_insersion/aql-defect-insertion.html" class="nav-card defect-card">
+                <div class="nav-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-title">Defect Insertion</div>
+                <div class="nav-description">Record and track quality defects found during production line inspections</div>
+                <ul class="nav-features">
+                    <li>Real-time defect logging</li>
+                    <li>Production line assignment</li>
+                    <li>Severity classification</li>
+                    <li>Photo documentation</li>
+                </ul>
+            </a>
+
+            <!-- 5S Audit -->
+            <a href="../5S/5s-checklist.html" class="nav-card audit-5s-card">
+                <div class="nav-icon">
+                    <i class="fas fa-broom"></i>
+                </div>
+                <div class="nav-title">5S Audit</div>
+                <div class="nav-description">Workplace organization and cleanliness assessment across production areas</div>
+                <ul class="nav-features">
+                    <li>60 criteria evaluation</li>
+                    <li>4 production zones</li>
+                    <li>Score tracking</li>
+                    <li>Improvement actions</li>
+                </ul>
+            </a>
+
+            <!-- AFP Audit -->
+            <a href="../AFP/afp-audit.html" class="nav-card audit-afp-card">
+                <div class="nav-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="nav-title">AFP Audit</div>
+                <div class="nav-description">Audit Fabrication Process - comprehensive quality assessment</div>
+                <ul class="nav-features">
+                    <li>100 checkpoint system</li>
+                    <li>Assembly & testing audits</li>
+                    <li>Process compliance</li>
+                    <li>Quality documentation</li>
+                </ul>
+            </a>
+
+            <!-- TRAM Metrics -->
+            <a href="../Values/quality-metrics.html" class="nav-card tram-card">
+                <div class="nav-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-title">TRAM Metrics</div>
+                <div class="nav-description">Track Scrap weight, Rework status, and Parts Per Million (PPM) calculations</div>
+                <ul class="nav-features">
+                    <li>Scrap weight monitoring</li>
+                    <li>Rework status tracking</li>
+                    <li>PPM defect calculations</li>
+                    <li>Production line metrics</li>
+                </ul>
+            </a>
+
+            <!-- Vigilance Test -->
+            <a href="../Vigilance_test/vigilance-test.html" class="nav-card vigilance-card">
+                <div class="nav-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="nav-title">Vigilance Test</div>
+                <div class="nav-description">Safety awareness and attention assessment for quality control personnel</div>
+                <ul class="nav-features">
+                    <li>Attention measurement</li>
+                    <li>Reaction time testing</li>
+                    <li>Safety awareness</li>
+                    <li>Performance tracking</li>
+                </ul>
+            </a>
+
+            <!-- Archives -->
+            <a href="../Archives/aql-archives.html" class="nav-card archives-card">
+                <div class="nav-icon">
+                    <i class="fas fa-archive"></i>
+                </div>
+                <div class="nav-title">Quality Archives</div>
+                <div class="nav-description">Access historical quality data, reports, and documentation</div>
+                <ul class="nav-features">
+                    <li>Historical defect data</li>
+                    <li>Audit reports</li>
+                    <li>Trend analysis</li>
+                    <li>Export capabilities</li>
+                </ul>
+            </a>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="footer-navigation">
+            <h3>Navigation & Support</h3>
+            <p>Access additional tools and get help with the quality management system</p>
+            
+            <div class="nav-buttons">
+                <a href="../index.html" class="nav-btn secondary">
+                    <i class="fas fa-home"></i> Main Dashboard
+                </a>
+                
+                <a href="role-selection.html" class="nav-btn danger">
+                    <i class="fas fa-user-cog"></i> Change Role
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced navigation with role validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user has AQL role access (placeholder for future authentication)
+            const userRole = localStorage.getItem('userRole') || 'AQL';
+            
+            if (userRole !== 'AQL') {
+                console.warn('Unauthorized access attempt to AQL dashboard');
+                // In production, redirect to login or role selection
+            }
+
+            // Enhanced click feedback for navigation cards
+            const navCards = document.querySelectorAll('.nav-card');
+            
+            navCards.forEach((card, index) => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Add loading state
+                    card.style.transform = 'scale(0.95)';
+                    
+                    // Store current role for navigation
+                    localStorage.setItem('userRole', 'AQL');
+                    localStorage.setItem('lastAccessed', new Date().toISOString());
+                    
+                    setTimeout(() => {
+                        window.location.href = card.href;
+                    }, 200);
+                });
+            });
+
+            // Navigation buttons enhancement
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    btn.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        window.location.href = btn.href;
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
