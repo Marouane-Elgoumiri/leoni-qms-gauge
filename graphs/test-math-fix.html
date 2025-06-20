@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Fix Test - LEONI QMS</title>
+    <!-- KaTeX for LaTeX math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <!-- Marked.js for markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #1a365d;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .test-title {
+            font-weight: bold;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+        
+        .test-input {
+            background: #f0f8ff;
+            border: 1px solid #b0d4f1;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .test-output {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            min-height: 40px;
+        }
+        
+        .math-display {
+            display: block;
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        .math-inline {
+            display: inline;
+            padding: 2px 4px;
+            background: #f8f9ff;
+            border-radius: 4px;
+            border: 1px solid #e0e7ff;
+            margin: 0 2px;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        button {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Math Processing Fix Test</h1>
+        
+        <div class="test-section">
+            <div class="test-title">📊 Environment Check</div>
+            <div id="environmentCheck" class="test-output">
+                <em>Loading...</em>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🔧 Direct Math Processing Test</div>
+            <div class="test-input">
+                Input: "Process Capability: $$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$ and inline math $Q = \\frac{Defects}{Total} \\times 100$"
+            </div>
+            <button onclick="testMathProcessing()">Test Math Processing</button>
+            <div id="mathProcessingResult" class="test-output">
+                <em>Click test button to run</em>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">📝 Markdown + Math Test</div>
+            <div class="test-input">
+                Input: "# Quality Metrics\n\n**Process Capability:**\n$$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$\n\n**Defect Rate:** $DR = \\frac{\\text{Defects}}{\\text{Total}} \\times 100$"
+            </div>
+            <button onclick="testMarkdownMath()">Test Markdown + Math</button>
+            <div id="markdownMathResult" class="test-output">
+                <em>Click test button to run</em>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🎯 Direct KaTeX Test</div>
+            <button onclick="testDirectKaTeX()">Test Direct KaTeX</button>
+            <div id="directKaTeXResult" class="test-output">
+                <em>Click test button to run</em>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🔍 Debug Console</div>
+            <div id="debugConsole" class="test-output" style="font-family: monospace; font-size: 12px; height: 200px; overflow-y: auto; background: #1a1a1a; color: #00ff00;">
+                <em>Console output will appear here...</em>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Override console.log to capture output
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const debugConsole = document.getElementById('debugConsole');
+        
+        function addToDebugConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff4444' : type === 'warn' ? '#ffaa00' : '#00ff00';
+            debugConsole.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+            debugConsole.scrollTop = debugConsole.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addToDebugConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addToDebugConsole(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            addToDebugConsole(args.join(' '), 'warn');
+        };
+        
+        // Environment check
+        function checkEnvironment() {
+            const results = [];
+            
+            // Check KaTeX
+            if (typeof katex !== 'undefined') {
+                try {
+                    const test = katex.renderToString('E = mc^2', { throwOnError: false });
+                    results.push('✅ KaTeX: Available and working');
+                } catch (error) {
+                    results.push('❌ KaTeX: Available but error - ' + error.message);
+                }
+            } else {
+                results.push('❌ KaTeX: Not available');
+            }
+            
+            // Check Marked
+            if (typeof marked !== 'undefined') {
+                try {
+                    const test = marked.parse('# Test');
+                    results.push('✅ Marked.js: Available and working');
+                } catch (error) {
+                    results.push('❌ Marked.js: Available but error - ' + error.message);
+                }
+            } else {
+                results.push('❌ Marked.js: Not available');
+            }
+            
+            document.getElementById('environmentCheck').innerHTML = results.join('<br>');
+        }
+        
+        // Simplified math processing functions (copied from dashboard.js)
+        let _mathPlaceholders = [];
+        let _uniqueId = null;
+        
+        function preprocessMathExpressions(text) {
+            const mathPlaceholders = [];
+            let processedText = text;
+            
+            // Use simple placeholder strings that won't be modified by markdown
+            const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+            
+            console.log('🔢 Starting math preprocessing...');
+            console.log('📝 Input text:', text);
+            
+            // Handle display math ($$...$$)
+            processedText = processedText.replace(/\$\$([^$]+)\$\$/g, (match, math) => {
+                const placeholder = `LEONI_MATH_DISPLAY_${uniqueId}_${mathPlaceholders.length}`;
+                mathPlaceholders.push({ type: 'display', content: math.trim(), placeholder });
+                console.log('🔢 Display math found:', math.trim());
+                console.log('📝 Using placeholder:', placeholder);
+                return placeholder;
+            });
+            
+            // Handle inline math ($...$)
+            processedText = processedText.replace(/\$([^$\n]+)\$/g, (match, math) => {
+                const placeholder = `LEONI_MATH_INLINE_${uniqueId}_${mathPlaceholders.length}`;
+                mathPlaceholders.push({ type: 'inline', content: math.trim(), placeholder });
+                console.log('🔢 Inline math found:', math.trim());
+                console.log('📝 Using placeholder:', placeholder);
+                return placeholder;
+            });
+            
+            // Store placeholders for post-processing
+            _mathPlaceholders = mathPlaceholders;
+            _uniqueId = uniqueId;
+            console.log('📝 Math preprocessing complete. Placeholders:', mathPlaceholders.length);
+            console.log('🔄 Processed text:', processedText);
+            return processedText;
+        }
+        
+        function postprocessMathExpressions(html) {
+            if (!_mathPlaceholders || typeof katex === 'undefined') {
+                console.log('⚠️ Math postprocessing skipped:', !_mathPlaceholders ? 'No placeholders' : 'KaTeX not available');
+                return html;
+            }
+            
+            let processedHtml = html;
+            console.log('🔄 Processing', _mathPlaceholders.length, 'math placeholders');
+            console.log('🔍 HTML before processing:', processedHtml.substring(0, 200) + '...');
+            
+            _mathPlaceholders.forEach(({ type, content, placeholder }, index) => {
+                console.log(`🔢 Processing placeholder ${index}:`, placeholder);
+                console.log(`📝 Content:`, content);
+                
+                // Check if placeholder exists
+                if (processedHtml.includes(placeholder)) {
+                    console.log(`🔍 Found placeholder exactly:`, placeholder);
+                    
+                    try {
+                        let renderedMath;
+                        if (type === 'display') {
+                            renderedMath = katex.renderToString(content, {
+                                displayMode: true,
+                                throwOnError: false,
+                                output: 'html',
+                                trust: true
+                            });
+                            renderedMath = `<div class="math-display">${renderedMath}</div>`;
+                        } else {
+                            renderedMath = katex.renderToString(content, {
+                                displayMode: false,
+                                throwOnError: false,
+                                output: 'html',
+                                trust: true
+                            });
+                            renderedMath = `<span class="math-inline">${renderedMath}</span>`;
+                        }
+                        
+                        // Replace all occurrences of the placeholder
+                        const beforeCount = (processedHtml.split(placeholder).length - 1);
+                        processedHtml = processedHtml.split(placeholder).join(renderedMath);
+                        const afterCount = (processedHtml.split(placeholder).length - 1);
+                        
+                        console.log('✅ Math rendered:', type, '| Before:', beforeCount, '| After:', afterCount);
+                        console.log('🎨 Rendered HTML:', renderedMath.substring(0, 100) + '...');
+                    } catch (error) {
+                        console.error('❌ KaTeX rendering error:', error);
+                        // Fallback to raw math expression
+                        const fallback = type === 'display' ? 
+                            `<div class="math-display"><code>$$${content}$$</code></div>` :
+                            `<span class="math-inline"><code>$${content}$</code></span>`;
+                        processedHtml = processedHtml.split(placeholder).join(fallback);
+                        console.log('🔄 Used fallback for:', content);
+                    }
+                } else {
+                    console.warn('⚠️ Placeholder not found:', placeholder);
+                    console.log('🔍 Available text sample:', processedHtml.substring(0, 300) + '...');
+                }
+            });
+            
+            console.log('🔍 HTML after processing:', processedHtml.substring(0, 200) + '...');
+            
+            // Clear placeholders
+            _mathPlaceholders = [];
+            _uniqueId = null;
+            return processedHtml;
+        }
+        
+        // Test functions
+        function testMathProcessing() {
+            console.log('🧪 Testing math processing...');
+            const input = "Process Capability: $$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$ and inline math $Q = \\frac{Defects}{Total} \\times 100$";
+            
+            try {
+                const preprocessed = preprocessMathExpressions(input);
+                const postprocessed = postprocessMathExpressions(preprocessed);
+                
+                document.getElementById('mathProcessingResult').innerHTML = `
+                    <div class="status success">✅ Math processing successful</div>
+                    <div><strong>Result:</strong> ${postprocessed}</div>
+                `;
+            } catch (error) {
+                console.error('Math processing error:', error);
+                document.getElementById('mathProcessingResult').innerHTML = `
+                    <div class="status error">❌ Math processing failed: ${error.message}</div>
+                `;
+            }
+        }
+        
+        function testMarkdownMath() {
+            console.log('🧪 Testing markdown + math...');
+            const input = "# Quality Metrics\n\n**Process Capability:**\n$$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$\n\n**Defect Rate:** $DR = \\frac{\\text{Defects}}{\\text{Total}} \\times 100$";
+            
+            try {
+                const preprocessed = preprocessMathExpressions(input);
+                const markdownHtml = marked.parse(preprocessed);
+                const postprocessed = postprocessMathExpressions(markdownHtml);
+                
+                document.getElementById('markdownMathResult').innerHTML = `
+                    <div class="status success">✅ Markdown + Math processing successful</div>
+                    <div><strong>Result:</strong> ${postprocessed}</div>
+                `;
+            } catch (error) {
+                console.error('Markdown + Math processing error:', error);
+                document.getElementById('markdownMathResult').innerHTML = `
+                    <div class="status error">❌ Markdown + Math processing failed: ${error.message}</div>
+                `;
+            }
+        }
+        
+        function testDirectKaTeX() {
+            console.log('🧪 Testing direct KaTeX...');
+            
+            try {
+                const displayMath = katex.renderToString('Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)', {
+                    displayMode: true,
+                    throwOnError: false
+                });
+                
+                const inlineMath = katex.renderToString('Q = \\frac{\\text{Defects}}{\\text{Total}} \\times 100', {
+                    displayMode: false,
+                    throwOnError: false
+                });
+                
+                document.getElementById('directKaTeXResult').innerHTML = `
+                    <div class="status success">✅ Direct KaTeX rendering successful</div>
+                    <div><strong>Display Math:</strong> <div class="math-display">${displayMath}</div></div>
+                    <div><strong>Inline Math:</strong> <span class="math-inline">${inlineMath}</span></div>
+                `;
+            } catch (error) {
+                console.error('Direct KaTeX error:', error);
+                document.getElementById('directKaTeXResult').innerHTML = `
+                    <div class="status error">❌ Direct KaTeX failed: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkEnvironment();
+            console.log('🚀 Math Fix Test initialized');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUICK Math Test - LEONI QMS</title>
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #005999;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            border-left: 4px solid #007acc;
+        }
+        
+        .console {
+            background-color: #000;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 Quick Math Rendering Test</h1>
+    
+    <div class="test-box">
+        <h2>Step 1: Libraries Check</h2>
+        <div id="libraryCheck"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Step 2: Direct KaTeX Test</h2>
+        <button onclick="testDirectKaTeX()">Test KaTeX Directly</button>
+        <div id="katexResult" class="result" style="display:none;"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Step 4: Full Integration Test</h2>
+        <button onclick="testFullIntegration()">Test Complete Flow</button>
+        <div id="integrationResult" class="result" style="display:none;"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Console Output</h2>
+        <div id="console" class="console"></div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        // Console capture
+        const consoleDiv = document.getElementById('console');
+        function log(message) {
+            console.log(message);
+            consoleDiv.innerHTML += message + '<br>';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        // Step 1: Check libraries
+        function checkLibraries() {
+            const checkDiv = document.getElementById('libraryCheck');
+            let status = '';
+            
+            if (typeof katex !== 'undefined') {
+                status += '✅ KaTeX loaded<br>';
+                log('✅ KaTeX available');
+            } else {
+                status += '❌ KaTeX NOT loaded<br>';
+                log('❌ KaTeX not available');
+            }
+            
+            if (typeof marked !== 'undefined') {
+                status += '✅ Marked.js loaded<br>';
+                log('✅ Marked.js available');
+            } else {
+                status += '❌ Marked.js NOT loaded<br>';
+                log('❌ Marked.js not available');
+            }
+            
+            checkDiv.innerHTML = status;
+        }
+
+        // Step 2: Test direct KaTeX
+        function testDirectKaTeX() {
+            const resultDiv = document.getElementById('katexResult');
+            resultDiv.style.display = 'block';
+            
+            if (typeof katex === 'undefined') {
+                resultDiv.innerHTML = '❌ KaTeX not available';
+                log('❌ KaTeX test failed - library not loaded');
+                return;
+            }
+            
+            try {
+                log('🧪 Testing direct KaTeX rendering...');
+                
+                const testFormula = 'Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)';
+                const rendered = katex.renderToString(testFormula, {
+                    displayMode: true,
+                    throwOnError: false
+                });
+                
+                resultDiv.innerHTML = '<h3>✅ Direct KaTeX Success!</h3>' + rendered;
+                log('✅ Direct KaTeX test successful');
+            } catch (error) {
+                resultDiv.innerHTML = '❌ KaTeX Error: ' + error.message;
+                log('❌ Direct KaTeX test failed: ' + error.message);
+            }
+        }
+
+        // Step 3: Test welcome message
+        function testWelcomeMessage() {
+            const resultDiv = document.getElementById('welcomeResult');
+            resultDiv.style.display = 'block';
+            
+            log('📡 Testing welcome message API call...');
+            
+            fetch('http://localhost:5001/api/welcome')
+                .then(response => {
+                    log('📡 API Response received');
+                    return response.json();
+                })
+                .then(data => {
+                    log('📨 Welcome data: ' + JSON.stringify(data).substring(0, 100) + '...');
+                    
+                    if (data.status === 'success' && data.message) {
+                        resultDiv.innerHTML = '<h3>✅ API Success!</h3><div style="border:1px solid #ccc; padding:10px; background:#f9f9f9; max-height:300px; overflow-y:auto;">' + 
+                            data.message.replace(/\n/g, '<br>') + '</div>';
+                        log('✅ Welcome message received successfully');
+                        
+                        // Test if it has math formulas
+                        if (data.message.includes('$$')) {
+                            log('🔢 Math formulas detected in welcome message');
+                        }
+                    } else {
+                        resultDiv.innerHTML = '❌ API Error: Invalid response';
+                        log('❌ Invalid API response');
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = '❌ API Error: ' + error.message;
+                    log('❌ API call failed: ' + error.message);
+                });
+        }
+
+        // Step 4: Test full integration (simulate chatbot processing)
+        function testFullIntegration() {
+            const resultDiv = document.getElementById('integrationResult');
+            resultDiv.style.display = 'block';
+            
+            log('🔬 Testing full integration flow...');
+            
+            // Load dashboard.js if not already loaded
+            if (typeof LEONIChatbot === 'undefined') {
+                log('📥 Loading dashboard.js...');
+                const script = document.createElement('script');
+                script.src = 'dashboard.js';
+                script.onload = () => {
+                    log('✅ Dashboard.js loaded');
+                    setTimeout(runIntegrationTest, 1000);
+                };
+                script.onerror = () => {
+                    log('❌ Failed to load dashboard.js');
+                    resultDiv.innerHTML = '❌ Failed to load dashboard.js';
+                };
+                document.head.appendChild(script);
+            } else {
+                runIntegrationTest();
+            }
+            
+            function runIntegrationTest() {
+                try {
+                    log('🤖 Creating LEONIChatbot instance...');
+                    const chatbot = new LEONIChatbot();
+                    
+                    // Test the math processing directly
+                    const testText = `# Test Math Processing
+
+Display math: $$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$
+
+Inline math: The quality rate is $Q = \\frac{\\text{Good}}{\\text{Total}} \\times 100$.
+
+End of test.`;
+
+                    log('📝 Testing markdown parsing with math...');
+                    const result = chatbot.parseMarkdown(testText);
+                    
+                    resultDiv.innerHTML = '<h3>✅ Full Integration Test Result:</h3><div style="border:1px solid #ccc; padding:15px; background:#f9f9f9; max-height:400px; overflow-y:auto;">' + result + '</div>';
+                    log('✅ Full integration test completed');
+                    
+                    // Check if math was rendered properly
+                    if (result.includes('katex') || result.includes('math-display') || result.includes('math-inline')) {
+                        log('🎉 Math rendering detected in result!');
+                    } else if (result.includes('__MATH_')) {
+                        log('⚠️ Warning: Placeholders still present in result');
+                    } else {
+                        log('❓ Unknown math processing state');
+                    }
+                    
+                } catch (error) {
+                    log('❌ Integration test failed: ' + error.message);
+                    resultDiv.innerHTML = '❌ Integration test failed: ' + error.message;
+                }
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('🚀 Quick test page loaded');
+            checkLibraries();
+        });
+    </script>
+</body>
+</html>

@@ -458,7 +458,7 @@ function getStatusColor(status) {
 // LEONI Quality Management Chatbot Integration
 class LEONIChatbot {
     constructor() {
-        this.apiUrl = 'http://localhost:5000/api';
+        this.apiUrl = 'http://localhost:5001/api';
         this.isOpen = false;
         this.isTyping = false;
         this.conversationHistory = [];
@@ -474,7 +474,8 @@ class LEONIChatbot {
         // Markdown configuration
         this.markdownConfig = {
             enabled: true,
-            renderer: null
+            renderer: null,
+            useManualMath: false  // Flag for manual math processing when extension fails
         };
         
         this.init();
@@ -492,7 +493,7 @@ class LEONIChatbot {
     }
 
     setupMarkdown() {
-        // Configure marked.js for optimal chatbot rendering
+        // Configure marked.js for optimal chatbot rendering with enhanced features
         if (typeof marked !== 'undefined') {
             // Configure marked options for security and performance
             marked.setOptions({
@@ -504,25 +505,145 @@ class LEONIChatbot {
                 xhtml: false        // Don't self-close tags
             });
 
-            // Create custom renderer
+            // Use manual math processing with KaTeX (extension removed due to compatibility issues)
+            console.log('📐 Using manual math processing with KaTeX for LaTeX formulas');
+            this.markdownConfig.useManualMath = true;
+
+            // Create enhanced custom renderer
             this.markdownConfig.renderer = new marked.Renderer();
             
-            // Custom renderer overrides for better chatbot formatting
+            // Enhanced renderer overrides for better chatbot formatting
             this.markdownConfig.renderer.heading = function(text, level) {
-                const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
-                return `<h${level} id="${escapedText}">${text}</h${level}>`;
+                // Ensure text is a string (handle tokens and other types)
+                let textStr;
+                if (typeof text === 'string') {
+                    textStr = text;
+                } else if (text && typeof text === 'object') {
+                    textStr = text.text || text.raw || text.tokens?.map(t => t.raw || t.text || String(t)).join('') || String(text);
+                } else {
+                    textStr = String(text);
+                }
+                const escapedText = textStr.toLowerCase().replace(/[^\w]+/g, '-');
+                return `<h${level} id="${escapedText}">${textStr}</h${level}>`;
             };
 
             this.markdownConfig.renderer.code = function(code, language) {
-                if (language) {
-                    return `<pre><code class="language-${language}">${code}</code></pre>`;
+                // Ensure code is a string
+                let codeStr;
+                if (typeof code === 'string') {
+                    codeStr = code;
+                } else if (code && typeof code === 'object') {
+                    codeStr = code.text || code.raw || String(code);
+                } else {
+                    codeStr = String(code);
                 }
-                return `<pre><code>${code}</code></code></pre>`;
+                if (language) {
+                    return `<pre class="language-${language}"><code class="language-${language}">${codeStr}</code></pre>`;
+                }
+                return `<pre><code>${codeStr}</code></pre>`;
+            };
+
+            this.markdownConfig.renderer.codespan = function(text) {
+                // Ensure text is a string
+                let textStr;
+                if (typeof text === 'string') {
+                    textStr = text;
+                } else if (text && typeof text === 'object') {
+                    textStr = text.text || text.raw || String(text);
+                } else {
+                    textStr = String(text);
+                }
+                return `<code>${textStr}</code>`;
             };
 
             this.markdownConfig.renderer.blockquote = function(quote) {
-                return `<blockquote>${quote}</blockquote>`;
+                // Ensure quote is a string
+                let quoteStr;
+                if (typeof quote === 'string') {
+                    quoteStr = quote;
+                } else if (quote && typeof quote === 'object') {
+                    quoteStr = quote.text || quote.raw || String(quote);
+                } else {
+                    quoteStr = String(quote);
+                }
+                return `<blockquote>${quoteStr}</blockquote>`;
             };
+
+            // Enhanced table renderer
+            this.markdownConfig.renderer.table = function(header, body) {
+                return `<table>
+                    <thead>${header}</thead>
+                    <tbody>${body}</tbody>
+                </table>`;
+            };
+
+            this.markdownConfig.renderer.tablecell = function(content, flags) {
+                // Ensure content is a string
+                let contentStr;
+                if (typeof content === 'string') {
+                    contentStr = content;
+                } else if (content && typeof content === 'object') {
+                    contentStr = content.text || content.raw || String(content);
+                } else {
+                    contentStr = String(content);
+                }
+                const type = flags.header ? 'th' : 'td';
+                const tag = flags.align ? `<${type} align="${flags.align}">` : `<${type}>`;
+                return tag + contentStr + `</${type}>`;
+            };
+
+            // Enhanced link renderer with security
+            this.markdownConfig.renderer.link = function(href, title, text) {
+                // Ensure parameters are strings
+                let hrefStr, textStr, titleStr;
+                
+                if (typeof href === 'string') {
+                    hrefStr = href;
+                } else {
+                    hrefStr = href && href.href ? href.href : String(href);
+                }
+                
+                if (typeof text === 'string') {
+                    textStr = text;
+                } else if (text && typeof text === 'object') {
+                    textStr = text.text || text.raw || String(text);
+                } else {
+                    textStr = String(text);
+                }
+                
+                if (title) {
+                    titleStr = typeof title === 'string' ? title : String(title);
+                }
+                
+                const titleAttr = titleStr ? ` title="${titleStr}"` : '';
+                return `<a href="${hrefStr}" target="_blank" rel="noopener noreferrer"${titleAttr}>${textStr}</a>`;
+            };
+
+            // Enhanced image renderer
+            this.markdownConfig.renderer.image = function(href, title, text) {
+                // Ensure parameters are strings
+                let hrefStr, textStr, titleStr;
+                
+                if (typeof href === 'string') {
+                    hrefStr = href;
+                } else {
+                    hrefStr = href && href.href ? href.href : String(href);
+                }
+                
+                if (text) {
+                    textStr = typeof text === 'string' ? text : String(text);
+                }
+                
+                if (title) {
+                    titleStr = typeof title === 'string' ? title : String(title);
+                }
+                
+                const titleAttr = titleStr ? ` title="${titleStr}"` : '';
+                const altAttr = textStr ? ` alt="${textStr}"` : '';
+                return `<img src="${hrefStr}"${altAttr}${titleAttr} style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">`;
+            };
+
+            console.log('✅ Enhanced Markdown renderer configured with math support');
         } else {
             console.warn('Marked.js library not loaded - Markdown support disabled');
             this.markdownConfig.enabled = false;
@@ -919,48 +1040,236 @@ I'm currently unable to connect to the server. Please try again later or contact
         return 'General System';
     }
 
-    // Convert Markdown to HTML for better visualization
+    // Convert Markdown to HTML for better visualization with enhanced features
     parseMarkdown(markdownText) {
+        // Ensure we have a string to work with
+        if (!markdownText) return '';
+        const textStr = typeof markdownText === 'string' ? markdownText : String(markdownText);
+        
+        console.log('📝 Parsing markdown:', textStr.substring(0, 100) + '...');
+        
         if (!this.markdownConfig.enabled || typeof marked === 'undefined') {
-            // Fallback: basic HTML formatting if Markdown is not available
-            return this.basicMarkdownFallback(markdownText);
+            console.log('⚠️ Markdown disabled, using fallback');
+            // Fallback: enhanced HTML formatting if Markdown is not available
+            return this.enhancedMarkdownFallback(textStr);
         }
 
         try {
-            // Parse Markdown to HTML
-            const htmlContent = marked.parse(markdownText, {
-                renderer: this.markdownConfig.renderer
+            let processedText = textStr;
+            
+            // If using manual math processing (extension failed), preprocess math expressions
+            if (this.markdownConfig.useManualMath) {
+                console.log('🔢 Starting math preprocessing...');
+                processedText = this.preprocessMathExpressions(textStr);
+                console.log('📝 After preprocessing:', processedText.substring(0, 100) + '...');
+            }
+            
+            // Parse Markdown to HTML with enhanced features
+            let htmlContent = marked.parse(processedText, {
+                renderer: this.markdownConfig.renderer,
+                highlight: function(code, lang) {
+                    // Use Prism.js for syntax highlighting if available
+                    if (typeof Prism !== 'undefined' && lang && Prism.languages[lang]) {
+                        return Prism.highlight(code, Prism.languages[lang], lang);
+                    }
+                    return code;
+                }
             });
+            
+            console.log('📝 After markdown parsing:', htmlContent.substring(0, 100) + '...');
+            
+            // If using manual math processing, restore and render math expressions
+            if (this.markdownConfig.useManualMath) {
+                console.log('🔢 Starting math postprocessing...');
+                htmlContent = this.postprocessMathExpressions(htmlContent);
+                console.log('📝 Final result:', htmlContent.substring(0, 100) + '...');
+            }
+            
+            // Apply syntax highlighting if Prism.js is available
+            if (typeof Prism !== 'undefined') {
+                setTimeout(() => {
+                    Prism.highlightAll();
+                }, 10);
+            }
             
             return htmlContent;
         } catch (error) {
-            console.error('Markdown parsing error:', error);
-            return this.basicMarkdownFallback(markdownText);
+            console.error('Enhanced markdown parsing error:', error);
+            return this.enhancedMarkdownFallback(textStr);
         }
     }
 
-    // Basic Markdown fallback for essential formatting
-    basicMarkdownFallback(text) {
-        return text
-            // Headers
+    // Preprocess math expressions to protect them during markdown parsing
+    preprocessMathExpressions(text) {
+        const mathPlaceholders = [];
+        let processedText = text;
+        
+        // Use simple placeholder strings that won't be modified by markdown
+        const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        
+        // Handle display math ($$...$$)
+        processedText = processedText.replace(/\$\$([^$]+)\$\$/g, (match, math) => {
+            const placeholder = `LEONI_MATH_DISPLAY_${uniqueId}_${mathPlaceholders.length}`;
+            mathPlaceholders.push({ type: 'display', content: math.trim(), placeholder });
+            console.log('🔢 Display math found:', math.trim());
+            console.log('📝 Using placeholder:', placeholder);
+            return placeholder;
+        });
+        
+        // Handle inline math ($...$)
+        processedText = processedText.replace(/\$([^$\n]+)\$/g, (match, math) => {
+            const placeholder = `LEONI_MATH_INLINE_${uniqueId}_${mathPlaceholders.length}`;
+            mathPlaceholders.push({ type: 'inline', content: math.trim(), placeholder });
+            console.log('🔢 Inline math found:', math.trim());
+            console.log('📝 Using placeholder:', placeholder);
+            return placeholder;
+        });
+        
+        // Store placeholders for post-processing
+        this._mathPlaceholders = mathPlaceholders;
+        this._uniqueId = uniqueId;
+        console.log('📝 Math preprocessing complete. Placeholders:', mathPlaceholders.length);
+        return processedText;
+    }
+
+    // Post-process to restore and render math expressions
+    postprocessMathExpressions(html) {
+        if (!this._mathPlaceholders || typeof katex === 'undefined') {
+            console.log('⚠️ Math postprocessing skipped:', !this._mathPlaceholders ? 'No placeholders' : 'KaTeX not available');
+            return html;
+        }
+        
+        let processedHtml = html;
+        console.log('🔄 Processing', this._mathPlaceholders.length, 'math placeholders');
+        console.log('🔍 HTML before processing:', processedHtml.substring(0, 200) + '...');
+        
+        this._mathPlaceholders.forEach(({ type, content, placeholder }, index) => {
+            console.log(`🔢 Processing placeholder ${index}:`, placeholder);
+            console.log(`📝 Content:`, content);
+            
+            // Check if placeholder exists (now using simple text placeholders)
+            if (processedHtml.includes(placeholder)) {
+                console.log(`🔍 Found placeholder exactly:`, placeholder);
+                
+                try {
+                    let renderedMath;
+                    if (type === 'display') {
+                        renderedMath = katex.renderToString(content, {
+                            displayMode: true,
+                            throwOnError: false,
+                            output: 'html',
+                            trust: true
+                        });
+                        renderedMath = `<div class="math-display">${renderedMath}</div>`;
+                    } else {
+                        renderedMath = katex.renderToString(content, {
+                            displayMode: false,
+                            throwOnError: false,
+                            output: 'html',
+                            trust: true
+                        });
+                        renderedMath = `<span class="math-inline">${renderedMath}</span>`;
+                    }
+                    
+                    // Replace all occurrences of the placeholder
+                    const beforeCount = (processedHtml.split(placeholder).length - 1);
+                    processedHtml = processedHtml.split(placeholder).join(renderedMath);
+                    const afterCount = (processedHtml.split(placeholder).length - 1);
+                    
+                    console.log('✅ Math rendered:', type, '| Before:', beforeCount, '| After:', afterCount);
+                    console.log('🎨 Rendered HTML:', renderedMath.substring(0, 100) + '...');
+                } catch (error) {
+                    console.error('❌ KaTeX rendering error:', error);
+                    // Fallback to raw math expression
+                    const fallback = type === 'display' ? 
+                        `<div class="math-display"><code>$$${content}$$</code></div>` :
+                        `<span class="math-inline"><code>$${content}$</code></span>`;
+                    processedHtml = processedHtml.split(placeholder).join(fallback);
+                    console.log('🔄 Used fallback for:', content);
+                }
+            } else {
+                console.warn('⚠️ Placeholder not found:', placeholder);
+                console.log('🔍 Available text sample:', processedHtml.substring(0, 300) + '...');
+            }
+        });
+        
+        console.log('🔍 HTML after processing:', processedHtml.substring(0, 200) + '...');
+        
+        // Clear placeholders
+        this._mathPlaceholders = [];
+        this._uniqueId = null;
+        return processedHtml;
+    }
+
+    // Enhanced Markdown fallback for essential formatting with math support
+    enhancedMarkdownFallback(text) {
+        let processedText = text
+            // Headers with enhanced styling
             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
             .replace(/^## (.*$)/gim, '<h2>$1</h2>')
             .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            
+            // Math expressions
+            .replace(/\$\$([^$]+)\$\$/g, '<div class="math-display"><code>$$1$$</code></div>')
+            .replace(/\$([^$\n]+)\$/g, '<span class="math-inline"><code>$1</code></span>')
+            
             // Bold and italic
+            .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
-            // Code blocks
+            
+            // Code blocks and inline code
+            .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
             .replace(/`(.*?)`/g, '<code>$1</code>')
-            // Line breaks
-            .replace(/\n/g, '<br>')
-            // Lists (basic)
+            
+            // Links
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+            
+            // Images
+            .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; height: auto; border-radius: 8px;">')
+            
+            // Tables (basic support)
+            .replace(/\|(.+)\|/g, (match, content) => {
+                const cells = content.split('|').map(cell => cell.trim());
+                const cellsHtml = cells.map(cell => `<td>${cell}</td>`).join('');
+                return `<tr>${cellsHtml}</tr>`;
+            })
+            
+            // Blockquotes
+            .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+            
+            // Horizontal rules
+            .replace(/^---$/gm, '<hr>')
+            
+            // Lists (enhanced)
             .replace(/^\* (.*$)/gim, '<li>$1</li>')
-            .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+            
+            // Line breaks
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+
+        // Wrap consecutive list items in proper list tags
+        processedText = processedText
+            .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+            .replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+            
+        // Wrap in paragraphs if needed
+        if (!processedText.includes('<p>') && !processedText.includes('<h') && !processedText.includes('<div>')) {
+            processedText = `<p>${processedText}</p>`;
+        }
+
+        return processedText;
     }
 
-    // Enhanced message processing with Markdown support
+    // Enhanced message processing with full markdown and math support
     processMessageContent(content, isMarkdown = false) {
-        if (isMarkdown || this.detectMarkdown(content)) {
+        // Force markdown processing if math expressions are detected
+        const hasMath = /\$.*?\$/.test(content);
+        const shouldUseMarkdown = isMarkdown || hasMath || this.detectMarkdown(content);
+        
+        if (shouldUseMarkdown) {
+            console.log('🔬 Processing with enhanced markdown (math detected:', hasMath, ')');
             return this.parseMarkdown(content);
         }
         
@@ -969,11 +1278,14 @@ I'm currently unable to connect to the server. Please try again later or contact
             return content;
         }
         
-        // Plain text - convert line breaks to <br>
-        return content.replace(/\n/g, '<br>');
+        // Plain text - convert line breaks to <br> and preserve formatting
+        return content
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>')
+            .replace(/^(.*)$/, '<p>$1</p>');
     }
 
-    // Detect if content contains Markdown syntax
+    // Enhanced detection for various markdown patterns including math
     detectMarkdown(text) {
         const markdownPatterns = [
             /^#{1,6}\s/m,           // Headers
@@ -985,7 +1297,15 @@ I'm currently unable to connect to the server. Please try again later or contact
             /^\d+\. /m,             // Ordered lists
             /^\> /m,                // Blockquotes
             /\[.*?\]\(.*?\)/,       // Links
-            /!\[.*?\]\(.*?\)/       // Images
+            /!\[.*?\]\(.*?\)/,      // Images
+            /\|.*\|.*\|/,           // Tables
+            /^---$/m,               // Horizontal rules
+            /\$\$.*?\$\$/,          // Display math
+            /\$[^$\n]+\$/,          // Inline math
+            /~~.*?~~/,              // Strikethrough
+            /\*\*\*.*?\*\*\*/,      // Bold italic
+            /^\s*-\s+/m,            // Alternative list marker
+            /^\s*\+\s+/m            // Alternative list marker
         ];
         
         return markdownPatterns.some(pattern => pattern.test(text));

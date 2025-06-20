@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Rendering Test - LEONI QMS</title>
+    
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .math-display {
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .math-inline {
+            margin: 0 5px;
+        }
+        
+        button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background-color: #005999;
+        }
+        
+        .log {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .error {
+            color: red;
+        }
+        
+        .success {
+            color: green;
+        }
+        
+        .info {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 LEONI QMS - Math Rendering Test</h1>
+    
+    <div class="test-section">
+        <h2>🔬 Library Availability Test</h2>
+        <div id="libraryStatus"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🧪 Direct KaTeX Rendering Test</h2>
+        <button onclick="testDirectKaTeX()">Test Direct KaTeX</button>
+        <div id="directKaTeXResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📝 Manual Math Processing Test</h2>
+        <button onclick="testManualMathProcessing()">Test Math Processing</button>
+        <div id="mathProcessingResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🤖 Chatbot Integration Test</h2>
+        <button onclick="testChatbotIntegration()">Test Chatbot Math</button>
+        <div id="chatbotResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Console Logs</h2>
+        <div id="consoleLog" class="log"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="dashboard.js"></script>
+
+    <script>
+        // Override console.log to capture output
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        
+        function logToPage(message, type = 'info') {
+            const logDiv = document.getElementById('consoleLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<span class="${type}">[${timestamp}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            logToPage(args.join(' '), 'info');
+        };
+        
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            logToPage('ERROR: ' + args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            logToPage('WARN: ' + args.join(' '), 'error');
+        };
+        
+        // Test functions
+        function testLibraries() {
+            const status = document.getElementById('libraryStatus');
+            let html = '<h3>Library Status:</h3><ul>';
+            
+            html += `<li>KaTeX: ${typeof katex !== 'undefined' ? '✅ Available' : '❌ Not loaded'}</li>`;
+            html += `<li>Marked: ${typeof marked !== 'undefined' ? '✅ Available' : '❌ Not loaded'}</li>`;
+            html += `<li>Dashboard.js LEONIChatbot: ${typeof LEONIChatbot !== 'undefined' ? '✅ Available' : '❌ Not loaded'}</li>`;
+            
+            html += '</ul>';
+            status.innerHTML = html;
+        }
+        
+        function testDirectKaTeX() {
+            const resultDiv = document.getElementById('directKaTeXResult');
+            
+            if (typeof katex === 'undefined') {
+                resultDiv.innerHTML = '❌ KaTeX not available';
+                return;
+            }
+            
+            try {
+                // Test display math
+                const displayMath = katex.renderToString('Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)', {
+                    displayMode: true,
+                    throwOnError: false
+                });
+                
+                // Test inline math
+                const inlineMath = katex.renderToString('Q = \\frac{\\text{Defects}}{\\text{Total Production}} \\times 100', {
+                    displayMode: false,
+                    throwOnError: false
+                });
+                
+                resultDiv.innerHTML = `
+                    <h4>✅ Direct KaTeX Test Success</h4>
+                    <p><strong>Display Math:</strong></p>
+                    <div class="math-display">${displayMath}</div>
+                    <p><strong>Inline Math:</strong> <span class="math-inline">${inlineMath}</span></p>
+                `;
+                
+                console.log('✅ Direct KaTeX rendering successful');
+            } catch (error) {
+                resultDiv.innerHTML = `❌ KaTeX Error: ${error.message}`;
+                console.error('❌ Direct KaTeX test failed:', error);
+            }
+        }
+        
+        function testManualMathProcessing() {
+            const resultDiv = document.getElementById('mathProcessingResult');
+            
+            if (typeof window.leonichatbot === 'undefined') {
+                resultDiv.innerHTML = '❌ LEONIChatbot not available - loading...';
+                
+                // Try to initialize manually
+                try {
+                    window.leonichatbot = new LEONIChatbot();
+                    setTimeout(() => testManualMathProcessing(), 1000);
+                    return;
+                } catch (error) {
+                    resultDiv.innerHTML = `❌ Failed to initialize chatbot: ${error.message}`;
+                    return;
+                }
+            }
+            
+            const testText = `# Math Processing Test
+
+Display math: $$Cpk = \\min\\left(\\frac{USL - \\bar{x}}{3\\sigma}, \\frac{\\bar{x} - LSL}{3\\sigma}\\right)$$
+
+Inline math: The defect rate $Q = \\frac{\\text{Defects}}{\\text{Total}} \\times 100$ is important.
+
+Another display: $$\\text{OEE} = \\text{Availability} \\times \\text{Performance} \\times \\text{Quality}$$`;
+
+            try {
+                console.log('🧪 Testing manual math processing...');
+                const result = window.leonichatbot.parseMarkdown(testText);
+                resultDiv.innerHTML = `
+                    <h4>✅ Manual Math Processing Result:</h4>
+                    <div style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9;">
+                        ${result}
+                    </div>
+                `;
+                console.log('✅ Manual math processing completed');
+            } catch (error) {
+                resultDiv.innerHTML = `❌ Processing Error: ${error.message}`;
+                console.error('❌ Manual math processing failed:', error);
+            }
+        }
+        
+        function testChatbotIntegration() {
+            const resultDiv = document.getElementById('chatbotResult');
+            
+            // Test chatbot API call
+            fetch('http://localhost:5001/api/welcome')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('📨 Welcome message received:', data);
+                    
+                    if (data.message && window.leonichatbot) {
+                        const processedMessage = window.leonichatbot.parseMarkdown(data.message);
+                        resultDiv.innerHTML = `
+                            <h4>✅ Chatbot API Integration Test:</h4>
+                            <div style="border: 1px solid #ccc; padding: 15px; background: #f9f9f9; max-height: 400px; overflow-y: auto;">
+                                ${processedMessage}
+                            </div>
+                        `;
+                        console.log('✅ Chatbot integration test successful');
+                    } else {
+                        resultDiv.innerHTML = '❌ Invalid response or chatbot not available';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `❌ API Error: ${error.message}`;
+                    console.error('❌ Chatbot API test failed:', error);
+                });
+        }
+        
+        function clearLog() {
+            document.getElementById('consoleLog').innerHTML = '';
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('🚀 Math rendering test page loaded');
+            testLibraries();
+        });
+    </script>
+</body>
+</html>
