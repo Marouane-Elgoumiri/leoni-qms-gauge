@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Leader Dashboard - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+        }
+
+        .header-section {
+            margin-bottom: 3rem;
+        }
+
+        .role-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.3);
+        }
+
+        .dashboard-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.4rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .welcome-message {
+            background: linear-gradient(135deg, #fef3e2, #fed7aa);
+            border: 2px solid #ed8936;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .welcome-message h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .welcome-message p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Project and Line Selectors */
+        .selector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .selector-section {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid #ed8936;
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .selector-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .selector-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .selector-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .selector-group label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4a5568;
+            min-width: 80px;
+        }
+
+        .selector-group select {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            background: white;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selector-group select:focus {
+            outline: none;
+            border-color: #ed8936;
+            box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.1);
+        }
+
+        .selector-group select:disabled {
+            background: #f7fafc;
+            color: #a0aec0;
+            cursor: not-allowed;
+            border-color: #e2e8f0;
+        }
+
+        .dashboard-btn {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.3);
+        }
+
+        .dashboard-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(237, 137, 54, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .tool-card:hover::before {
+            left: 100%;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border-color: #ed8936;
+        }
+
+        .tool-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            margin: 0 auto 1.5rem auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+
+        .tool-card:hover .tool-icon::after {
+            transform: rotate(90deg);
+        }
+
+        /* Tool-specific color schemes */
+        .admin-tool .tool-icon {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .projects-tool .tool-icon {
+            background: linear-gradient(135deg, #0891b2, #06b6d4);
+            box-shadow: 0 8px 25px rgba(8, 145, 178, 0.4);
+        }
+
+        .archives-tool .tool-icon {
+            background: linear-gradient(135deg, #718096, #4a5568);
+            box-shadow: 0 8px 25px rgba(113, 128, 150, 0.4);
+        }
+
+        .tool-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-subtitle {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .tool-features {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .tool-features li {
+            padding: 0.4rem 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .tool-features li:before {
+            content: "✓";
+            color: #ed8936;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .access-badge {
+            background: #fed7aa;
+            color: #9a3412;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .footer-section {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            
+            .selector-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .dashboard-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .tool-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .tool-icon {
+                font-size: 3rem;
+                width: 80px;
+                height: 80px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .selector-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .selector-group label {
+                min-width: auto;
+            }
+
+            .selector-group select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-title {
+                font-size: 1.6rem;
+            }
+
+            .dashboard-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation for tool cards */
+        .tool-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .tool-card:nth-child(1) { animation-delay: 0.1s; }
+        .tool-card:nth-child(2) { animation-delay: 0.2s; }
+        .tool-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="role-header">
+                <div class="role-badge">
+                    <i class="fas fa-users-cog"></i>
+                    Team Leader Dashboard
+                </div>
+            </div>
+            <h1 class="dashboard-title">Production Team Leader</h1>
+            <p class="dashboard-subtitle">Leadership Tools & Production Line Management</p>
+        </div>
+
+        <!-- Welcome Message -->
+        <div class="welcome-message">
+            <h3><i class="fas fa-info-circle"></i> Team Leader Access Portal</h3>
+            <p><strong>Welcome, Team Leader!</strong> You have management access to administrative tools, project dashboards, production line monitoring, and quality archives.</p>
+            <p>Use the tools below to manage your team, monitor production performance, and access administrative functions for quality control.</p>
+        </div>
+
+        <!-- Project and Production Line Selectors -->
+        <div class="selector-grid">
+            <!-- Project Dashboard Selector -->
+            <div class="selector-section">
+                <div class="selector-title">
+                    <i class="fas fa-project-diagram"></i>
+                    Project Dashboard Selection
+                </div>
+                <div class="selector-controls">
+                    <div class="selector-group">
+                        <label for="projectSelect">Project:</label>
+                        <select id="projectSelect">
+                            <option value="">-- Select Project --</option>
+                            <option value="volvo">VOLVO - Cable Engine Production</option>
+                            <option value="man">MAN - Commercial Vehicles</option>
+                            <option value="coming-soon" disabled>BMW - Harness Project (Coming Soon)</option>
+                            <option value="coming-soon" disabled>Audi - Wire Assembly (Coming Soon)</option>
+                        </select>
+                    </div>
+                    <a href="../graphs/dashboard.html" class="dashboard-btn" id="projectDashboardBtn">
+                        <i class="fas fa-chart-line"></i>
+                        Open Project Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Production Line Selector -->
+            <div class="selector-section">
+                <div class="selector-title">
+                    <i class="fas fa-industry"></i>
+                    Production Line Selection
+                </div>
+                <div class="selector-controls">
+                    <div class="selector-group">
+                        <label for="productionLineSelect">Line:</label>
+                        <select id="productionLineSelect" disabled>
+                            <option value="">-- Select Project First --</option>
+                        </select>
+                    </div>
+                    <a href="../graphs/DashPerLine/vce-dashboard.html" class="dashboard-btn" id="lineDashboardBtn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Open Line Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="tools-grid">
+            <!-- Admin Access -->
+            <a href="../Admin/admin.html" class="tool-card admin-tool">
+                <div class="tool-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="tool-title">Admin Panel</div>
+                <div class="tool-subtitle">System Administration & Management</div>
+                <ul class="tool-features">
+                    <li>User management & permissions</li>
+                    <li>System configuration</li>
+                    <li>Performance monitoring</li>
+                    <li>Data backup & maintenance</li>
+                    <li>Audit logs access</li>
+                </ul>
+                <div class="access-badge">Admin Access</div>
+            </a>
+
+            <!-- Project Management -->
+            <a href="#" class="tool-card projects-tool" onclick="showComingSoon('Project Management')">
+                <div class="tool-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="tool-title">Project Management</div>
+                <div class="tool-subtitle">Multi-Project Coordination</div>
+                <ul class="tool-features">
+                    <li>Project overview & status</li>
+                    <li>Resource allocation</li>
+                    <li>Timeline management</li>
+                    <li>Team assignments</li>
+                    <li>Progress tracking</li>
+                </ul>
+                <div class="access-badge">Coming Soon</div>
+            </a>
+
+            <!-- Archives -->
+            <a href="#" class="tool-card archives-tool" onclick="showComingSoon('Quality Archives')">
+                <div class="tool-icon">
+                    <i class="fas fa-archive"></i>
+                </div>
+                <div class="tool-title">Quality Archives</div>
+                <div class="tool-subtitle">Historical Data & Documentation</div>
+                <ul class="tool-features">
+                    <li>Historical quality reports</li>
+                    <li>Audit trail documentation</li>
+                    <li>Compliance records</li>
+                    <li>Document management</li>
+                    <li>Data export & analysis</li>
+                </ul>
+                <div class="access-badge">Coming Soon</div>
+            </a>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="navigation">
+                <a href="role-selection.html" class="nav-btn secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Role Selection
+                </a>
+                <a href="../index.html" class="nav-btn primary">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Store team leader role in localStorage
+            localStorage.setItem('userRole', 'teamleader');
+            localStorage.setItem('roleDisplayName', 'Team Leader');
+
+            // Project selector functionality with linked line selection
+            const projectSelect = document.getElementById('projectSelect');
+            const projectDashboardBtn = document.getElementById('projectDashboardBtn');
+
+            // Define project-line relationships
+            const projectLines = {
+                'volvo': [
+                    { value: 'vce', text: 'VCE Line - Volvo Car Electric', dashboard: '../graphs/DashPerLine/vce-dashboard.html' },
+                    { value: 'hdep', text: 'HDep Line - Heavy Duty Electric Power', dashboard: '#', disabled: true },
+                    { value: 'assembly1', text: 'Assembly Line 1 - Cable Harness', dashboard: '#', disabled: true },
+                    { value: 'assembly2', text: 'Assembly Line 2 - Wire Processing', dashboard: '#', disabled: true },
+                    { value: 'testing', text: 'Testing Line - Quality Control', dashboard: '#', disabled: true },
+                    { value: 'packaging', text: 'Packaging Line - Final Assembly', dashboard: '#', disabled: true }
+                ],
+                'man': [
+                    { value: 'man-cbp', text: 'MAN CBP - Commercial Battery Pack', dashboard: '#', disabled: true },
+                    { value: 'man-hv', text: 'MAN HV - High Voltage Systems', dashboard: '#', disabled: true }
+                ]
+            };
+
+            projectSelect.addEventListener('change', function() {
+                const selectedProject = this.value;
+                const productionLineSelect = document.getElementById('productionLineSelect');
+                const lineDashboardBtn = document.getElementById('lineDashboardBtn');
+                
+                // Clear and reset line selector
+                productionLineSelect.innerHTML = '<option value="">-- Select Production Line --</option>';
+                productionLineSelect.disabled = !selectedProject || selectedProject === 'coming-soon';
+                
+                // Reset line dashboard button
+                lineDashboardBtn.href = '#';
+                lineDashboardBtn.disabled = true;
+                lineDashboardBtn.style.opacity = '0.5';
+                lineDashboardBtn.style.pointerEvents = 'none';
+                
+                // Update project dashboard button
+                switch(selectedProject) {
+                    case 'volvo':
+                        projectDashboardBtn.href = '../graphs/dashboard.html';
+                        projectDashboardBtn.disabled = false;
+                        projectDashboardBtn.style.opacity = '1';
+                        projectDashboardBtn.style.pointerEvents = 'auto';
+                        
+                        // Populate VOLVO lines
+                        projectLines.volvo.forEach(line => {
+                            const option = document.createElement('option');
+                            option.value = line.value;
+                            option.textContent = line.text;
+                            if (line.disabled) {
+                                option.disabled = true;
+                                option.textContent += ' (Coming Soon)';
+                            }
+                            productionLineSelect.appendChild(option);
+                        });
+                        break;
+                        
+                    case 'man':
+                        projectDashboardBtn.href = '#';
+                        projectDashboardBtn.disabled = true;
+                        projectDashboardBtn.style.opacity = '0.5';
+                        projectDashboardBtn.style.pointerEvents = 'none';
+                        
+                        // Populate MAN lines
+                        projectLines.man.forEach(line => {
+                            const option = document.createElement('option');
+                            option.value = line.value;
+                            option.textContent = line.text;
+                            if (line.disabled) {
+                                option.disabled = true;
+                                option.textContent += ' (Coming Soon)';
+                            }
+                            productionLineSelect.appendChild(option);
+                        });
+                        break;
+                        
+                    case '':
+                        projectDashboardBtn.href = '#';
+                        projectDashboardBtn.disabled = true;
+                        projectDashboardBtn.style.opacity = '0.5';
+                        projectDashboardBtn.style.pointerEvents = 'none';
+                        break;
+                        
+                    default:
+                        projectDashboardBtn.href = '#';
+                        projectDashboardBtn.disabled = true;
+                        projectDashboardBtn.style.opacity = '0.5';
+                        projectDashboardBtn.style.pointerEvents = 'none';
+                }
+            });
+
+            // Production line selector functionality
+            const productionLineSelect = document.getElementById('productionLineSelect');
+            const lineDashboardBtn = document.getElementById('lineDashboardBtn');
+
+            productionLineSelect.addEventListener('change', function() {
+                const selectedLine = this.value;
+                const selectedProject = projectSelect.value;
+                
+                // Find the selected line configuration
+                let lineConfig = null;
+                if (selectedProject && projectLines[selectedProject]) {
+                    lineConfig = projectLines[selectedProject].find(line => line.value === selectedLine);
+                }
+                
+                if (lineConfig && !lineConfig.disabled) {
+                    lineDashboardBtn.href = lineConfig.dashboard;
+                    lineDashboardBtn.disabled = false;
+                    lineDashboardBtn.style.opacity = '1';
+                    lineDashboardBtn.style.pointerEvents = 'auto';
+                } else {
+                    lineDashboardBtn.href = '#';
+                    lineDashboardBtn.disabled = true;
+                    lineDashboardBtn.style.opacity = '0.5';
+                    lineDashboardBtn.style.pointerEvents = 'none';
+                }
+            });
+
+            // Enhanced tool card interactions
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            toolCards.forEach((card, index) => {
+                // Add click feedback
+                card.addEventListener('click', function(e) {
+                    if (this.getAttribute('onclick')) {
+                        e.preventDefault();
+                        eval(this.getAttribute('onclick'));
+                        return;
+                    }
+                    
+                    // Add loading state for real links
+                    if (this.href && this.href !== '#') {
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            window.location.href = this.href;
+                        }, 150);
+                    }
+                });
+
+                // Accessibility enhancements
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Session management
+            const sessionData = {
+                role: 'teamleader',
+                loginTime: new Date().toISOString(),
+                permissions: [
+                    'admin_access',
+                    'project_management',
+                    'dashboard_view',
+                    'line_monitoring',
+                    'team_management'
+                ]
+            };
+            
+            localStorage.setItem('teamLeaderSession', JSON.stringify(sessionData));
+
+            console.log('Team Leader Dashboard initialized');
+            console.log('User permissions:', sessionData.permissions);
+        });
+
+        // Coming soon modal for unavailable features
+        function showComingSoon(featureName) {
+            alert(`${featureName} will be available soon!\n\nThis feature is currently under development and will be released in the next update.`);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Quick navigation back to role selection
+                window.location.href = 'role-selection.html';
+            }
+        });
+    </script>
+</body>
+</html>

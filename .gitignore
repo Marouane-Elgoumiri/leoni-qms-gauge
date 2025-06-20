@@ -20,6 +20,8 @@ graphs/combined.html
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+monitor-vscode.sh
+optimize-vscode.sh
 
 # Runtime data
 pids
