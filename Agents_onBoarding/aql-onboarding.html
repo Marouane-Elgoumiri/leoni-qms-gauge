@@ -198,6 +198,59 @@
             color: white;
         }
 
+        /* Disabled/Coming Soon card styles */
+        .tool-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(30%);
+            pointer-events: none;
+        }
+
+        .tool-card.disabled::before {
+            background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+        }
+
+        .tool-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+        .tool-card.disabled .nav-icon {
+            background: linear-gradient(135deg, #94a3b8, #64748b) !important;
+            box-shadow: 0 8px 25px rgba(148, 163, 184, 0.3) !important;
+        }
+
+        .tool-card.disabled .nav-title {
+            color: #64748b;
+        }
+
+        .tool-card.disabled .nav-description {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .nav-features li {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .nav-features li:before {
+            color: #cbd5e1;
+        }
+
+        .coming-soon-badge {
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid #e2e8f0;
+        }
+
         .nav-title {
             font-size: 1.4rem;
             font-weight: 600;
@@ -548,7 +601,7 @@
             </a>
 
             <!-- Vigilance Test -->
-            <a href="../Vigilance_test/vigilance-test.html" class="nav-card vigilance-card">
+            <a href="#" class="nav-card vigilance-card tool-card disabled">
                 <div class="nav-icon">
                     <i class="fas fa-eye"></i>
                 </div>
@@ -560,6 +613,7 @@
                     <li>Safety awareness</li>
                     <li>Performance tracking</li>
                 </ul>
+                <div class="coming-soon-badge">Coming Soon</div>
             </a>
 
             <!-- Archives -->
@@ -593,7 +647,7 @@
             </a>
 
             <!-- Agenda Standard -->
-            <a href="../Agenda/agenda-standard.html" class="nav-card agenda-card">
+            <a href="#" class="nav-card agenda-card tool-card disabled">
                 <div class="nav-icon">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
@@ -605,6 +659,7 @@
                     <li>Task management</li>
                     <li>Timeline coordination</li>
                 </ul>
+                <div class="coming-soon-badge">Coming Soon</div>
             </a>
         </div>
 
