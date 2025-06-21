@@ -337,6 +337,51 @@
             display: inline-block;
         }
 
+        .access-badge.coming-soon {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Disabled/Coming Soon card styles */
+        .tool-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(30%);
+            pointer-events: none;
+        }
+
+        .tool-card.disabled::before {
+            background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+        }
+
+        .tool-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+        .tool-card.disabled .tool-icon {
+            background: linear-gradient(135deg, #94a3b8, #64748b) !important;
+            box-shadow: 0 8px 25px rgba(148, 163, 184, 0.3) !important;
+        }
+
+        .tool-card.disabled .tool-title {
+            color: #64748b;
+        }
+
+        .tool-card.disabled .tool-subtitle {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .tool-features li {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .tool-features li:before {
+            color: #cbd5e1;
+        }
+
         .footer-section {
             border-top: 2px solid #e2e8f0;
             padding-top: 2rem;
@@ -657,7 +702,7 @@
             </a>
 
             <!-- Project Management -->
-            <a href="#" class="tool-card projects-tool" onclick="showComingSoon('Project Management')">
+            <a href="#" class="tool-card projects-tool disabled" onclick="showComingSoon('Project Management')">
                 <div class="tool-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
@@ -670,7 +715,7 @@
                     <li>Team assignments</li>
                     <li>Progress tracking</li>
                 </ul>
-                <div class="access-badge">Coming Soon</div>
+                <div class="access-badge coming-soon">Coming Soon</div>
             </a>
 
             <!-- Archives -->
