@@ -719,7 +719,7 @@
             </a>
 
             <!-- Archives -->
-            <a href="#" class="tool-card archives-tool" onclick="showComingSoon('Quality Archives')">
+            <a href="#" class="tool-card archives-tool disabled" onclick="showComingSoon('Quality Archives')">
                 <div class="tool-icon">
                     <i class="fas fa-archive"></i>
                 </div>
@@ -732,7 +732,7 @@
                     <li>Document management</li>
                     <li>Data export & analysis</li>
                 </ul>
-                <div class="access-badge">Coming Soon</div>
+                <div class="access-badge coming-soon">Coming Soon</div>
             </a>
         </div>
 
@@ -766,6 +766,13 @@
             // Project selector functionality with linked line selection
             const projectSelect = document.getElementById('projectSelect');
             const projectDashboardBtn = document.getElementById('projectDashboardBtn');
+
+            // Initialize project selector with options
+            projectSelect.innerHTML = `
+                <option value="">-- Select Project --</option>
+                <option value="volvo">VOLVO Project</option>
+                <option value="man">MAN Project (Coming Soon)</option>
+            `;
 
             // Define project-line relationships
             const projectLines = {

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Dashboard - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            text-align: center;
+            backdrop-filter: blur(15px);
+        }
+        
+        .header-section {
+            margin-bottom: 3rem;
+        }
+        
+        .role-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .role-badge {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+        
+        .dashboard-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-subtitle {
+            font-size: 1.4rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+        
+        .welcome-message {
+            background: linear-gradient(135deg, #f0fff4, #dcfce7);
+            border: 2px solid #48bb78;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        
+        .welcome-message h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .welcome-message p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(72, 187, 120, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .tool-card:hover::before {
+            left: 100%;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border-color: #48bb78;
+        }
+        
+        .tool-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            margin: 0 auto 1.5rem auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            transform: rotate(45deg);
+            transition: transform 0.6s ease;
+        }
+        
+        .tool-card:hover .tool-icon::after {
+            transform: rotate(90deg);
+        }
+        
+        /* Tool-specific color schemes */
+        .aql-tool .tool-icon {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.4);
+        }
+        
+        .volvo-tool .tool-icon {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+        
+        .metrics-tool .tool-icon {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            box-shadow: 0 8px 25px rgba(237, 137, 54, 0.4);
+        }
+        
+        .analytics-tool .tool-icon {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.4);
+        }
+        
+        .archives-tool .tool-icon {
+            background: linear-gradient(135deg, #718096, #4a5568);
+            box-shadow: 0 8px 25px rgba(113, 128, 150, 0.4);
+        }
+        
+        .tool-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tool-subtitle {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .tool-features {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .tool-features li {
+            padding: 0.4rem 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.9rem;
+        }
+        
+        .tool-features li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .access-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .access-badge.coming-soon {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Disabled/Coming Soon card styles */
+        .tool-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(30%);
+            pointer-events: none;
+        }
+
+        .tool-card.disabled::before {
+            background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+        }
+
+        .tool-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+        .tool-card.disabled .tool-icon {
+            background: linear-gradient(135deg, #94a3b8, #64748b) !important;
+            box-shadow: 0 8px 25px rgba(148, 163, 184, 0.3) !important;
+        }
+
+        .tool-card.disabled .tool-title {
+            color: #64748b;
+        }
+
+        .tool-card.disabled .tool-subtitle {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .tool-features li {
+            color: #94a3b8;
+        }
+
+        .tool-card.disabled .tool-features li:before {
+            color: #cbd5e1;
+        }
+        
+        /* Production Line Selector */
+        .production-selector {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border: 2px solid #48bb78;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .selector-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .line-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .line-selector label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .line-selector select {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            background: white;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        
+        .line-selector select:focus {
+            outline: none;
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+        
+        .dashboard-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dashboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+        
+        .footer-section {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .navigation {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .nav-btn.secondary {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            
+            .dashboard-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .tool-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .tool-icon {
+                font-size: 3rem;
+                width: 80px;
+                height: 80px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .line-selector {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .line-selector select {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-title {
+                font-size: 1.6rem;
+            }
+            
+            .dashboard-subtitle {
+                font-size: 1rem;
+            }
+        }
+        
+        /* Animation for tool cards */
+        .tool-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .tool-card:nth-child(1) { animation-delay: 0.1s; }
+        .tool-card:nth-child(2) { animation-delay: 0.2s; }
+        .tool-card:nth-child(3) { animation-delay: 0.3s; }
+        .tool-card:nth-child(4) { animation-delay: 0.4s; }
+        .tool-card:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Feedback Icon Styles */
+        .feedback-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e53e3e, #fc8181);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(229, 62, 62, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+        
+        .feedback-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(229, 62, 62, 0.6);
+            animation: none;
+        }
+        
+        .feedback-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(229, 62, 62, 0.3);
+            animation: ripple 2s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes heartbeat {
+            0%, 50%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.05); }
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .feedback-tooltip {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: rgba(26, 54, 93, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .feedback-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border: 6px solid transparent;
+            border-top-color: rgba(26, 54, 93, 0.9);
+        }
+        
+        .feedback-icon:hover .feedback-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile responsive for feedback icon */
+        @media (max-width: 768px) {
+            .feedback-icon {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .feedback-tooltip {
+                bottom: 60px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="role-header">
+                <div class="role-badge">
+                    <i class="fas fa-wrench"></i>
+                    Technician Dashboard
+                </div>
+            </div>
+            <h1 class="dashboard-title">Production Quality Technician</h1>
+            <p class="dashboard-subtitle">Quality Control & Production Line Monitoring Tools</p>
+        </div>
+
+        <!-- Welcome Message -->
+        <div class="welcome-message">
+            <h3><i class="fas fa-info-circle"></i> Technician Access Portal</h3>
+            <p><strong>Welcome, Quality Technician!</strong> You have access to essential quality management tools for production line monitoring, quality metrics entry, analytics, and AQL inspection systems.</p>
+            <p>Select from the tools below to access your quality management functions and monitor production line performance.</p>
+        </div>
+
+        <!-- Production Line Selector -->
+        <div class="production-selector">
+            <div class="selector-title">
+                <i class="fas fa-industry"></i>
+                Project VOLVO Dashboard - Select Production Line
+            </div>
+            <div class="line-selector">
+                <label for="productionLine">Production Line:</label>
+                <select id="productionLine">
+                    <option value="vce">VCE Line - Volvo Car Electric</option>
+                    <option value="coming-soon" disabled>HDep Line - Coming Soon</option>
+                    <option value="coming-soon" disabled>Assembly Line 3 - Coming Soon</option>
+                </select>
+                <a href="../graphs/DashPerLine/vce-dashboard.html" class="dashboard-btn" id="dashboardBtn">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Open Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="tools-grid">
+            <!-- AQL Route -->
+            <a href="aql-onboarding.html" class="tool-card aql-tool">
+                <div class="tool-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="tool-title">AQL Inspection System</div>
+                <div class="tool-subtitle">View as AQL</div>
+                <ul class="tool-features">
+                    <li>Random sampling inspection</li>
+                    <li>Defect classification & recording</li>
+                    <li>Statistical quality control</li>
+                    <li>Pass/fail determination</li>
+                </ul>
+                <div class="access-badge">Full Access</div>
+            </a>
+
+            <!-- Technician Metrics -->
+            <a href="../Values/technician-metrics.html" class="tool-card metrics-tool">
+                <div class="tool-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="tool-title">Quality Metrics Entry</div>
+                <div class="tool-subtitle">Quality Data Input</div>
+                <ul class="tool-features">
+                    <li>Scrap rate tracking</li>
+                    <li>Rework rate monitoring</li>
+                    <li>Customer complaint logging</li>
+                    <li>Real-time metrics entry</li>
+                </ul>
+                <div class="access-badge">Data Entry</div>
+            </a>
+
+            <!-- Analytics Hub -->
+            <a href="../Values/technician-analytics.html" class="tool-card analytics-tool">
+                <div class="tool-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="tool-title">Analytics Hub</div>
+                <div class="tool-subtitle">AI-Powered Quality Intelligence</div>
+                <ul class="tool-features">
+                    <li>Performance trend analysis</li>
+                    <li>Predictive quality insights</li>
+                    <li>AI-driven recommendations</li>
+                    <li>Advanced reporting tools</li>
+                </ul>
+                <div class="access-badge">Analytics</div>
+            </a>
+
+            <!-- Archives -->
+            <a href="#" class="tool-card archives-tool disabled" onclick="showComingSoon('Quality Archives')">
+                <div class="tool-icon">
+                    <i class="fas fa-archive"></i>
+                </div>
+                <div class="tool-title">Quality Archives</div>
+                <div class="tool-subtitle">Historical Quality Data</div>
+                <ul class="tool-features">
+                    <li>Historical quality reports</li>
+                    <li>Audit trail access</li>
+                    <li>Document management</li>
+                    <li>Compliance records</li>
+                </ul>
+                <div class="access-badge coming-soon">Coming Soon</div>
+            </a>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="navigation">
+                <a href="role-selection.html" class="nav-btn secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Role Selection
+                </a>
+                <a href="../index.html" class="nav-btn primary">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Icon -->
+    <button class="feedback-icon" onclick="goToFeedback()" title="Send us feedback">
+        <i class="fas fa-heart"></i>
+        <div class="feedback-tooltip">Help us improve! 💕</div>
+    </button>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Store technician role in localStorage
+            localStorage.setItem('userRole', 'technician');
+            localStorage.setItem('roleDisplayName', 'Quality Technician');
+            
+            // Production line selector functionality
+            const productionLineSelect = document.getElementById('productionLine');
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            
+            productionLineSelect.addEventListener('change', function() {
+                const selectedLine = this.value;
+                
+                switch(selectedLine) {
+                    case 'vce':
+                        dashboardBtn.href = '../graphs/DashPerLine/vce-dashboard.html';
+                        dashboardBtn.style.opacity = '1';
+                        dashboardBtn.style.pointerEvents = 'auto';
+                        break;
+                    default:
+                        dashboardBtn.href = '#';
+                        dashboardBtn.style.opacity = '0.5';
+                        dashboardBtn.style.pointerEvents = 'none';
+                }
+            });
+            
+            // Enhanced tool card interactions
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            toolCards.forEach((card, index) => {
+                // Add click feedback
+                card.addEventListener('click', function(e) {
+                    if (this.getAttribute('onclick')) {
+                        e.preventDefault();
+                        eval(this.getAttribute('onclick'));
+                        return;
+                    }
+                    
+                    // Add loading state for real links
+                    if (this.href && this.href !== '#') {
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            window.location.href = this.href;
+                        }, 150);
+                    }
+                });
+                
+                // Accessibility enhancements
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // Session management
+            const sessionData = {
+                role: 'technician',
+                loginTime: new Date().toISOString(),
+                permissions: [
+                    'aql_inspection',
+                    'quality_metrics_entry',
+                    'analytics_view',
+                    'volvo_dashboard_view'
+                ]
+            };
+            
+            localStorage.setItem('technicianSession', JSON.stringify(sessionData));
+            
+            console.log('Technician Dashboard initialized');
+            console.log('User permissions:', sessionData.permissions);
+        });
+        
+        // Feedback navigation function
+        function goToFeedback() {
+            // Store current page info for feedback context
+            localStorage.setItem('feedbackReferrer', 'technician-onboarding');
+            localStorage.setItem('feedbackContext', 'Production Quality Technician Dashboard');
+            
+            // Navigate to feedback page with animation
+            window.location.href = '../Feedback/feedback.html';
+        }
+        
+        // Coming soon modal for unavailable features
+        function showComingSoon(featureName) {
+            alert(`${featureName} will be available soon!\n\nThis feature is currently under development and will be released in the next update.`);
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Quick navigation back to role selection
+                window.location.href = 'role-selection.html';
+            }
+        });
+    </script>
+</body>
+</html>
