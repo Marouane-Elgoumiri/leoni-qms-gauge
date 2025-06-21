@@ -357,6 +357,107 @@
                 transform: translateY(0);
             }
         }
+
+        /* Feedback Icon Styles */
+        .feedback-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #e53e3e, #fc8181);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(229, 62, 62, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .feedback-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(229, 62, 62, 0.6);
+            animation: none;
+        }
+
+        .feedback-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(229, 62, 62, 0.3);
+            animation: ripple 2s infinite;
+            z-index: -1;
+        }
+
+        @keyframes heartbeat {
+            0%, 50%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.05); }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .feedback-tooltip {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: rgba(26, 54, 93, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .feedback-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border: 6px solid transparent;
+            border-top-color: rgba(26, 54, 93, 0.9);
+        }
+
+        .feedback-icon:hover .feedback-tooltip {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile responsive for feedback icon */
+        @media (max-width: 768px) {
+            .feedback-icon {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .feedback-tooltip {
+                bottom: 60px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -522,6 +623,12 @@
                 </a>
             </div>
         </div>
+
+        <!-- Feedback Icon -->
+        <button class="feedback-icon" onclick="goToFeedback()" title="Send us feedback">
+            <i class="fas fa-heart"></i>
+            <div class="feedback-tooltip">Help us improve! 💕</div>
+        </button>
     </div>
 
     <script>
@@ -568,6 +675,16 @@
                 });
             });
         });
+
+        // Feedback navigation function
+        function goToFeedback() {
+            // Store current page info for feedback context
+            localStorage.setItem('feedbackReferrer', 'aql-onboarding');
+            localStorage.setItem('feedbackContext', 'AQL Agent Quality Ligne Dashboard');
+            
+            // Navigate to feedback page with animation
+            window.location.href = '../Feedback/feedback.html';
+        }
     </script>
 </body>
 </html>

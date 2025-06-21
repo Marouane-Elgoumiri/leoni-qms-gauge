@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Feedback - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            animation: slideDown 0.6s ease;
+        }
+
+        .feedback-icon {
+            font-size: 4rem;
+            color: #e53e3e;
+            margin-bottom: 1rem;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .motivation-message {
+            background: linear-gradient(135deg, #fef3e2, #fed7aa);
+            border: 2px solid #ed8936;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .motivation-message h3 {
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .motivation-message p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            animation: slideUp 0.6s ease;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            color: #4a5568;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .rating-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .rating-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .rating-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .rating-label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .star {
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #f8fafc;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+
+        .checkbox-item label {
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .footer-navigation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animations */
+        @keyframes heartbeat {
+            0%, 50%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.1); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+            }
+
+            .header-section,
+            .feedback-form,
+            .footer-navigation {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .rating-group {
+                grid-template-columns: 1fr;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .feedback-icon {
+                font-size: 3rem;
+            }
+        }
+
+        /* Success message */
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 2px solid #10b981;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            display: none;
+            animation: slideDown 0.6s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message h3 {
+            color: #065f46;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .success-message p {
+            color: #047857;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="feedback-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h1 class="page-title">We Value Your Feedback</h1>
+            <p class="page-subtitle">Help us improve the LEONI Quality Management System</p>
+            
+            <div class="motivation-message">
+                <h3><i class="fas fa-lightbulb"></i> Your Voice Matters</h3>
+                <p><strong>Thank you for taking the time to share your experience!</strong> Your feedback is essential for continuous improvement of our quality management system.</p>
+                <p>Every suggestion, comment, and rating helps us enhance the user experience and make the system more efficient for everyone.</p>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <h3><i class="fas fa-check-circle"></i> Thank You!</h3>
+            <p>Your feedback has been submitted successfully. We appreciate your valuable input and will use it to improve our system.</p>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="feedback-form" id="feedbackForm">
+            <form id="userFeedbackForm">
+                <!-- User Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i>
+                        User Information
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="userRole">Your Role</label>
+                        <select class="form-select" id="userRole" name="userRole" required>
+                            <option value="">-- Select Your Role --</option>
+                            <option value="aql">AQL - Agent Quality Ligne</option>
+                            <option value="technician">Production Quality Technician</option>
+                            <option value="teamleader">Production Team Leader</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="department">Department/Line</label>
+                        <input type="text" class="form-input" id="department" name="department" placeholder="e.g., VCE Line, Packaging Line, Admin">
+                    </div>
+                </div>
+
+                <!-- Overall Experience -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-star"></i>
+                        Overall Experience
+                    </div>
+                    
+                    <div class="rating-group">
+                        <div class="rating-item">
+                            <label class="rating-label">System Usability</label>
+                            <div class="star-rating" data-rating="usability">
+                                <i class="fas fa-star star" data-value="1"></i>
+                                <i class="fas fa-star star" data-value="2"></i>
+                                <i class="fas fa-star star" data-value="3"></i>
+                                <i class="fas fa-star star" data-value="4"></i>
+                                <i class="fas fa-star star" data-value="5"></i>
+                            </div>
+                            <small>How easy is it to use?</small>
+                        </div>
+
+                        <div class="rating-item">
+                            <label class="rating-label">Interface Design</label>
+                            <div class="star-rating" data-rating="design">
+                                <i class="fas fa-star star" data-value="1"></i>
+                                <i class="fas fa-star star" data-value="2"></i>
+                                <i class="fas fa-star star" data-value="3"></i>
+                                <i class="fas fa-star star" data-value="4"></i>
+                                <i class="fas fa-star star" data-value="5"></i>
+                            </div>
+                            <small>How appealing is the design?</small>
+                        </div>
+
+                        <div class="rating-item">
+                            <label class="rating-label">Performance</label>
+                            <div class="star-rating" data-rating="performance">
+                                <i class="fas fa-star star" data-value="1"></i>
+                                <i class="fas fa-star star" data-value="2"></i>
+                                <i class="fas fa-star star" data-value="3"></i>
+                                <i class="fas fa-star star" data-value="4"></i>
+                                <i class="fas fa-star star" data-value="5"></i>
+                            </div>
+                            <small>How fast and responsive?</small>
+                        </div>
+
+                        <div class="rating-item">
+                            <label class="rating-label">Overall Satisfaction</label>
+                            <div class="star-rating" data-rating="satisfaction">
+                                <i class="fas fa-star star" data-value="1"></i>
+                                <i class="fas fa-star star" data-value="2"></i>
+                                <i class="fas fa-star star" data-value="3"></i>
+                                <i class="fas fa-star star" data-value="4"></i>
+                                <i class="fas fa-star star" data-value="5"></i>
+                            </div>
+                            <small>How satisfied are you overall?</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specific Features -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        Which features have you used?
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="defectInsertion" name="features" value="defectInsertion">
+                            <label for="defectInsertion">Defect Insertion System</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="audit5s" name="features" value="audit5s">
+                            <label for="audit5s">5S Audit</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="afpAudit" name="features" value="afpAudit">
+                            <label for="afpAudit">AFP Audit</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="qkAudit" name="features" value="qkAudit">
+                            <label for="qkAudit">QK Audit</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tramMetrics" name="features" value="tramMetrics">
+                            <label for="tramMetrics">TRAM Metrics</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="analytics" name="features" value="analytics">
+                            <label for="analytics">Analytics Hub</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dashboards" name="features" value="dashboards">
+                            <label for="dashboards">Production Dashboards</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="adminPanel" name="features" value="adminPanel">
+                            <label for="adminPanel">Admin Panel</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Comments -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-comments"></i>
+                        Your Feedback
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="improvements">What improvements would you like to see?</label>
+                        <textarea class="form-textarea" id="improvements" name="improvements" placeholder="Share your suggestions for improving the system..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="challenges">What challenges do you face while using the system?</label>
+                        <textarea class="form-textarea" id="challenges" name="challenges" placeholder="Describe any difficulties or issues you encounter..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="features">What new features would be helpful?</label>
+                        <textarea class="form-textarea" id="features" name="newFeatures" placeholder="Suggest new features or functionalities..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="additional">Additional Comments</label>
+                        <textarea class="form-textarea" id="additional" name="additional" placeholder="Any other feedback or comments..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Information (Optional) -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-envelope"></i>
+                        Contact Information (Optional)
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" class="form-input" id="email" name="email" placeholder="your.email@leoni.com (optional)">
+                        <small style="color: #718096; font-size: 0.85rem;">Only if you'd like us to follow up on your feedback</small>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Feedback
+                    </button>
+                    <p style="color: #718096; font-size: 0.9rem; margin-top: 1rem;">
+                        Thank you for helping us improve! Your feedback is anonymous unless you provide contact information.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="footer-navigation">
+            <a href="javascript:history.back()" class="nav-btn">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Star rating functionality
+            const starRatings = document.querySelectorAll('.star-rating');
+            const ratings = {};
+
+            starRatings.forEach(rating => {
+                const stars = rating.querySelectorAll('.star');
+                const ratingType = rating.dataset.rating;
+                
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        ratings[ratingType] = value;
+                        
+                        // Update visual state
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.classList.add('active');
+                            } else {
+                                s.classList.remove('active');
+                            }
+                        });
+                        
+                        // Add pulse animation
+                        rating.style.animation = 'pulse 0.6s ease';
+                        setTimeout(() => {
+                            rating.style.animation = '';
+                        }, 600);
+                    });
+                    
+                    // Hover effects
+                    star.addEventListener('mouseenter', function() {
+                        const value = parseInt(this.dataset.value);
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.style.color = '#fbbf24';
+                                s.style.transform = 'scale(1.1)';
+                            }
+                        });
+                    });
+                    
+                    star.addEventListener('mouseleave', function() {
+                        stars.forEach((s, i) => {
+                            if (!s.classList.contains('active')) {
+                                s.style.color = '#e2e8f0';
+                                s.style.transform = 'scale(1)';
+                            }
+                        });
+                    });
+                });
+            });
+
+            // Form submission
+            const form = document.getElementById('userFeedbackForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const feedbackData = {};
+                
+                // Add basic form data
+                for (let [key, value] of formData.entries()) {
+                    if (feedbackData[key]) {
+                        if (Array.isArray(feedbackData[key])) {
+                            feedbackData[key].push(value);
+                        } else {
+                            feedbackData[key] = [feedbackData[key], value];
+                        }
+                    } else {
+                        feedbackData[key] = value;
+                    }
+                }
+                
+                // Add ratings
+                feedbackData.ratings = ratings;
+                
+                // Add timestamp and session info
+                feedbackData.timestamp = new Date().toISOString();
+                feedbackData.userAgent = navigator.userAgent;
+                feedbackData.referrer = document.referrer;
+                
+                // Simulate sending feedback (in production, send to server)
+                console.log('Feedback Data:', feedbackData);
+                
+                // Store feedback locally for now
+                const existingFeedback = JSON.parse(localStorage.getItem('userFeedback') || '[]');
+                existingFeedback.push(feedbackData);
+                localStorage.setItem('userFeedback', JSON.stringify(existingFeedback));
+                
+                // Show success message
+                showSuccessMessage();
+            });
+
+            function showSuccessMessage() {
+                const form = document.getElementById('feedbackForm');
+                const successMessage = document.getElementById('successMessage');
+                
+                // Hide form with animation
+                form.style.transform = 'translateY(20px)';
+                form.style.opacity = '0';
+                
+                setTimeout(() => {
+                    form.style.display = 'none';
+                    successMessage.classList.add('show');
+                    
+                    // Auto redirect after 3 seconds
+                    setTimeout(() => {
+                        history.back();
+                    }, 3000);
+                }, 300);
+            }
+
+            // Auto-detect user role from localStorage
+            const userRole = localStorage.getItem('userRole');
+            if (userRole) {
+                const roleSelect = document.getElementById('userRole');
+                roleSelect.value = userRole;
+            }
+
+            // Auto-fill department from referrer
+            const referrer = document.referrer;
+            const departmentInput = document.getElementById('department');
+            
+            if (referrer.includes('aql-onboarding')) {
+                departmentInput.value = 'AQL Quality Line';
+            } else if (referrer.includes('technician-onboarding')) {
+                departmentInput.value = 'Production Quality';
+            } else if (referrer.includes('team-leader-onboarding')) {
+                departmentInput.value = 'Team Leadership';
+            }
+
+            console.log('Feedback system initialized');
+        });
+    </script>
+</body>
+</html>
