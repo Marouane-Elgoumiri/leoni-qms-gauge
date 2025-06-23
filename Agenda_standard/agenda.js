@@ -1,443 +1,438 @@
 // Agenda Standard JavaScript
-// LEONI QMS - Agent Qualité Ligne
 
-// Morning shift schedule data - LEONI AQL Agenda Standard
-const morningShiftData = [
-    {
-        category: "PRISE DE POSTE",
-        tasks: [
-            {
-                task: "1) Vérifier le cahier de consignes et prendre les informations des AQL précédentes",
-                time: "6h55 à 7h05",
-                duration: "10min",
-                type: "prise-poste",
-                reaction: "Signaler au chef d'équipe"
-            },
-            {
-                task: "2) Distribuer les cahiers de relevés de contrôle",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Vérifier disponibilité cahiers"
-            },
-            {
-                task: "3) Relever l'absentéisme sur les postes à risque",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Informer TL des absences"
-            },
-            {
-                task: "4) Vérifier la validation des remplaçants des opérateurs absents",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Valider compétences remplaçants"
-            },
-            {
-                task: "5) Vérifier l'enregistrement des relées de contrôle finale /quality gate/bol /firewall",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Corriger enregistrements manquants"
-            },
-            {
-                task: "6) Vérifier que la réparatrice est présente (sinon sa remplaçante) et identifiée par son brassard (vérifier l'état des outils de désenfichage et cahier d'enregistrement)",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Organiser remplacement si nécessaire"
-            },
-            {
-                task: "7) Vérifier la cohérence entre le tableau de polyvalence et les personnes sur la ligne (tableau à jour)",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Mettre à jour tableau polyvalence"
-            },
-            {
-                task: "8) Vérifier la présence des outils GAF pour petites et grosses sections",
-                time: "7h05 à 7h25",
-                duration: "20min",
-                type: "prise-poste",
-                reaction: "Récupérer outils manquants"
-            }
-        ]
-    },
-    {
-        category: "EN POSTE",
-        tasks: [
-            {
-                task: "9) Faire la saisie des défauts dans la base et apporter les données de la Réunion 5min",
-                time: "7h25 à 7h45",
-                duration: "20min",
-                type: "en-poste",
-                reaction: "Vérifier saisie complète"
-            },
-            {
-                task: "10) Respecter le mode opératoire d'utilisation outil GAF",
-                time: "Continu",
-                duration: "Continu",
-                type: "en-poste",
-                reaction: "Reprendre formation si nécessaire"
-            },
-            {
-                task: "11) Vérifier la présence des QRQC par rapport aux défauts (nombre, détection, date..), respect 5 équipes et animer les QRQC ligne avec les TS",
-                time: "7h45 à 8h05, 10h00, 12h00 et 14h40",
-                duration: "20min par ZAP chaque 2 heures",
-                type: "en-poste",
-                reaction: "Créer QRQC si manquant"
-            },
-            {
-                task: "12) Faire des audits QK et remplir l'enregistrement, avec vérification du remplissage fiche bâtonnage",
-                time: "08h05, 11h00 et à 13h",
-                duration: "1h",
-                type: "en-poste",
-                reaction: "Compléter fiches manquantes"
-            },
-            {
-                task: "13) Auditer et vérifier l'application des OK démarrage sur chaque poste audité: -Montage: Carrousel / LAD -Test Agrafe -BOL",
-                time: "10h00",
-                duration: "2h",
-                type: "en-poste",
-                reaction: "Corriger non-conformités"
-            },
-            {
-                task: "14) Vérifier le nombre de faisceau par crochet en fin de ligne et sur chariot par rapport à ce qui est demandé",
-                time: "Continu",
-                duration: "Ponctuel",
-                type: "en-poste",
-                reaction: "Ajuster quantités"
-            },
-            {
-                task: "Auditer le respect du produit en Zone d'assemblage: -Pas de fils et composants au sol -Pas de fils hors des bâches de protection des Carrousels ou LAD -Les chariots de fils sont réglés à la bonne hauteur pour laisser un espace mini de 100 mm entre les extrémités et le fond du chariot -Pas de chariots porte fils sans bâche plastique ou carter bois -Pas de fil hors de protections des chariots (bâche ou carter) -Pas de fils emmêlés dans le chariot -Le plan de chargement des chariots porte fils est conforme au standard -les Quantités de fils sont conformes au plan de chargement -Le fond des chariots ou bac bois est propre -Les boîtes de composants sont identifiées, ne sont pas surchargées, pas de mélange composant -Aucun fil ou aucune épissure stockée hors chariot ou hors support -Aucun composant pré chargé sur les chariots de fils (sauf si standard spécifique)",
-                time: "12h00",
-                duration: "2h30",
-                type: "en-poste",
-                reaction: "Corriger immédiatement les non-conformités"
-            },
-            {
-                task: "Auditer le nettoyage des contres-parties sur BOL: Nettoyage se fait par aspirateur",
-                time: "12h00",
-                duration: "Inclus dans audit",
-                type: "en-poste",
-                reaction: "Nettoyer si nécessaire"
-            },
-            {
-                task: "15) Les connexions serties sur joint et composant des ergots de verrouillage à l'extérieur de la connexion type MQS doivent en priorité être placés devant les opérateurs",
-                time: "Continu",
-                duration: "Vérification",
-                type: "en-poste",
-                reaction: "Repositionner si mal placés"
-            },
-            {
-                task: "17) Validation produit ou process selon le planning",
-                time: "Selon planning",
-                duration: "Variable",
-                type: "en-poste",
-                reaction: "Suivre procédure validation"
-            }
-        ]
-    },
-    {
-        category: "LA PAUSE",
-        tasks: [
-            {
-                task: "Pause",
-                time: "Variable",
-                duration: "30min",
-                type: "pause",
-                reaction: "Transmission des consignes"
-            }
-        ]
-    },
-    {
-        category: "FIN DE POSTE",
-        tasks: [
-            {
-                task: "16) Vérifier l'encours, les bacs rouges et application des 5S",
-                time: "14h30 à 14h40",
-                duration: "10min",
-                type: "fin-poste",
-                reaction: "Nettoyer et organiser"
-            },
-            {
-                task: "17) Renseigner le cahier de consignes et informer l'AQL lors de changement d'équipe",
-                time: "14h40 à 14h55",
-                duration: "15min",
-                type: "fin-poste",
-                reaction: "Transmission complète obligatoire"
-            }
-        ]
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize current week display
+    initializeWeekDisplay();
+    
+    // Initialize shift selector
+    initializeShiftSelector();
+    
+    // Initialize checkbox interactions
+    initializeCheckboxes();
+    
+    // Initialize save functionality
+    initializeSaveFunction();
+    
+    // Initialize save status indicator
+    initializeSaveStatus();
+    
+    // Initialize progress tracking
+    initializeProgressTracking();
+    
+    console.log('Agenda Standard initialized');
+});
+
+// Initialize save status indicator
+function initializeSaveStatus() {
+    const lastSaved = localStorage.getItem('agendaLastSaved');
+    if (lastSaved) {
+        updateSaveStatus('saved', `Dernière sauvegarde: ${new Date(lastSaved).toLocaleString('fr-FR')}`);
     }
-];
+}
 
-// Reaction modes data
-const reactionModes = [
-    "Signaler au chef d'équipe",
-    "Vérifier disponibilité cahiers",
-    "Informer TL des absences",
-    "Valider compétences remplaçants",
-    "Corriger enregistrements manquants",
-    "Organiser remplacement si nécessaire",
-    "Mettre à jour tableau polyvalence",
-    "Récupérer outils manquants",
-    "Vérifier saisie complète",
-    "Reprendre formation si nécessaire",
-    "Créer QRQC si manquant",
-    "Compléter fiches manquantes",
-    "Corriger non-conformités",
-    "Ajuster quantités",
-    "Corriger immédiatement les non-conformités",
-    "Nettoyer si nécessaire",
-    "Repositionner si mal placés",
-    "Suivre procédure validation",
-    "Transmission des consignes",
-    "Nettoyer et organiser",
-    "Transmission complète obligatoire"
-];
-
-// Days of the week
-const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-
-class AgendaManager {
-    constructor() {
-        this.currentShift = 'morning';
-        this.agendaGrid = document.getElementById('agendaGrid');
-        this.shiftSelect = document.getElementById('shiftSelect');
-        this.currentWeekElement = document.getElementById('currentWeek');
+// Update save status indicator
+function updateSaveStatus(type, message) {
+    const saveStatus = document.getElementById('saveStatus');
+    if (saveStatus) {
+        saveStatus.className = `save-status ${type}`;
+        saveStatus.textContent = message;
         
-        this.init();
-    }
-
-    init() {
-        this.updateCurrentWeek();
-        this.setupEventListeners();
-        this.renderAgenda();
-    }
-
-    updateCurrentWeek() {
-        const now = new Date();
-        const startOfYear = new Date(now.getFullYear(), 0, 1);
-        const pastDaysOfYear = (now - startOfYear) / 86400000;
-        const weekNumber = Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
-        
-        if (this.currentWeekElement) {
-            this.currentWeekElement.textContent = weekNumber;
+        if (type === 'saved') {
+            setTimeout(() => {
+                saveStatus.textContent = '';
+                saveStatus.className = 'save-status';
+            }, 3000);
         }
     }
+}
 
-    setupEventListeners() {
-        if (this.shiftSelect) {
-            this.shiftSelect.addEventListener('change', (e) => {
-                this.currentShift = e.target.value;
-                this.renderAgenda();
-            });
+// Initialize progress tracking
+function initializeProgressTracking() {
+    console.log('Initializing progress tracking...');
+    updateProgressBar();
+    
+    // Update progress when checkboxes change
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    console.log('Found checkboxes for progress tracking:', checkboxes.length);
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateProgressBar);
+    });
+}
+
+// Update progress bar
+function updateProgressBar() {
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    
+    if (progressFill && progressText) {
+        const percentage = getCompletionPercentage();
+        progressFill.style.width = `${percentage}%`;
+        progressText.textContent = `${percentage}%`;
+        
+        // Change color based on completion
+        if (percentage >= 90) {
+            progressFill.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+        } else if (percentage >= 70) {
+            progressFill.style.background = 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)';
+        } else {
+            progressFill.style.background = 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)';
         }
-    }
-
-    renderAgenda() {
-        if (!this.agendaGrid) return;
-
-        // Clear existing content except headers
-        this.clearDynamicContent();
-
-        // Render based on current shift
-        switch (this.currentShift) {
-            case 'morning':
-                this.renderMorningShift();
-                break;
-            case 'afternoon':
-                this.renderNotAvailable('Équipe d\'Après-midi');
-                break;
-            case 'night':
-                this.renderNotAvailable('Équipe de Nuit');
-                break;
-            default:
-                this.renderMorningShift();
-        }
-    }
-
-    clearDynamicContent() {
-        // Remove all elements that are not headers or day-subheaders
-        const staticElements = this.agendaGrid.querySelectorAll('.grid-header, .day-subheader');
-        this.agendaGrid.innerHTML = '';
         
-        // Re-add static elements
-        staticElements.forEach(element => {
-            this.agendaGrid.appendChild(element);
-        });
+        console.log('Progress updated:', percentage + '%');
+    } else {
+        console.log('Progress bar elements not found');
     }
+}
 
-    renderMorningShift() {
-        morningShiftData.forEach((category, categoryIndex) => {
-            // Render category header
-            this.renderCategoryHeader(category.category);
-
-            // Render tasks for this category
-            category.tasks.forEach((task, taskIndex) => {
-                this.renderTaskRow(task, `${categoryIndex}-${taskIndex}`);
-            });
-        });
+// Display current week number
+function initializeWeekDisplay() {
+    const currentWeekElement = document.getElementById('currentWeek');
+    if (currentWeekElement) {
+        const currentDate = new Date();
+        const weekNumber = getWeekNumber(currentDate);
+        currentWeekElement.textContent = weekNumber;
+        console.log('Current week initialized:', weekNumber);
     }
+}
 
-    renderCategoryHeader(categoryName) {
-        const categoryElement = document.createElement('div');
-        categoryElement.className = 'task-category';
-        categoryElement.textContent = categoryName;
-        this.agendaGrid.appendChild(categoryElement);
-    }
+// Calculate week number (ISO 8601 standard)
+function getWeekNumber(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNumber = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return weekNumber;
+}
 
-    renderTaskRow(task, taskId) {
-        // Task name
-        const taskCell = this.createCell('task-cell', task.task, task.type);
-        
-        // Time
-        const timeCell = this.createCell('time-cell', task.time);
-        
-        // Duration
-        const durationCell = this.createCell('duration-cell', task.duration);
-        
-        // Days (OK/NOK checkboxes for each day)
-        const dayCheckboxes = [];
-        daysOfWeek.forEach((day, dayIndex) => {
-            // OK checkbox
-            const okCell = this.createCheckboxCell(`${taskId}-${dayIndex}-ok`, false);
-            dayCheckboxes.push(okCell);
+// Initialize shift selector functionality
+function initializeShiftSelector() {
+    const shiftSelect = document.getElementById('shiftSelect');
+    if (shiftSelect) {
+        shiftSelect.addEventListener('change', function() {
+            const selectedShift = this.value;
+            console.log('Selected shift:', selectedShift);
             
-            // NOK checkbox
-            const nokCell = this.createCheckboxCell(`${taskId}-${dayIndex}-nok`, true);
-            dayCheckboxes.push(nokCell);
+            // Store the selection
+            localStorage.setItem('selectedShift', selectedShift);
+            
+            // Update time displays based on shift
+            updateTimeDisplays(selectedShift);
         });
         
-        // Comments
-        const commentsCell = this.createCommentsCell(`${taskId}-comments`);
-        
-        // Reaction mode
-        const reactionCell = this.createReactionCell(`${taskId}-reaction`, task.reaction);
-        
-        // Append all cells
-        [taskCell, timeCell, durationCell, ...dayCheckboxes, commentsCell, reactionCell].forEach(cell => {
-            this.agendaGrid.appendChild(cell);
-        });
-    }
-
-    createCell(className, content, taskType = '') {
-        const cell = document.createElement('div');
-        cell.className = `grid-cell ${className}`;
-        if (taskType) {
-            cell.classList.add(`task-${taskType}`);
+        // Load previously selected shift
+        const savedShift = localStorage.getItem('selectedShift');
+        if (savedShift) {
+            shiftSelect.value = savedShift;
+            updateTimeDisplays(savedShift);
         }
-        cell.textContent = content;
-        return cell;
     }
+}
 
-    createCheckboxCell(id, isNok = false) {
-        const cell = document.createElement('div');
-        cell.className = `grid-cell checkbox-cell ${isNok ? 'nok-cell' : 'ok-cell'}`;
+// Update time displays based on selected shift
+function updateTimeDisplays(shift) {
+    // This function could be expanded to show different times for different shifts
+    // For now, it just highlights the current shift's time information
+    const timeCells = document.querySelectorAll('.time-cell');
+    timeCells.forEach(cell => {
+        if (shift === 'morning') {
+            cell.style.backgroundColor = '#f0f9ff';
+        } else if (shift === 'afternoon') {
+            cell.style.backgroundColor = '#fff7ed';
+        } else if (shift === 'night') {
+            cell.style.backgroundColor = '#f3f4f6';
+        }
+    });
+}
+
+// Initialize checkbox interactions
+function initializeCheckboxes() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    checkboxes.forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            const textarea = row.querySelector('textarea');
+            
+            // Check if this is a NOK checkbox (odd-indexed within the day columns)
+            const cell = this.closest('td');
+            const cellIndex = Array.from(row.children).indexOf(cell);
+            const isNokColumn = cellIndex >= 4 && cellIndex <= 15 && (cellIndex - 4) % 2 === 1;
+            
+            if (this.checked && isNokColumn && textarea) {
+                textarea.focus();
+                textarea.placeholder = 'Veuillez décrire le problème détecté...';
+                textarea.style.backgroundColor = '#fef2f2';
+            }
+            
+            // Visual feedback for checked items
+            if (this.checked) {
+                cell.style.backgroundColor = isNokColumn ? '#fef2f2' : '#f0fdf4';
+            } else {
+                cell.style.backgroundColor = '';
+            }
+            
+            // Save state
+            saveCheckboxState();
+            
+            // Update progress
+            updateProgressBar();
+        });
+    });
+    
+    // Load saved checkbox states
+    loadCheckboxStates();
+}
+
+// Save checkbox states to localStorage
+function saveCheckboxState() {
+    updateSaveStatus('saving', 'Sauvegarde en cours...');
+    
+    try {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const states = {};
         
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = id;
-        checkbox.addEventListener('change', (e) => this.handleCheckboxChange(e, isNok));
+        checkboxes.forEach((checkbox, index) => {
+            states[`checkbox_${index}`] = checkbox.checked;
+        });
         
-        cell.appendChild(checkbox);
-        return cell;
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach((textarea, index) => {
+            states[`textarea_${index}`] = textarea.value;
+        });
+        
+        localStorage.setItem('agendaStates', JSON.stringify(states));
+        
+        // Save timestamp
+        const timestamp = new Date().toISOString();
+        localStorage.setItem('agendaLastSaved', timestamp);
+        
+        updateSaveStatus('saved', 'Données sauvegardées');
+        console.log('Data saved successfully');
+    } catch (error) {
+        updateSaveStatus('error', 'Erreur de sauvegarde');
+        console.error('Error saving data:', error);
     }
+}
 
-    createCommentsCell(id) {
-        const cell = document.createElement('div');
-        cell.className = 'grid-cell comments-cell';
-        
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = id;
-        input.placeholder = 'Commentaires...';
-        
-        cell.appendChild(input);
-        return cell;
+// Manual save function for button
+function saveData() {
+    saveCheckboxState();
+}
+
+// Load checkbox states from localStorage
+function loadCheckboxStates() {
+    const savedStates = localStorage.getItem('agendaStates');
+    if (savedStates) {
+        try {
+            const states = JSON.parse(savedStates);
+            
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                if (states[`checkbox_${index}`] !== undefined) {
+                    checkbox.checked = states[`checkbox_${index}`];
+                    
+                    // Apply visual feedback
+                    if (checkbox.checked) {
+                        const cell = checkbox.closest('td');
+                        const row = checkbox.closest('tr');
+                        const cellIndex = Array.from(row.children).indexOf(cell);
+                        const isNokColumn = cellIndex >= 4 && cellIndex <= 15 && (cellIndex - 4) % 2 === 1;
+                        cell.style.backgroundColor = isNokColumn ? '#fef2f2' : '#f0fdf4';
+                    }
+                }
+            });
+            
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                if (states[`textarea_${index}`] !== undefined) {
+                    textarea.value = states[`textarea_${index}`];
+                    if (textarea.value) {
+                        textarea.style.backgroundColor = '#fffbeb';
+                    }
+                }
+            });
+            
+            console.log('Checkbox states loaded from localStorage');
+            updateProgressBar(); // Update progress after loading states
+        } catch (error) {
+            console.error('Error loading checkbox states:', error);
+        }
     }
+}
 
-    createReactionCell(id, defaultReaction) {
-        const cell = document.createElement('div');
-        cell.className = 'grid-cell reaction-cell';
+// Initialize save functionality
+function initializeSaveFunction() {
+    // Auto-save on textarea changes
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            if (this.value) {
+                this.style.backgroundColor = '#fffbeb';
+            } else {
+                this.style.backgroundColor = '';
+            }
+            debounce(saveCheckboxState, 1000)();
+        });
+    });
+    
+    // Save on page unload
+    window.addEventListener('beforeunload', saveCheckboxState);
+    
+    // Periodic auto-save every 5 minutes
+    setInterval(saveCheckboxState, 5 * 60 * 1000);
+}
+
+// Debounce function to limit save frequency
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Export data function
+function exportData() {
+    try {
+        const data = {
+            exportDate: new Date().toISOString(),
+            week: getWeekNumber(new Date()),
+            shift: document.getElementById('shiftSelect')?.value || 'morning',
+            tasks: []
+        };
         
-        const select = document.createElement('select');
-        select.id = id;
-        
-        // Add default option
-        const defaultOption = document.createElement('option');
-        defaultOption.value = defaultReaction;
-        defaultOption.textContent = defaultReaction;
-        defaultOption.selected = true;
-        select.appendChild(defaultOption);
-        
-        // Add other reaction modes
-        reactionModes.forEach(reaction => {
-            if (reaction !== defaultReaction) {
-                const option = document.createElement('option');
-                option.value = reaction;
-                option.textContent = reaction;
-                select.appendChild(option);
+        const rows = document.querySelectorAll('tbody tr:not(.section-row)');
+        rows.forEach(row => {
+            const taskText = row.querySelector('.task-text');
+            const timeCell = row.querySelector('.time-cell');
+            const durationCell = row.querySelector('.duration-cell');
+            const checkboxes = row.querySelectorAll('input[type="checkbox"]');
+            const textarea = row.querySelector('textarea');
+            
+            if (taskText) {
+                const taskData = {
+                    task: taskText.textContent.trim(),
+                    time: timeCell ? timeCell.textContent.trim() : '',
+                    duration: durationCell ? durationCell.textContent.trim() : '',
+                    status: {
+                        monday: { ok: checkboxes[0]?.checked || false, nok: checkboxes[1]?.checked || false },
+                        tuesday: { ok: checkboxes[2]?.checked || false, nok: checkboxes[3]?.checked || false },
+                        wednesday: { ok: checkboxes[4]?.checked || false, nok: checkboxes[5]?.checked || false },
+                        thursday: { ok: checkboxes[6]?.checked || false, nok: checkboxes[7]?.checked || false },
+                        friday: { ok: checkboxes[8]?.checked || false, nok: checkboxes[9]?.checked || false },
+                        saturday: { ok: checkboxes[10]?.checked || false, nok: checkboxes[11]?.checked || false }
+                    },
+                    comments: textarea ? textarea.value : ''
+                };
+                data.tasks.push(taskData);
             }
         });
         
-        cell.appendChild(select);
-        return cell;
+        // Create and download JSON file
+        const jsonString = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `agenda_standard_semaine_${data.week}_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        updateSaveStatus('saved', 'Données exportées avec succès');
+        console.log('Data exported successfully');
+    } catch (error) {
+        updateSaveStatus('error', 'Erreur lors de l\'export');
+        console.error('Error exporting data:', error);
     }
+}
 
-    handleCheckboxChange(event, isNok) {
-        const checkbox = event.target;
-        const taskRowElement = checkbox.closest('.grid-row') || checkbox.parentElement;
-        
-        // If this is a NOK checkbox and it's checked, enable comments
-        if (isNok && checkbox.checked) {
-            this.enableCommentsForTask(taskRowElement);
-            this.showAlert('NOK détecté', 'Veuillez remplir les commentaires et vérifier le mode de réaction.');
-        }
-        
-        // Ensure only one checkbox per day can be selected
-        const dayIndex = this.getDayIndexFromCheckboxId(checkbox.id);
-        const taskId = this.getTaskIdFromCheckboxId(checkbox.id);
-        
-        if (checkbox.checked) {
-            // Uncheck the opposite checkbox for the same day
-            const oppositeType = isNok ? 'ok' : 'nok';
-            const oppositeCheckbox = document.getElementById(`${taskId}-${dayIndex}-${oppositeType}`);
-            if (oppositeCheckbox) {
-                oppositeCheckbox.checked = false;
+// Print function
+function printAgenda() {
+    saveCheckboxState(); // Save before printing
+    updateSaveStatus('saved', 'Données sauvegardées avant impression');
+    window.print();
+}
+
+// Manual save function
+function saveData() {
+    try {
+        saveCheckboxState();
+        updateSaveStatus('saved', 'Données sauvegardées manuellement');
+    } catch (error) {
+        updateSaveStatus('error', 'Erreur lors de la sauvegarde');
+        console.error('Error saving data:', error);
+    }
+}
+
+// Reset all data
+function resetAll() {
+    if (confirm('Êtes-vous sûr de vouloir effacer toutes les données ? Cette action est irréversible.')) {
+        try {
+            // Clear localStorage
+            localStorage.removeItem('agendaStates');
+            localStorage.removeItem('agendaLastSaved');
+            localStorage.removeItem('selectedShift');
+            
+            // Reset all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                const cell = checkbox.closest('td');
+                if (cell) {
+                    cell.style.backgroundColor = '';
+                }
+            });
+            
+            // Reset all textareas
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.value = '';
+                textarea.style.backgroundColor = '';
+            });
+            
+            // Reset shift selector
+            const shiftSelect = document.getElementById('shiftSelect');
+            if (shiftSelect) {
+                shiftSelect.value = 'morning';
+                updateTimeDisplays('morning');
             }
+            
+            updateSaveStatus('saved', 'Toutes les données ont été effacées');
+            updateProgressBar(); // Update progress after reset
+            console.log('All data reset successfully');
+        } catch (error) {
+            updateSaveStatus('error', 'Erreur lors de la remise à zéro');
+            console.error('Error resetting data:', error);
+        }
         }
     }
+}
 
-    getDayIndexFromCheckboxId(checkboxId) {
-        const parts = checkboxId.split('-');
-        return parts[parts.length - 2]; // Should be the day index
-    }
+// Get completion percentage
+function getCompletionPercentage() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    return checkboxes.length > 0 ? Math.round((checkedBoxes.length / checkboxes.length) * 100) : 0;
+}
 
-    getTaskIdFromCheckboxId(checkboxId) {
-        const parts = checkboxId.split('-');
-        return parts.slice(0, -2).join('-'); // Everything except last two parts
-    }
-
-    enableCommentsForTask(taskRowElement) {
-        const commentsInput = taskRowElement.querySelector('.comments-cell input');
-        if (commentsInput) {
-            commentsInput.focus();
-            commentsInput.style.borderColor = '#ef4444';
-            commentsInput.style.backgroundColor = '#fef2f2';
-        }
-    }
-
-    showAlert(title, message) {
-        // Simple alert for now - could be enhanced with a custom modal
-        alert(`${title}\n\n${message}`);
-    }
-
-    renderNotAvailable(shiftName) {
-        const notAvailableElement = document.createElement('div');
-        notAvailableElement.className = 'not-available';
-        notAvailableElement.style.cssText = `
+// Add some utility functions to window for potential external access
+window.agendaUtils = {
+    exportData,
+    printAgenda,
+    resetAll,
+    saveData,
+    loadCheckboxStates,
+    getCompletionPercentage
+};
             grid-column: 1 / -1;
             padding: 40px;
             text-align: center;

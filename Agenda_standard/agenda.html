@@ -46,37 +46,485 @@
             </select>
         </div>
 
-        <!-- Main Agenda Grid -->
+        <!-- Action Buttons -->
+        <div class="action-bar">
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="saveData()">
+                    <i class="icon-save"></i>
+                    Sauvegarder
+                </button>
+                <button class="btn btn-secondary" onclick="exportData()">
+                    <i class="icon-export"></i>
+                    Exporter
+                </button>
+                <button class="btn btn-info" onclick="printAgenda()">
+                    <i class="icon-print"></i>
+                    Imprimer
+                </button>
+                <button class="btn btn-warning" onclick="resetAll()">
+                    <i class="icon-reset"></i>
+                    Reset
+                </button>
+            </div>
+            <div class="save-indicator">
+                <span id="saveStatus" class="save-status"></span>
+            </div>
+        </div>
+
+        <!-- Main Agenda Table -->
         <main class="agenda-container">
-            <div class="agenda-grid" id="agendaGrid">
-                <!-- Grid headers -->
-                <div class="grid-header task-header">Tâches</div>
-                <div class="grid-header time-header">Heures</div>
-                <div class="grid-header duration-header">Durée</div>
-                <div class="grid-header day-header">Lun</div>
-                <div class="grid-header day-header">Mar</div>
-                <div class="grid-header day-header">Mer</div>
-                <div class="grid-header day-header">Jeu</div>
-                <div class="grid-header day-header">Ven</div>
-                <div class="grid-header day-header">Sam</div>
-                <div class="grid-header comments-header">Commentaires</div>
-                <div class="grid-header reaction-header">Mode de Réaction</div>
+            <div class="table-container">
+                <table class="agenda-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="task-col">Tâches</th>
+                            <th rowspan="2" class="time-col">Heures</th>
+                            <th rowspan="2" class="duration-col">Durée</th>
+                            <th colspan="2">Lun</th>
+                            <th colspan="2">Mar</th>
+                            <th colspan="2">Mer</th>
+                            <th colspan="2">Jeu</th>
+                            <th colspan="2">Ven</th>
+                            <th colspan="2">Sam</th>
+                            <th rowspan="2" class="comments-col">Commentaires</th>
+                            <th rowspan="2" class="reaction-col">Mode de Réaction</th>
+                        </tr>
+                        <tr>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                            <th class="ok-col">OK</th>
+                            <th class="nok-col">NOK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Section: Prise de poste -->
+                        <tr class="section-row">
+                            <td colspan="17" class="section-title">Prise de poste</td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">1) Vérifier le cahier de consignes et prendre les informations des AQL précédentes</td>
+                            <td class="time-cell">6h55 à 7h05<br>14h55 à 15h05<br>22h55 à 23h05</td>
+                            <td class="duration-cell">10mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">2) Distribuer les cahiers de relevés de contrôle</td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">25mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">3) Relever l'absentéisme sur les postes à risque</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">4) Vérifier la validation des remplaçants des opérateurs absents</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">5) Vérifier l'enregistrement des relevés de contrôle finale / quality gate / bol / firewall</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">6) Vérifier que la réparatrice est présente (sinon sa remplaçante) et identifiée par son brassard (vérifier l'état des outils de désenfichage et cahier d'enregistrement)</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">7) Vérifier la cohérence entre le tableau de polyvalence et les personnes sur la ligne (tableau à jour)</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">8) Vérifier la présence des outils GAF pour petites et grosses sections</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
 
-                <!-- Day sub-headers for OK/NOK -->
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
-                <div class="day-subheader">OK</div>
-                <div class="day-subheader">NOK</div>
+                        <!-- Section: En Poste -->
+                        <tr class="section-row">
+                            <td colspan="17" class="section-title">En Poste</td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">9) Faire la saisie des défauts dans la base et apporter les données de la Réunion 5mm</td>
+                            <td class="time-cell">7h25 à 7h45<br>15h25 à 15h45<br>23h25 à 23h45</td>
+                            <td class="duration-cell">20mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">10) Respecter le mode opératoire d'utilisation outil GAF</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">11) Vérifier la présence des QRQC par rapport aux défauts (nombre, détection, date..), respect 5 équipes et animer les QRQC ligne avec les TS</td>
+                            <td class="time-cell">7h45 à 8h05, 10h00, 12h00 et 14h40<br>15h45 à 16h05, 18h00, 20h00 et 22h40<br>23h45, 00h05, 02h00, 04h00 06h40</td>
+                            <td class="duration-cell">20mn par ZAP chaque 2 heures</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">12) Faire des audits QK et remplir l'enregistrement, avec vérification du remplissage fiche bâtonnage</td>
+                            <td class="time-cell">08h05, 11h00 et à 13h<br>16h05, 19h00 et 21h00<br>00h05, 01h00 et 03h00</td>
+                            <td class="duration-cell">1h</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">13) Auditer et vérifier l'application des OK démarrage sur chaque poste audité:<br>- Montage: Carrousel / LAD<br>- Test Agrafe<br>- BOL</td>
+                            <td class="time-cell">10h00<br>15h00<br>02h00</td>
+                            <td class="duration-cell">2h</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">14) Vérifier le nombre de faisceaux par crochet en fin de ligne et sur chariot par rapport à ce qui est demandé</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">* Auditer le respect du produit en Zone d'assemblage (voir détails ci-dessous)</td>
+                            <td class="time-cell">12h00<br>17h00<br>4h00</td>
+                            <td class="duration-cell">2h30</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">15) Les connexions serties sur joint et composant des ergots de verrouillage à l'extérieur de la connexion type MQS doivent en priorité être placés devant les opérateurs</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">* Auditer le nettoyage des contre-parties sur BOL: Nettoyage se fait par aspirateur</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">17) Validation produit ou process selon le planning</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
 
-                <!-- Dynamic content will be inserted here by JavaScript -->
+                        <!-- Section: La pause -->
+                        <tr class="section-row">
+                            <td colspan="17" class="section-title">La pause</td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">Pause</td>
+                            <td class="time-cell"></td>
+                            <td class="duration-cell">30mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+
+                        <!-- Section: Fin de poste -->
+                        <tr class="section-row">
+                            <td colspan="17" class="section-title">Fin de poste</td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">16) Vérifier l'encours, les bacs rouges et application des 5S</td>
+                            <td class="time-cell">14h30 à 14h40<br>22h30 à 22h40<br>6h30 à 6h40</td>
+                            <td class="duration-cell">10mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="task-text">17) Renseigner le cahier de consignes et informer l'AQL lors de changement d'équipe</td>
+                            <td class="time-cell">14h40 à 14h55<br>22h40 à 22h55<br>6h40 à 6h55</td>
+                            <td class="duration-cell">10mn</td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="checkbox-cell"><input type="checkbox"></td>
+                            <td class="comments-cell"><textarea placeholder="Commentaires..."></textarea></td>
+                            <td class="reaction-cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </main>
 
@@ -102,7 +550,15 @@
                         <li>Cocher NOK si un problème est détecté</li>
                         <li>Remplir les commentaires en cas de NOK</li>
                         <li>Suivre le mode de réaction approprié</li>
+                        <li>Sauvegarder régulièrement vos données</li>
                     </ul>
+                </div>
+                <div class="completion-info">
+                    <h3>Progression :</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
                 </div>
             </div>
         </footer>
