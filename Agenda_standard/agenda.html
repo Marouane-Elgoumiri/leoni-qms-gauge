@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Standard - Agent Qualité Ligne | LEONI</title>
+    <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="agenda.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../assets/logo_volvo.png" alt="Volvo Logo" class="logo">
+                    <img src="../assets/logo.png" alt="LEONI Logo" class="logo">
+                </div>
+                <div class="title-section">
+                    <h1>AGENDA STANDARD</h1>
+                    <h2>"Agent Qualité Ligne"</h2>
+                </div>
+                <div class="info-section">
+                    <div class="date-info">
+                        <span class="label">Date de création :</span>
+                        <span class="value">10/07/2014</span>
+                    </div>
+                    <div class="week-info">
+                        <span class="label">SEMAINE :</span>
+                        <span class="value" id="currentWeek">--</span>
+                    </div>
+                    <div class="update-info">
+                        <span class="label">MAJ :</span>
+                        <span class="value">08/03/2017</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Shift Selector -->
+        <div class="shift-selector">
+            <label for="shiftSelect" class="shift-label">Sélectionner l'équipe :</label>
+            <select id="shiftSelect" class="shift-select">
+                <option value="morning">Équipe du Matin (6h55 - 14h55)</option>
+                <option value="afternoon" disabled>Équipe d'Après-midi (14h55 - 22h55) - Non disponible</option>
+                <option value="night" disabled>Équipe de Nuit (22h55 - 6h55) - Non disponible</option>
+            </select>
+        </div>
+
+        <!-- Main Agenda Grid -->
+        <main class="agenda-container">
+            <div class="agenda-grid" id="agendaGrid">
+                <!-- Grid headers -->
+                <div class="grid-header task-header">Tâches</div>
+                <div class="grid-header time-header">Heures</div>
+                <div class="grid-header duration-header">Durée</div>
+                <div class="grid-header day-header">Lun</div>
+                <div class="grid-header day-header">Mar</div>
+                <div class="grid-header day-header">Mer</div>
+                <div class="grid-header day-header">Jeu</div>
+                <div class="grid-header day-header">Ven</div>
+                <div class="grid-header day-header">Sam</div>
+                <div class="grid-header comments-header">Commentaires</div>
+                <div class="grid-header reaction-header">Mode de Réaction</div>
+
+                <!-- Day sub-headers for OK/NOK -->
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+                <div class="day-subheader">OK</div>
+                <div class="day-subheader">NOK</div>
+
+                <!-- Dynamic content will be inserted here by JavaScript -->
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="legend">
+                    <h3>Légende :</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-color ok-color"></span>
+                            <span>OK - Tâche accomplie</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color nok-color"></span>
+                            <span>NOK - Problème détecté</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="instructions">
+                    <h3>Instructions :</h3>
+                    <ul>
+                        <li>Cocher OK si la tâche est correctement réalisée</li>
+                        <li>Cocher NOK si un problème est détecté</li>
+                        <li>Remplir les commentaires en cas de NOK</li>
+                        <li>Suivre le mode de réaction approprié</li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="agenda.js"></script>
+</body>
+</html>
