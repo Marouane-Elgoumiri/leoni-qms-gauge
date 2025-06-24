@@ -53,5 +53,7 @@ LEPS/
 Leps_files/
 system_design/
 chatbot/
+calibration_alert/venv
+
 start_chatbot.sh
 requirements.txt

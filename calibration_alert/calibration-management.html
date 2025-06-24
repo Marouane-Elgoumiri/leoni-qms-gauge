@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Calibration Management - LEONI Quality Management System</title>
+    <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1a202c;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
+        }
+
+        .header {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            background: var(--leoni-white);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid var(--leoni-primary-light);
+            box-shadow: var(--leoni-shadow-md);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--leoni-white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--leoni-shadow-md);
+            border: 2px solid var(--leoni-border-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--leoni-shadow-lg);
+        }
+
+        .stat-card.overdue {
+            border-color: #dc2626;
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+        }
+
+        .stat-card.due-soon {
+            border-color: #d97706;
+            background: linear-gradient(135deg, #fffbeb, #ffffff);
+        }
+
+        .stat-card.good {
+            border-color: #059669;
+            background: linear-gradient(135deg, #f0fdf4, #ffffff);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .stat-icon.overdue {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .stat-icon.due-soon {
+            color: #d97706;
+            background: #fed7aa;
+        }
+
+        .stat-icon.good {
+            color: #059669;
+            background: #d1fae5;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a202c;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid var(--leoni-border-light);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--leoni-white);
+            color: #1a202c;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--leoni-primary);
+            box-shadow: 0 0 0 3px var(--leoni-shadow-primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .btn-success {
+            background: var(--leoni-gradient-success);
+            color: var(--leoni-white);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--leoni-shadow-green);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: var(--leoni-white);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: var(--leoni-white);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--leoni-gray-100);
+            color: #1a202c;
+        }
+
+        .btn-secondary:hover {
+            background: var(--leoni-gray-200);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .equipment-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 2px solid var(--leoni-border-light);
+        }
+
+        .equipment-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--leoni-white);
+        }
+
+        .equipment-table th {
+            background: var(--leoni-gradient-secondary);
+            color: var(--leoni-white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .equipment-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--leoni-border-light);
+            color: #1a202c;
+            font-size: 0.875rem;
+        }
+
+        .equipment-table tr:hover {
+            background: var(--leoni-gray-50);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-overdue {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-due-soon {
+            background: #fed7aa;
+            color: #d97706;
+        }
+
+        .status-good {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-indicator {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-connected {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-offline {
+            background: #fed7aa;
+            color: #d97706;
+        }
+
+        .status-checking {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .alert-panel {
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+            border: 2px solid #fca5a5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            color: #dc2626;
+        }
+
+        .alert-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .alert-count {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #dc2626;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--leoni-primary-light);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: var(--leoni-gray-50);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--leoni-primary);
+            background: var(--leoni-blue-light);
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--leoni-primary);
+            margin-bottom: 10px;
+        }
+
+        .navigation-section {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--leoni-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #f0fdf4, #ffffff);
+            border: 2px solid #86efac;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-icon {
+            color: #059669;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-tools"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>Equipment Calibration Management System - Team Leader Dashboard</p>
+        </div>
+
+        <!-- Alert Summary -->
+        <div class="content-section" id="alertSection" style="display: none;">
+            <div class="alert-panel">
+                <div class="alert-header">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <span class="alert-title">Calibration Alerts</span>
+                </div>
+                <div class="alert-count" id="alertCount">0</div>
+                <p style="text-align: center; color: #dc2626; font-weight: 600;">
+                    Equipment items require immediate attention
+                </p>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-check-circle success-icon"></i>
+                <span id="successText">Operation completed successfully</span>
+            </div>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-chart-bar"></i> Calibration Status Overview
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card overdue">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-number" id="overdueCount">0</div>
+                            <div class="stat-label">Overdue Equipment</div>
+                        </div>
+                        <div class="stat-icon overdue">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card due-soon">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-number" id="dueSoonCount">0</div>
+                            <div class="stat-label">Due Within 30 Days</div>
+                        </div>
+                        <div class="stat-icon due-soon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card good">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-number" id="goodCount">0</div>
+                            <div class="stat-label">Up to Date</div>
+                        </div>
+                        <div class="stat-icon good">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-number" id="totalCount">0</div>
+                            <div class="stat-label">Total Equipment</div>
+                        </div>
+                        <div class="stat-icon" style="color: var(--leoni-primary); background: var(--leoni-blue-light);">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-cogs"></i> Alert System Controls
+            </div>
+            
+            <div class="control-panel">
+                <div class="form-group">
+                    <label for="alertThreshold">
+                        <i class="fas fa-calendar-alt"></i> Alert Threshold (Days)
+                    </label>
+                    <input type="number" id="alertThreshold" value="30" min="1" max="365">
+                    <small style="color: #64748b; margin-top: 5px;">
+                        Send alerts X days before calibration due date
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailRecipients">
+                        <i class="fas fa-envelope"></i> Email Recipients
+                    </label>
+                    <input type="email" id="emailRecipients" placeholder="team.leader@leoni.com" multiple>
+                    <small style="color: #64748b; margin-top: 5px;">
+                        Separate multiple emails with commas
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduleFrequency">
+                        <i class="fas fa-clock"></i> Check Frequency
+                    </label>
+                    <select id="scheduleFrequency">
+                        <option value="daily">Daily</option>
+                        <option value="weekly" selected>Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="manual">Manual Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="checkAlerts()">
+                    <i class="fas fa-search"></i> Check for Alerts Now
+                </button>
+                <button class="btn btn-warning" onclick="sendAlerts()">
+                    <i class="fas fa-paper-plane"></i> Send Alert Emails
+                </button>
+                <button class="btn btn-success" onclick="updateData()">
+                    <i class="fas fa-sync-alt"></i> Update Equipment Data
+                </button>
+                <button class="btn btn-secondary" onclick="downloadReport()">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+            </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-upload"></i> Equipment Data Management
+            </div>
+            
+            <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="file-upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3 style="margin-bottom: 10px; color: #1a202c;">Upload Equipment Data</h3>
+                <p style="color: #64748b; margin-bottom: 10px;">
+                    Click to upload or drag and drop your laboratory_measures.xls file
+                </p>
+                <small style="color: #64748b;">
+                    Supported formats: .xls, .xlsx (Max size: 10MB)
+                </small>
+                <input type="file" id="fileInput" accept=".xls,.xlsx" style="display: none;" onchange="handleFileUpload(event)">
+            </div>
+        </div>
+
+        <!-- Add New Equipment Section -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-plus-circle"></i> Add New Equipment
+                <button class="btn btn-secondary" style="margin-left: auto; font-size: 0.875rem;" onclick="toggleNewEquipmentForm()">
+                    <i class="fas fa-plus"></i> Add Equipment
+                </button>
+            </div>
+            
+            <div id="newEquipmentForm" style="display: none;">
+                <form onsubmit="addNewEquipment(event)">
+                    <div class="control-panel">
+                        <div class="form-group">
+                            <label for="newEquipmentType">
+                                <i class="fas fa-tools"></i> Equipment Type & Description *
+                            </label>
+                            <input type="text" id="newEquipmentType" required placeholder="e.g., Digital Multimeter, Oscilloscope">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newSerialNumber">
+                                <i class="fas fa-hashtag"></i> Serial Number *
+                            </label>
+                            <input type="text" id="newSerialNumber" required placeholder="e.g., DMM-001, OSC-002">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newManufacturer">
+                                <i class="fas fa-industry"></i> Manufacturer *
+                            </label>
+                            <input type="text" id="newManufacturer" required placeholder="e.g., Fluke, Keysight, Rigol">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newLocation">
+                                <i class="fas fa-map-marker-alt"></i> Location *
+                            </label>
+                            <input type="text" id="newLocation" required placeholder="e.g., Lab A - Station 1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newInternalNo">
+                                <i class="fas fa-id-card"></i> Internal Number *
+                            </label>
+                            <input type="text" id="newInternalNo" required placeholder="e.g., LEONI-001">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newDueDate">
+                                <i class="fas fa-calendar"></i> Next Calibration Due Date *
+                            </label>
+                            <input type="date" id="newDueDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Add Equipment
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetNewEquipmentForm()">
+                            <i class="fas fa-undo"></i> Reset Form
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="toggleNewEquipmentForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Equipment Table -->
+        <div class="content-section">
+            <div class="section-title">
+                <i class="fas fa-list"></i> Equipment Calibration Status
+                <div style="margin-left: auto; font-size: 0.875rem; font-weight: normal; color: #64748b; display: flex; gap: 20px; align-items: center;">
+                    <div>API: <span id="apiStatus" class="status-indicator status-checking">Checking...</span></div>
+                    <div>Last updated: <span id="lastUpdated">Never</span></div>
+                </div>
+            </div>
+            
+            <div class="loading-spinner" id="loadingSpinner">
+                <i class="fas fa-spinner"></i>
+                <p style="margin-top: 10px; color: #64748b;">Loading equipment data...</p>
+            </div>
+
+            <div class="equipment-table-container" id="tableContainer" style="display: none;">
+                <table class="equipment-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-tools"></i> Equipment Type</th>
+                            <th><i class="fas fa-hashtag"></i> Serial Number</th>
+                            <th><i class="fas fa-industry"></i> Manufacturer</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                            <th><i class="fas fa-id-card"></i> Internal No.</th>
+                            <th><i class="fas fa-calendar"></i> Next Due Date</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                            <th><i class="fas fa-clock"></i> Days Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipmentTableBody">
+                        <!-- Equipment data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation-section">
+            <a href="../index.html" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Main Dashboard
+            </a>
+            <a href="../Admin/admin.html" class="btn btn-primary">
+                <i class="fas fa-users-cog"></i> Staff Management
+            </a>
+            <a href="../Analysis/qrqc.html" class="btn btn-success">
+                <i class="fas fa-clipboard-check"></i> QRQC Analysis
+            </a>
+        </div>
+    </div>
+
+    <script src="calibration-management.js"></script>
+</body>
+</html>
