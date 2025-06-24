@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
         * {
             margin: 0;
@@ -17,10 +18,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--leoni-gradient-bg-corporate);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--leoni-text-primary);
         }
 
         .container {
@@ -34,40 +35,41 @@
             padding: 2rem;
             margin-bottom: 2rem;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--leoni-shadow-xl);
             backdrop-filter: blur(10px);
+            border: 1px solid var(--leoni-border-light);
         }
 
         .role-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             padding: 0.8rem 2rem;
             border-radius: 25px;
             font-weight: 600;
             font-size: 1.1rem;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .welcome-title {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #1a365d;
+            color: var(--leoni-primary-blue);
             margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .welcome-subtitle {
             font-size: 1.3rem;
-            color: #4a5568;
+            color: var(--leoni-text-secondary);
             margin-bottom: 1rem;
             font-weight: 300;
         }
 
         .role-description {
-            background: #f0f8ff;
-            border: 2px solid #3182ce;
+            background: var(--leoni-primary-blue-50);
+            border: 2px solid var(--leoni-secondary-blue);
             border-radius: 15px;
             padding: 1.5rem;
             margin: 1.5rem 0;
@@ -75,7 +77,7 @@
         }
 
         .role-description h3 {
-            color: #1a365d;
+            color: var(--leoni-primary-blue);
             margin-bottom: 1rem;
             font-size: 1.2rem;
             display: flex;
@@ -90,7 +92,8 @@
 
         .role-description li {
             padding: 0.3rem 0;
-            color: #4a5568;
+            color: var(--leoni-black);
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -98,7 +101,7 @@
 
         .role-description li:before {
             content: "✓";
-            color: #38a169;
+            color: var(--leoni-accent-green);
             font-weight: bold;
         }
 
@@ -111,7 +114,7 @@
 
         .nav-card {
             background: rgba(255, 255, 255, 0.95);
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--leoni-border-light);
             border-radius: 20px;
             padding: 2rem;
             text-decoration: none;
@@ -121,7 +124,7 @@
             overflow: hidden;
             cursor: pointer;
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--leoni-shadow-lg);
         }
 
         .nav-card::before {
@@ -131,7 +134,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, var(--leoni-primary-blue-100), transparent);
             transition: left 0.5s;
         }
 
@@ -141,8 +144,8 @@
 
         .nav-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
+            box-shadow: var(--leoni-shadow-2xl);
+            border-color: var(--leoni-primary-blue);
         }
 
         .nav-icon {
@@ -159,43 +162,51 @@
 
         /* Color schemes for different functions */
         .defect-card .nav-icon {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
-            color: white;
+            background: var(--leoni-gradient-error);
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-red);
         }
 
         .audit-5s-card .nav-icon {
-            background: linear-gradient(135deg, #68d391, #38a169);
-            color: white;
+            background: var(--leoni-gradient-success);
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-green);
         }
 
         .audit-afp-card .nav-icon {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .tram-card .nav-icon {
-            background: linear-gradient(135deg, #9f7aea, #805ad5);
-            color: white;
+            background: linear-gradient(135deg, var(--leoni-accent-orange), var(--leoni-primary-blue));
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-orange);
         }
 
         .vigilance-card .nav-icon {
-            background: linear-gradient(135deg, #fbb042, #ed8936);
-            color: white;
+            background: var(--leoni-gradient-warning);
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-orange);
         }
 
         .archives-card .nav-icon {
-            background: linear-gradient(135deg, #718096, #4a5568);
-            color: white;
+            background: linear-gradient(135deg, var(--leoni-gray-600), var(--leoni-gray-500));
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-md);
         }
 
         .qk-card .nav-icon {
-            background: linear-gradient(135deg, #38b2ac, #319795);
-            color: white;
+            background: linear-gradient(135deg, var(--leoni-secondary-blue), var(--leoni-accent-green));
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .agenda-card .nav-icon {
-            background: linear-gradient(135deg, #d69e2e, #b7791f);
-            color: white;
+            background: linear-gradient(135deg, var(--leoni-accent-orange), var(--leoni-accent-orange-dark));
+            color: var(--leoni-white);
+            box-shadow: var(--leoni-shadow-orange);
         }
 
         /* Disabled/Coming Soon card styles */
@@ -207,39 +218,42 @@
         }
 
         .tool-card.disabled::before {
-            background: linear-gradient(90deg, transparent, rgba(100, 116, 139, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, var(--leoni-gray-300), transparent);
         }
 
         .tool-card.disabled:hover {
             transform: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border-color: #e2e8f0;
+            box-shadow: var(--leoni-shadow-lg);
+            border-color: var(--leoni-border-light);
         }
 
         .tool-card.disabled .nav-icon {
-            background: linear-gradient(135deg, #94a3b8, #64748b) !important;
-            box-shadow: 0 8px 25px rgba(148, 163, 184, 0.3) !important;
+            background: linear-gradient(135deg, var(--leoni-gray-400), var(--leoni-gray-500)) !important;
+            box-shadow: var(--leoni-shadow-md) !important;
         }
 
         .tool-card.disabled .nav-title {
-            color: #64748b;
+            color: var(--leoni-gray-600);
+            font-weight: 600;
         }
 
         .tool-card.disabled .nav-description {
-            color: #94a3b8;
+            color: var(--leoni-gray-500);
+            font-weight: 500;
         }
 
         .tool-card.disabled .nav-features li {
-            color: #94a3b8;
+            color: var(--leoni-gray-500);
+            font-weight: 500;
         }
 
         .tool-card.disabled .nav-features li:before {
-            color: #cbd5e1;
+            color: var(--leoni-gray-300);
         }
 
         .coming-soon-badge {
-            background: #f1f5f9;
-            color: #64748b;
+            background: var(--leoni-gray-100);
+            color: var(--leoni-gray-500);
             font-size: 0.85rem;
             font-weight: 600;
             padding: 0.5rem 1rem;
@@ -248,20 +262,21 @@
             margin-top: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--leoni-border-light);
         }
 
         .nav-title {
             font-size: 1.4rem;
             font-weight: 600;
-            color: #1a365d;
+            color: var(--leoni-primary-blue);
             margin-bottom: 0.5rem;
             text-align: center;
         }
 
         .nav-description {
             font-size: 1rem;
-            color: #718096;
+            color: var(--leoni-black);
+            font-weight: 500;
             line-height: 1.5;
             text-align: center;
             margin-bottom: 1rem;
@@ -271,7 +286,7 @@
             list-style: none;
             padding: 0;
             font-size: 0.9rem;
-            color: #4a5568;
+            color: var(--leoni-black);
         }
 
         .nav-features li {
@@ -279,11 +294,12 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-weight: 600;
         }
 
         .nav-features li:before {
             content: "•";
-            color: #667eea;
+            color: var(--leoni-primary-blue);
             font-weight: bold;
         }
 
@@ -292,8 +308,21 @@
             border-radius: 20px;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--leoni-shadow-xl);
             backdrop-filter: blur(10px);
+            border: 1px solid var(--leoni-border-light);
+        }
+
+        .footer-navigation h3 {
+            color: var(--leoni-primary-blue);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-navigation p {
+            color: var(--leoni-black);
+            font-weight: 500;
+            margin-bottom: 1rem;
         }
 
         .nav-buttons {
@@ -313,28 +342,28 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            color: white;
+            color: var(--leoni-white);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--leoni-shadow-md);
         }
 
         .nav-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--leoni-shadow-lg);
         }
 
         .nav-btn.primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--leoni-gradient-primary);
         }
 
         .nav-btn.secondary {
-            background: linear-gradient(135deg, #4a5568, #2d3748);
+            background: linear-gradient(135deg, var(--leoni-gray-600), var(--leoni-gray-700));
         }
 
         .nav-btn.danger {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
+            background: var(--leoni-gradient-error);
         }
 
         /* Responsive Design */
@@ -418,13 +447,13 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #e53e3e, #fc8181);
+            background: var(--leoni-gradient-error);
             border: none;
             border-radius: 50%;
-            color: white;
+            color: var(--leoni-white);
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 8px 32px rgba(229, 62, 62, 0.4);
+            box-shadow: var(--leoni-shadow-red);
             transition: all 0.3s ease;
             z-index: 1000;
             display: flex;
@@ -435,7 +464,7 @@
 
         .feedback-icon:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 40px rgba(229, 62, 62, 0.6);
+            box-shadow: 0 12px 40px var(--leoni-accent-red-200);
             animation: none;
         }
 
@@ -445,7 +474,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: rgba(229, 62, 62, 0.3);
+            background: var(--leoni-accent-red-200);
             animation: ripple 2s infinite;
             z-index: -1;
         }
@@ -470,8 +499,8 @@
             position: absolute;
             bottom: 70px;
             right: 0;
-            background: rgba(26, 54, 93, 0.9);
-            color: white;
+            background: var(--leoni-primary-blue-800);
+            color: var(--leoni-white);
             padding: 0.5rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
@@ -488,7 +517,7 @@
             top: 100%;
             right: 20px;
             border: 6px solid transparent;
-            border-top-color: rgba(26, 54, 93, 0.9);
+            border-top-color: var(--leoni-primary-blue-800);
         }
 
         .feedback-icon:hover .feedback-tooltip {
@@ -510,6 +539,44 @@
                 bottom: 60px;
                 font-size: 0.8rem;
             }
+        }
+
+        /* Text Readability Enhancements */
+        .nav-card .nav-title,
+        .nav-card .nav-description,
+        .nav-card .nav-features li {
+            text-shadow: none !important;
+        }
+
+        .nav-card .nav-title {
+            color: var(--leoni-primary-blue) !important;
+            font-weight: 700 !important;
+        }
+
+        .nav-card .nav-description {
+            color: var(--leoni-black) !important;
+            font-weight: 500 !important;
+        }
+
+        .nav-card .nav-features li {
+            color: var(--leoni-black) !important;
+            font-weight: 600 !important;
+        }
+
+        /* Ensure high contrast for disabled cards */
+        .tool-card.disabled .nav-title {
+            color: var(--leoni-gray-700) !important;
+            font-weight: 700 !important;
+        }
+
+        .tool-card.disabled .nav-description {
+            color: var(--leoni-gray-600) !important;
+            font-weight: 500 !important;
+        }
+
+        .tool-card.disabled .nav-features li {
+            color: var(--leoni-gray-600) !important;
+            font-weight: 500 !important;
         }
     </style>
 </head>

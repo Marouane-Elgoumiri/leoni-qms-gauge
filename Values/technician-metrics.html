@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
         * {
             margin: 0;
@@ -16,37 +17,42 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
             min-height: 100vh;
             padding: 15px;
             margin: 0;
+            color: #1e293b;
         }
 
         .container {
             width: 100%;
-            max-width: none;
-            margin: 0;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
+            padding: 20px;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a365d, #2c5282);
-            color: white;
-            padding: 25px;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            padding: 30px;
             border-radius: 15px;
             text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .header h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
         .header p {
-            font-size: 16px;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
 
@@ -58,18 +64,19 @@
         }
 
         .metric-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--leoni-white);
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--leoni-shadow-lg);
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: fit-content;
+            border: 1px solid var(--leoni-border-light);
         }
 
         .metric-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--leoni-shadow-xl);
         }
 
         .metric-header {
@@ -93,7 +100,7 @@
         .metric-title {
             font-size: 16px;
             font-weight: bold;
-            color: #2d3748;
+            color: #1a202c;
         }
 
         /* Color schemes for different metrics */
@@ -145,8 +152,8 @@
             display: block;
             margin-bottom: 6px;
             font-weight: 600;
-            color: #2d3748;
-            font-size: 13px;
+            color: #1a202c;
+            font-size: 14px;
         }
 
         .form-group input, .form-group select {
@@ -225,11 +232,12 @@
         }
 
         .history-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--leoni-white);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--leoni-shadow-lg);
+            border: 1px solid var(--leoni-border-light);
         }
 
         .history-header {
@@ -257,9 +265,9 @@
         }
 
         .history-table th {
-            background: #f7fafc;
+            background: var(--leoni-gray-50);
             font-weight: 600;
-            color: #2d3748;
+            color: #1a202c;
         }
 
         .history-table tr:hover {
@@ -430,8 +438,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🔧 Technician Quality Metrics</h1>
-            <p>Quality Technician Metrics Entry - RFT, CPK & FPY</p>
+            <h1><i class="fas fa-chart-line"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>TRAM Metrics - Technician Quality Metrics Entry (RFT, CPK & FPY)</p>
         </div>
 
         <!-- Metrics Grid -->

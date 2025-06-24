@@ -8,28 +8,60 @@
     <link rel="shortcut icon" href="../../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../../assets/logo.png?v=2025">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/leoni-color-palette.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1a202c;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
+        }
+
+        .header {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+    </style>
     <link rel="stylesheet" href="aql-archives.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <div class="header-section">
-            <div class="header-content">
-                <div class="logo-section">
-                    <img src="../../assets/logo.png" alt="LEONI Logo" class="logo">
-                </div>
-                <div class="title-section">
-                    <h1 class="page-title">
-                        <i class="fas fa-archive"></i> AQL Quality Archives
-                    </h1>
-                    <p class="page-subtitle">Historical Quality Data & Audit Reports Access</p>
-                </div>
-                <div class="status-section">
-                    <div class="role-badge">
-                        <i class="fas fa-user-check"></i> AQL Agent
-                    </div>
-                </div>
-            </div>
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-archive"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>AQL Quality Archives - Historical Quality Data & Audit Reports Access</p>
         </div>
 
         <!-- Search and Filter Section -->

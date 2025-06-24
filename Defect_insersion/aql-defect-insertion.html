@@ -5,41 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Defect Insertion - LEONI Quality Department</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1e293b;
+            min-height: 100vh;
         }
+
         .container {
-            width: 100%;
-            max-width: none;
-            margin: 0;
-            background: white;
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
         }
+
         .header {
-            background: #1a365d;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             text-align: center;
-            margin-bottom: 20px;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
         }
+
         .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
+
         .header p {
-            margin: 5px 0 0 0;
-            font-size: 18px;
-            color: #cbd5e0;
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
         /* Responsive Design */
@@ -158,6 +167,22 @@
             cursor: not-allowed;
         }
 
+        /* Auto-complete styling */
+        #code-defect {
+            position: relative;
+        }
+        
+        #defect-name {
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        #defect-name.populated {
+            background: #f0fff4 !important;
+            color: #065f46;
+            border-color: #10b981;
+        }
+
         /* Defect Details Section */
         .defect-details {
             background: #f0f9ff;
@@ -203,6 +228,10 @@
         .btn-submit-defect {
             background: linear-gradient(135deg, #ea580c, #fb923c);
             box-shadow: 0 4px 8px rgba(234, 88, 12, 0.3);
+        }
+        .btn-reset-fields {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
         }
         .btn-create-qrqc {
             background: linear-gradient(135deg, #059669, #16a34a);
@@ -308,8 +337,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>LEONI QUALITY DEPARTMENT</h1>
-            <p>Defect Insertion</p>
+            <h1><i class="fas fa-exclamation-triangle"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>Defect Insertion - Report a new defect</p>
         </div>
 
         <!-- Success Message -->
@@ -341,12 +370,7 @@
                                     <input type="datetime-local" id="defect-datetime" name="defect-datetime" required>
                                 </div>
                             </div>
-                            <div class="form-field">
-                                <div class="form-field-header">Defect ID</div>
-                                <div class="form-field-content">
-                                    <input type="text" id="defect-id" name="defect-id" class="auto-filled" readonly>
-                                </div>
-                            </div>
+
                         </div>
 
                         <!-- Row 2: Defect Classification -->
@@ -354,33 +378,25 @@
                             <div class="form-field">
                                 <div class="form-field-header">Code Defect</div>
                                 <div class="form-field-content">
-                                    <select id="code-defect" name="code-defect" required>
-                                        <option value="">Select Code Defect...</option>
-                                        <option value="CD001">CD001 - Dimensional Issue</option>
-                                        <option value="CD002">CD002 - Visual Defect</option>
-                                        <option value="CD003">CD003 - Functional Failure</option>
-                                        <option value="CD004">CD004 - Material Defect</option>
-                                        <option value="CD005">CD005 - Assembly Error</option>
-                                        <option value="CD006">CD006 - Missing Component</option>
-                                        <option value="CD007">CD007 - Wrong Component</option>
-                                        <option value="CD008">CD008 - Damage</option>
-                                        <option value="CD009">CD009 - Contamination</option>
-                                        <option value="CD010">CD010 - Other</option>
-                                    </select>
+                                    <input type="text" id="code-defect" name="code-defect" placeholder="Type defect code (e.g., CD001)..." required list="defect-codes">
+                                    <datalist id="defect-codes">
+                                        <option value="CD001" data-name="Dimensional Issue">CD001 - Dimensional Issue</option>
+                                        <option value="CD002" data-name="Visual Defect">CD002 - Visual Defect</option>
+                                        <option value="CD003" data-name="Functional Failure">CD003 - Functional Failure</option>
+                                        <option value="CD004" data-name="Material Defect">CD004 - Material Defect</option>
+                                        <option value="CD005" data-name="Assembly Error">CD005 - Assembly Error</option>
+                                        <option value="CD006" data-name="Missing Component">CD006 - Missing Component</option>
+                                        <option value="CD007" data-name="Wrong Component">CD007 - Wrong Component</option>
+                                        <option value="CD008" data-name="Damage">CD008 - Damage</option>
+                                        <option value="CD009" data-name="Contamination">CD009 - Contamination</option>
+                                        <option value="CD010" data-name="Other">CD010 - Other</option>
+                                    </datalist>
                                 </div>
                             </div>
                             <div class="form-field">
-                                <div class="form-field-header">Defect Type</div>
+                                <div class="form-field-header">Defect Name</div>
                                 <div class="form-field-content">
-                                    <select id="defect-type" name="defect-type" required>
-                                        <option value="">Select Defect Type...</option>
-                                        <option value="Critical">Critical</option>
-                                        <option value="Major">Major</option>
-                                        <option value="Minor">Minor</option>
-                                        <option value="Dimensional">Dimensional</option>
-                                        <option value="Visual">Visual</option>
-                                        <option value="Functional">Functional</option>
-                                    </select>
+                                    <input type="text" id="defect-name" name="defect-name" class="auto-filled" readonly placeholder="Defect name will auto-populate">
                                 </div>
                             </div>
                             <div class="form-field">
@@ -427,24 +443,7 @@
                                     <input type="text" id="box-number" name="box-number" placeholder="Enter box/batch number..." required>
                                 </div>
                             </div>
-                            <div class="form-field">
-                                <div class="form-field-header">Pin/Terminal</div>
-                                <div class="form-field-content">
-                                    <select id="pin-terminal" name="pin-terminal" required>
-                                        <option value="">Select Pin/Terminal...</option>
-                                        <option value="PIN-A1">PIN-A1 - Power Supply</option>
-                                        <option value="PIN-A2">PIN-A2 - Ground</option>
-                                        <option value="PIN-B1">PIN-B1 - Signal Line</option>
-                                        <option value="PIN-B2">PIN-B2 - CAN High</option>
-                                        <option value="PIN-B3">PIN-B3 - CAN Low</option>
-                                        <option value="PIN-C1">PIN-C1 - Sensor Input</option>
-                                        <option value="PIN-C2">PIN-C2 - Actuator Output</option>
-                                        <option value="PIN-D1">PIN-D1 - Shield/Screen</option>
-                                        <option value="TERM-1.5">TERM-1.5 - Standard Terminal</option>
-                                        <option value="TERM-2.5">TERM-2.5 - Heavy Duty Terminal</option>
-                                    </select>
-                                </div>
-                            </div>
+
                         </div>
 
                         <!-- Row 4: Supervision & Location -->
@@ -513,9 +512,9 @@
             </div>
             <div class="section-content">
                 <div class="form-field full-width">
-                    <div class="form-field-header">Detailed Description & Comments</div>
+                    <div class="form-field-header">Detailed Description & Comments (Optional)</div>
                     <div class="form-field-content">
-                        <textarea id="defect-comments" name="defect-comments" placeholder="Provide detailed description of the defect, root cause analysis, corrective actions taken, and any additional comments..." required></textarea>
+                        <textarea id="defect-comments" name="defect-comments" placeholder="Provide detailed description of the defect, root cause analysis, corrective actions taken, and any additional comments..."></textarea>
                     </div>
                 </div>
             </div>
@@ -533,6 +532,9 @@
                 <div class="action-buttons">
                     <button type="button" class="action-btn btn-submit-defect" onclick="submitDefect()">
                         📝 Submit Defect Report
+                    </button>
+                    <button type="button" class="action-btn btn-reset-fields" onclick="resetAllFields()">
+                        🔄 Reset All Fields
                     </button>
                     <button type="button" class="action-btn btn-create-qrqc" id="createQrqcBtn" onclick="createQRQC()" disabled>
                         📋 Create QRQC Document
@@ -564,22 +566,21 @@
                 <li><strong>Section 1 - AQL Defect Information (Orange):</strong> Comprehensive defect data collection</li>
                 <li><strong>• AQL Inspector:</strong> Auto-filled with current user session (read-only)</li>
                 <li><strong>• Date & Time:</strong> Precise timestamp for defect occurrence</li>
-                <li><strong>• Defect ID:</strong> Auto-generated unique identifier for tracking</li>
-                <li><strong>• Code Defect:</strong> Predefined defect codes (CD001-CD010) for classification</li>
-                <li><strong>• Defect Type:</strong> Severity classification (Critical, Major, Minor, Dimensional, Visual, Functional)</li>
+                <li><strong>• Code Defect:</strong> Type-ahead input with suggestions (CD001-CD010) for classification</li>
+                <li><strong>• Defect Name:</strong> Auto-populated based on selected defect code</li>
                 <li><strong>• Operator ID:</strong> Selection from registered operators for accountability</li>
                 <li><strong>• Project:</strong> Volvo product lines and harness types</li>
                 <li><strong>• Box/Batch Number:</strong> Traceability identifier for production batches</li>
-                <li><strong>• Pin/Terminal:</strong> Specific component identification for precise location</li>
                 <li><strong>• Supervisor:</strong> Shift supervisors and team leaders for escalation</li>
                 <li><strong>• Production Line:</strong> VCE line featured prominently with dedicated dashboard link</li>
                 <li><strong>• Post/Station:</strong> Detailed workstation identification (Post 01-10)</li>
                 
-                <li><strong>Section 2 - Defect Details (Blue):</strong> Detailed description and comments</li>
-                <li><strong>• Comments Section:</strong> Full-width textarea for comprehensive defect analysis</li>
+                <li><strong>Section 2 - Defect Details (Blue):</strong> Optional detailed description and comments</li>
+                <li><strong>• Comments Section:</strong> Full-width textarea for additional defect analysis (optional)</li>
                 
                 <li><strong>Section 3 - Submit & QRQC Creation (Green):</strong> Enhanced workflow management</li>
                 <li><strong>• Submit Defect:</strong> Primary action with dashboard context detection</li>
+                <li><strong>• Reset All Fields:</strong> Clear all form data and start fresh</li>
                 <li><strong>• Create QRQC:</strong> Enhanced with dashboard navigation recommendations</li>
                 
                 <li><strong>🔧 Smart Features:</strong></li>
@@ -590,6 +591,7 @@
                 
                 <li><strong>⌨️ Keyboard Shortcuts:</strong></li>
                 <li><strong>• Ctrl+S:</strong> Save draft</li>
+                <li><strong>• Ctrl+R:</strong> Reset all fields</li>
                 <li><strong>• Ctrl+Enter:</strong> Submit defect (when form is complete)</li>
             </ul>
         </div>
@@ -615,8 +617,8 @@
             const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
             document.getElementById('defect-datetime').value = localDateTime;
             
-            // Generate unique defect ID
-            generateDefectId();
+            // Setup defect code auto-completion
+            setupDefectCodeAutoComplete();
             
             // Initialize workflow status
             updateWorkflowStatus();
@@ -693,22 +695,62 @@
             }, 3000);
         }
 
-        function generateDefectId() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = ('0' + (now.getMonth() + 1)).slice(-2);
-            const day = ('0' + now.getDate()).slice(-2);
-            const timestamp = Date.now().toString().slice(-6);
-            const defectId = `AQL-DEF-${year}${month}${day}-${timestamp}`;
-            document.getElementById('defect-id').value = defectId;
-            return defectId;
+        // Setup defect code auto-completion and name population
+        function setupDefectCodeAutoComplete() {
+            const codeDefectInput = document.getElementById('code-defect');
+            const defectNameInput = document.getElementById('defect-name');
+            
+            // Define defect code mappings
+            const defectMappings = {
+                'CD001': 'Dimensional Issue',
+                'CD002': 'Visual Defect',
+                'CD003': 'Functional Failure',
+                'CD004': 'Material Defect',
+                'CD005': 'Assembly Error',
+                'CD006': 'Missing Component',
+                'CD007': 'Wrong Component',
+                'CD008': 'Damage',
+                'CD009': 'Contamination',
+                'CD010': 'Other'
+            };
+            
+            codeDefectInput.addEventListener('input', function() {
+                const inputValue = this.value.toUpperCase();
+                
+                // Auto-populate defect name if exact match found
+                if (defectMappings[inputValue]) {
+                    defectNameInput.value = defectMappings[inputValue];
+                    defectNameInput.classList.add('populated');
+                    defectNameInput.style.backgroundColor = '#f0fff4';
+                    defectNameInput.style.borderColor = '#10b981';
+                } else {
+                    defectNameInput.value = '';
+                    defectNameInput.classList.remove('populated');
+                    defectNameInput.style.backgroundColor = '#fef3f2';
+                    defectNameInput.style.borderColor = '#fb923c';
+                }
+                
+                // Validate field
+                validateField({ target: this });
+            });
+            
+            // Also handle selection from datalist
+            codeDefectInput.addEventListener('change', function() {
+                const inputValue = this.value.toUpperCase();
+                if (defectMappings[inputValue]) {
+                    defectNameInput.value = defectMappings[inputValue];
+                    defectNameInput.classList.add('populated');
+                    defectNameInput.style.backgroundColor = '#f0fff4';
+                    defectNameInput.style.borderColor = '#10b981';
+                }
+            });
         }
 
         function setupFormValidation() {
             const requiredFields = [
-                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
-                'project', 'box-number', 'pin-terminal', 'supervisor',
-                'production-line', 'post-station', 'defect-comments'
+                'defect-datetime', 'code-defect', 'operator-id',
+                'project', 'box-number', 'supervisor',
+                'production-line', 'post-station'
             ];
 
             // Add real-time validation
@@ -739,9 +781,9 @@
 
         function checkFormCompletion() {
             const requiredFields = [
-                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
-                'project', 'box-number', 'pin-terminal', 'supervisor',
-                'production-line', 'post-station', 'defect-comments'
+                'defect-datetime', 'code-defect', 'operator-id',
+                'project', 'box-number', 'supervisor',
+                'production-line', 'post-station'
             ];
 
             const allFilled = requiredFields.every(fieldId => {
@@ -749,16 +791,22 @@
                 return field && field.value.trim() !== '';
             });
 
+            // Also check if defect name is populated (indicates valid defect code)
+            const defectNameField = document.getElementById('defect-name');
+            const defectNameFilled = defectNameField && defectNameField.value.trim() !== '';
+
+            const formComplete = allFilled && defectNameFilled;
+
             // Update submit button state
             const submitBtn = document.querySelector('.btn-submit-defect');
-            if (allFilled) {
+            if (formComplete) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.innerHTML = '📝 Submit Defect Report (Ready)';
             } else {
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.6';
-                submitBtn.innerHTML = '📝 Submit Defect Report (Complete all fields)';
+                submitBtn.innerHTML = '📝 Submit Defect Report (Complete required fields)';
             }
         }
 
@@ -793,54 +841,71 @@
 
         function validateAllFields() {
             const requiredFields = [
-                'defect-datetime', 'code-defect', 'defect-type', 'operator-id',
-                'project', 'box-number', 'pin-terminal', 'supervisor',
-                'production-line', 'post-station', 'defect-comments'
+                'defect-datetime', 'code-defect', 'operator-id',
+                'project', 'box-number', 'supervisor',
+                'production-line', 'post-station'
             ];
 
-            return requiredFields.every(fieldId => {
+            const basicValidation = requiredFields.every(fieldId => {
                 const field = document.getElementById(fieldId);
                 return field && field.value.trim() !== '';
             });
+
+            // Also check if defect name is populated (indicates valid defect code)
+            const defectNameField = document.getElementById('defect-name');
+            const defectNameValid = defectNameField && defectNameField.value.trim() !== '';
+
+            return basicValidation && defectNameValid;
         }
 
         function collectFormData() {
+            // Generate unique defect ID at submission time
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = ('0' + (now.getMonth() + 1)).slice(-2);
+            const day = ('0' + now.getDate()).slice(-2);
+            const timestamp = Date.now().toString().slice(-6);
+            const defectId = `AQL-DEF-${year}${month}${day}-${timestamp}`;
+
             return {
                 // Auto-generated fields
-                defectId: document.getElementById('defect-id').value,
+                defectId: defectId,
                 aqlInspector: document.getElementById('aql-inspector').value,
                 submittedAt: new Date().toISOString(),
                 
                 // User input fields
                 datetime: document.getElementById('defect-datetime').value,
                 codeDefect: document.getElementById('code-defect').value,
-                defectType: document.getElementById('defect-type').value,
+                defectName: document.getElementById('defect-name').value,
                 operatorId: document.getElementById('operator-id').value,
                 project: document.getElementById('project').value,
                 boxNumber: document.getElementById('box-number').value,
-                pinTerminal: document.getElementById('pin-terminal').value,
                 supervisor: document.getElementById('supervisor').value,
                 productionLine: document.getElementById('production-line').value,
                 postStation: document.getElementById('post-station').value,
-                comments: document.getElementById('defect-comments').value,
+                comments: document.getElementById('defect-comments').value || '', // Optional field
                 
                 // Additional metadata
                 status: 'submitted',
                 requiresQRQC: true,
-                priority: getPriorityFromDefectType(document.getElementById('defect-type').value)
+                priority: getPriorityFromDefectName(document.getElementById('defect-name').value)
             };
         }
 
-        function getPriorityFromDefectType(defectType) {
+        function getPriorityFromDefectName(defectName) {
             const priorityMap = {
-                'Critical': 'High',
-                'Major': 'High',
-                'Minor': 'Medium',
-                'Dimensional': 'Medium',
-                'Visual': 'Low',
-                'Functional': 'High'
+                'Functional Failure': 'High',
+                'Missing Component': 'High',
+                'Wrong Component': 'High',
+                'Dimensional Issue': 'Medium',
+                'Assembly Error': 'Medium',
+                'Material Defect': 'Medium',
+                'Visual Defect': 'Low',
+                'Damage': 'Medium',
+                'Contamination': 'Medium',
+                'Other': 'Medium'
             };
-            return priorityMap[defectType] || 'Medium';
+            return priorityMap[defectName] || 'Medium';
         }
 
         function submitToDatabase(defectData) {
@@ -873,15 +938,13 @@
             alert('❌ Please complete all required fields:\n\n' +
                   '• Date & Time\n' +
                   '• Code Defect (CD001-CD010)\n' +
-                  '• Defect Type\n' +
                   '• Operator ID\n' +
                   '• Project\n' +
                   '• Box/Batch Number\n' +
-                  '• Pin/Terminal\n' +
                   '• Supervisor\n' +
                   '• Production Line\n' +
-                  '• Post/Station\n' +
-                  '• Detailed Comments');
+                  '• Post/Station\n\n' +
+                  'Note: Defect Comments are optional but can be added for additional details.');
         }
 
         function updateWorkflowStatus(status = 'pending') {
@@ -923,6 +986,79 @@
             qrqcBtn.classList.add('btn-ready');
         }
 
+        function resetAllFields() {
+            // Show confirmation dialog
+            const confirmReset = confirm(
+                '🔄 Reset All Fields\n\n' +
+                'This will clear all form data including:\n' +
+                '• All input fields\n' +
+                '• All dropdown selections\n' +
+                '• Comments section\n' +
+                '• Any draft data\n\n' +
+                'Are you sure you want to continue?'
+            );
+            
+            if (!confirmReset) {
+                return;
+            }
+            
+            // Reset all form fields
+            const form = document.getElementById('aqlDefectForm');
+            form.reset();
+            
+            // Clear specific fields that might not be cleared by form.reset()
+            document.getElementById('defect-comments').value = '';
+            document.getElementById('defect-name').value = '';
+            
+            // Reset defect name field styling
+            const defectNameField = document.getElementById('defect-name');
+            defectNameField.classList.remove('populated');
+            defectNameField.style.backgroundColor = '#fef3f2';
+            defectNameField.style.borderColor = '#fb923c';
+            
+            // Reset all field styling to default
+            const allInputs = form.querySelectorAll('input, select, textarea');
+            allInputs.forEach(field => {
+                if (!field.readOnly && !field.classList.contains('auto-filled')) {
+                    field.style.borderColor = '#fb923c';
+                    field.style.backgroundColor = '#fef3f2';
+                }
+            });
+            
+            // Re-initialize form with fresh data
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            document.getElementById('defect-datetime').value = localDateTime;
+            
+            // Clear any stored draft data
+            localStorage.removeItem('aqlDefectDraft');
+            
+            // Clear session data if no defect has been submitted
+            if (currentDefectStatus === 'pending') {
+                sessionStorage.removeItem('currentDefectData');
+            }
+            
+            // Hide success message if visible
+            const successMessage = document.getElementById('successMessage');
+            successMessage.classList.remove('show');
+            
+            // Reset workflow status to pending (only if no defect has been submitted)
+            if (currentDefectStatus === 'pending') {
+                updateWorkflowStatus('pending');
+            } else {
+                // If a defect has been submitted, show a message but don't reset workflow
+                showContextualMessage('Note', 'Submitted defect data preserved. Only form fields were reset.');
+            }
+            
+            // Re-check form completion
+            checkFormCompletion();
+            
+            // Show confirmation message
+            showContextualMessage('Fields Reset', 'All form fields have been cleared successfully');
+            
+            console.log('🔄 All fields have been reset');
+        }
+
         function createQRQC() {
             const defectData = JSON.parse(sessionStorage.getItem('currentDefectData'));
             
@@ -940,8 +1076,8 @@
                 supervisor: defectData.supervisor,
                 productionLine: defectData.productionLine,
                 postStation: defectData.postStation,
-                defectDescription: `${defectData.codeDefect}: ${defectData.defectType}`,
-                rootCauseHypothesis: defectData.comments,
+                defectDescription: `${defectData.codeDefect}: ${defectData.defectName}`,
+                rootCauseHypothesis: defectData.comments || 'To be analyzed in QRQC',
                 priority: defectData.priority,
                 createdAt: new Date().toISOString(),
                 dashboardContext: defectData.productionLine === 'VCE-LINE' ? 'VCE_DASHBOARD' : 'GENERAL_DASHBOARD'
@@ -1041,7 +1177,7 @@
                 if (confirm) {
                     Object.keys(data).forEach(key => {
                         const element = document.getElementById(key);
-                        if (element && key !== 'defect-id' && key !== 'aql-inspector' && key !== 'lastSaved') {
+                        if (element && key !== 'aql-inspector' && key !== 'lastSaved') {
                             element.value = data[key];
                         }
                     });
@@ -1071,6 +1207,12 @@
                 e.preventDefault();
                 saveDraft();
                 alert('📁 Draft saved successfully!');
+            }
+            
+            // Ctrl+R to reset all fields
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                resetAllFields();
             }
             
             // Ctrl+Enter to submit form

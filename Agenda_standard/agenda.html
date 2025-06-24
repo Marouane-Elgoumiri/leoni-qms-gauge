@@ -5,36 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Standard - Agent Qualité Ligne | LEONI</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
+        }
+
+        .header {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+    </style>
     <link rel="stylesheet" href="agenda.css">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="header-content">
-                <div class="logo-section">
-                    <img src="../assets/logo_volvo.png" alt="Volvo Logo" class="logo">
-                    <img src="../assets/logo.png" alt="LEONI Logo" class="logo">
-                </div>
-                <div class="title-section">
-                    <h1>AGENDA STANDARD</h1>
-                    <h2>"Agent Qualité Ligne"</h2>
-                </div>
-                <div class="info-section">
-                    <div class="date-info">
-                        <span class="label">Date de création :</span>
-                        <span class="value">10/07/2014</span>
-                    </div>
-                    <div class="week-info">
-                        <span class="label">SEMAINE :</span>
-                        <span class="value" id="currentWeek">--</span>
-                    </div>
-                    <div class="update-info">
-                        <span class="label">MAJ :</span>
-                        <span class="value">08/03/2017</span>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-calendar-alt"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>Agenda Standard - Agent Qualité Ligne (Standardized Quality Control Schedule)</p>
+        </div>
 
         <!-- Shift Selector -->
         <div class="shift-selector">
@@ -149,8 +174,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">3) Relever l'absentéisme sur les postes à risque</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -168,8 +193,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">4) Vérifier la validation des remplaçants des opérateurs absents</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -187,8 +212,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">5) Vérifier l'enregistrement des relevés de contrôle finale / quality gate / bol / firewall</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -206,8 +231,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">6) Vérifier que la réparatrice est présente (sinon sa remplaçante) et identifiée par son brassard (vérifier l'état des outils de désenfichage et cahier d'enregistrement)</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -225,8 +250,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">7) Vérifier la cohérence entre le tableau de polyvalence et les personnes sur la ligne (tableau à jour)</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -244,8 +269,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">8) Vérifier la présence des outils GAF pour petites et grosses sections</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h05 à 7h25<br>15h05 à 15h25<br>23h05 à 23h25</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -287,8 +312,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">10) Respecter le mode opératoire d'utilisation outil GAF</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">7h25 à 7h45<br>15h25 à 15h45<br>23h25 à 23h45</td>
+                            <td class="duration-cell">20mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -363,8 +388,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">14) Vérifier le nombre de faisceaux par crochet en fin de ligne et sur chariot par rapport à ce qui est demandé</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">10h00<br>18h00<br>02h00</td>
+                            <td class="duration-cell">2h</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -401,8 +426,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">15) Les connexions serties sur joint et composant des ergots de verrouillage à l'extérieur de la connexion type MQS doivent en priorité être placés devant les opérateurs</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">12h00<br>20h00<br>04h00</td>
+                            <td class="duration-cell">2h30</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -420,8 +445,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">* Auditer le nettoyage des contre-parties sur BOL: Nettoyage se fait par aspirateur</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">12h00<br>20h00<br>04h00</td>
+                            <td class="duration-cell">2h30</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -439,8 +464,8 @@
                         </tr>
                         <tr>
                             <td class="task-text">17) Validation produit ou process selon le planning</td>
-                            <td class="time-cell"></td>
-                            <td class="duration-cell"></td>
+                            <td class="time-cell">12h00<br>20h00<br>04h00</td>
+                            <td class="duration-cell">2h30</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
@@ -463,7 +488,7 @@
                         </tr>
                         <tr>
                             <td class="task-text">Pause</td>
-                            <td class="time-cell"></td>
+                            <td class="time-cell">9h30<br>17h30<br>01h30</td>
                             <td class="duration-cell">30mn</td>
                             <td class="checkbox-cell"><input type="checkbox"></td>
                             <td class="checkbox-cell"><input type="checkbox"></td>

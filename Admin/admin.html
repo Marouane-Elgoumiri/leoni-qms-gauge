@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Management - LEONI Admin</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
         * {
             margin: 0;
@@ -14,7 +16,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1a202c;
             min-height: 100vh;
             padding: 20px;
         }
@@ -23,27 +26,30 @@
             max-width: 1400px;
             padding: 20px;
             margin: 0 auto;
-            background: white;
+            background: var(--leoni-white);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: var(--leoni-shadow-2xl);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a365d, #2c5282);
-            color: white;
-            padding: 30px;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .header h1 {
-            font-size: 32px;
-            font-weight: bold;
+            font-size: 2.5rem;
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .header p {
-            font-size: 18px;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
 
@@ -52,17 +58,18 @@
         }
 
         .filters-section {
-            background: #f8fafc;
+            background: var(--leoni-white);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
+            border: 2px solid var(--leoni-primary-light);
+            box-shadow: var(--leoni-shadow-md);
         }
 
         .filters-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2d3748;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -83,24 +90,25 @@
 
         .form-group label {
             font-weight: 600;
-            color: #4a5568;
+            color: #1a202c;
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .form-group select {
             padding: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--leoni-border-light);
             border-radius: 8px;
-            font-size: 14px;
-            background: white;
+            font-size: 0.875rem;
+            background: var(--leoni-white);
+            color: #1a202c;
             transition: all 0.3s ease;
         }
 
         .form-group select:focus {
             outline: none;
-            border-color: #3182ce;
-            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            border-color: var(--leoni-primary);
+            box-shadow: 0 0 0 3px var(--leoni-shadow-primary);
         }
 
         .filters-buttons {
@@ -114,7 +122,7 @@
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -124,56 +132,57 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .btn-secondary {
-            background: #e2e8f0;
-            color: #4a5568;
+            background: var(--leoni-gray-100);
+            color: #1a202c;
         }
 
         .btn-secondary:hover {
-            background: #cbd5e0;
+            background: var(--leoni-gray-200);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #38a169, #2f855a);
-            color: white;
+            background: var(--leoni-gradient-success);
+            color: var(--leoni-white);
         }
 
         .btn-success:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+            box-shadow: var(--leoni-shadow-green);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
-            color: white;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: var(--leoni-white);
         }
 
         .btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
         }
 
         .crud-section {
-            background: #f8fafc;
+            background: var(--leoni-white);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
-            border: 1px solid #e2e8f0;
+            border: 2px solid var(--leoni-primary-light);
+            box-shadow: var(--leoni-shadow-md);
         }
 
         .crud-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #2d3748;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -187,15 +196,15 @@
         }
 
         .table-section {
-            background: white;
+            background: var(--leoni-white);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: var(--leoni-shadow-lg);
         }
 
         .table-header {
-            background: linear-gradient(135deg, #4a5568, #2d3748);
-            color: white;
+            background: var(--leoni-gradient-secondary);
+            color: var(--leoni-white);
             padding: 20px;
             display: flex;
             justify-content: space-between;
@@ -203,8 +212,8 @@
         }
 
         .table-title {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
         }
 
         .results-count {
@@ -224,25 +233,25 @@
         th, td {
             padding: 15px;
             text-align: left;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--leoni-border-light);
         }
 
         th {
-            background: #f8fafc;
+            background: var(--leoni-gray-50);
             font-weight: 600;
-            color: #4a5568;
-            font-size: 14px;
+            color: #1a202c;
+            font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         td {
-            font-size: 14px;
-            color: #2d3748;
+            font-size: 0.875rem;
+            color: #1a202c;
         }
 
         tr:hover {
-            background: #f8fafc;
+            background: var(--leoni-gray-50);
         }
 
         .role-badge {
@@ -255,18 +264,18 @@
         }
 
         .role-aqlqualitylineagent {
-            background: #e6fffa;
-            color: #00a085;
+            background: var(--leoni-teal-light);
+            color: #0f5132;
         }
 
         .role-qualitytechnician {
-            background: #ebf8ff;
-            color: #3182ce;
+            background: var(--leoni-blue-light);
+            color: #0c4a6e;
         }
 
         .role-teamleader {
-            background: #fef5e7;
-            color: #d69e2e;
+            background: var(--leoni-yellow-light);
+            color: #92400e;
         }
 
         .status-badge {
@@ -277,13 +286,13 @@
         }
 
         .status-active {
-            background: #f0fff4;
-            color: #38a169;
+            background: var(--leoni-green-light);
+            color: #0f5132;
         }
 
         .status-onleave {
-            background: #fffaf0;
-            color: #d69e2e;
+            background: var(--leoni-yellow-light);
+            color: #92400e;
         }
 
         .actions {
@@ -301,13 +310,22 @@
             transition: all 0.3s ease;
         }
 
+        .btn-edit {
+            color: #059669;
+        }
+
+        .btn-delete {
+            color: #dc2626;
+        }
+
         .btn-edit:hover {
-            background: #e6fffa;
+            background: var(--leoni-teal-light);
             transform: scale(1.1);
         }
 
         .btn-delete:hover {
-            background: #fed7d7;
+            background: #fee2e2;
+            color: #dc2626;
             transform: scale(1.1);
         }
 
@@ -326,26 +344,26 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--leoni-white);
             border-radius: 20px;
             width: 90%;
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: var(--leoni-shadow-2xl);
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             padding: 20px;
             border-radius: 20px 20px 0 0;
             cursor: move;
         }
 
         .modal-title {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 700;
         }
 
         .modal-body {
@@ -365,16 +383,17 @@
 
         .form-group input, .form-group select {
             padding: 12px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--leoni-border-light);
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 0.875rem;
+            color: #1a202c;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #3182ce;
-            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+            border-color: var(--leoni-primary);
+            box-shadow: 0 0 0 3px var(--leoni-shadow-primary);
         }
 
         .checkbox-group {
@@ -382,9 +401,9 @@
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             padding: 10px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--leoni-border-light);
             border-radius: 8px;
-            background: #f8fafc;
+            background: var(--leoni-gray-50);
         }
 
         .checkbox-item {
@@ -399,14 +418,15 @@
         }
 
         .checkbox-item label {
-            font-size: 14px;
-            color: #4a5568;
+            font-size: 0.875rem;
+            color: #1a202c;
             cursor: pointer;
+            font-weight: 500;
         }
 
         .modal-footer {
             padding: 20px 30px;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid var(--leoni-border-light);
             display: flex;
             gap: 15px;
             justify-content: flex-end;
@@ -430,11 +450,11 @@
         }
 
         .notification.success {
-            background: linear-gradient(135deg, #38a169, #2f855a);
+            background: linear-gradient(135deg, #10b981, #059669);
         }
 
         .notification.error {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
         }
 
         /* Navigation */
@@ -447,12 +467,12 @@
         }
 
         .nav-button {
-            background: linear-gradient(135deg, #005691, #3182ce);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             border: none;
             padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -464,7 +484,7 @@
 
         .nav-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 86, 145, 0.3);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         @media (max-width: 768px) {
@@ -486,15 +506,15 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>👥 Staff Management System</h1>
-            <p>LEONI Quality Department - Personnel Administration</p>
+            <h1><i class="fas fa-users-cog"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>Staff Management System - Personnel Administration & Quality Team Management</p>
         </div>
 
         <div class="content">
             <!-- Search and Filter Section -->
             <div class="filters-section">
                 <div class="filters-title">
-                    🔍 Search & Filter Options
+                    <i class="fas fa-search"></i> Search & Filter Options
                 </div>
                 <div class="filters-grid">
                     <div class="form-group">
@@ -517,26 +537,26 @@
                     </div>
                 </div>
                 <div class="filters-buttons">
-                    <button id="searchBtn" class="btn btn-primary">🔍 Search</button>
-                    <button id="clearBtn" class="btn btn-secondary">🔄 Clear Filters</button>
+                    <button id="searchBtn" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                    <button id="clearBtn" class="btn btn-secondary"><i class="fas fa-undo"></i> Clear Filters</button>
                 </div>
             </div>
 
             <!-- CRUD Operations Section -->
             <div class="crud-section">
                 <div class="crud-title">
-                    ⚙️ Staff Operations
+                    <i class="fas fa-cogs"></i> Staff Operations
                 </div>
                 <div class="crud-buttons">
-                    <button id="addStaffBtn" class="btn btn-success">➕ Add Staff</button>
-                    <button id="deleteSelectedBtn" class="btn btn-danger">🗑️ Delete Selected</button>
+                    <button id="addStaffBtn" class="btn btn-success"><i class="fas fa-plus"></i> Add Staff</button>
+                    <button id="deleteSelectedBtn" class="btn btn-danger"><i class="fas fa-trash"></i> Delete Selected</button>
                 </div>
             </div>
 
             <!-- Staff Table Section -->
             <div class="table-section">
                 <div class="table-header">
-                    <div class="table-title">📋 Quality Staff Directory</div>
+                    <div class="table-title"><i class="fas fa-clipboard-list"></i> Quality Staff Directory</div>
                     <div id="resultsCount" class="results-count">Loading...</div>
                 </div>
                 <div class="table-wrapper">
@@ -564,12 +584,12 @@
 
         <!-- Navigation -->
         <div class="navigation">
-            <a href="../index.html" class="nav-button">🏠 Main Dashboard</a>
-            <a href="../graphs/dashboard.html" class="nav-button">📊 Quality dashboard</a>
-            <a href="../Analysis/qrqc.html" class="nav-button">📋 QRQC</a>
-            <a href="../Vigilance_test/vigilance-test.html" class="nav-button">👁️ Vigilance Test</a>
-            <a href="../5S/5s-checklist.html" class="nav-button">🏭 5S Checklist</a>
-            <a href="../AFP/afp-audit.html" class="nav-button">📋 AFP Audit</a>
+            <a href="../index.html" class="nav-button"><i class="fas fa-home"></i> Main Dashboard</a>
+            <a href="../graphs/dashboard.html" class="nav-button"><i class="fas fa-chart-bar"></i> Quality dashboard</a>
+            <a href="../Analysis/qrqc.html" class="nav-button"><i class="fas fa-clipboard-check"></i> QRQC</a>
+            <a href="../Vigilance_test/vigilance-test.html" class="nav-button"><i class="fas fa-eye"></i> Vigilance Test</a>
+            <a href="../5S/5s-checklist.html" class="nav-button"><i class="fas fa-industry"></i> 5S Checklist</a>
+            <a href="../AFP/afp-audit.html" class="nav-button"><i class="fas fa-clipboard-list"></i> AFP Audit</a>
         </div>
     </div>
 
@@ -618,8 +638,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="saveStaffBtn" class="btn btn-success">💾 Save</button>
-                <button id="cancelBtn" class="btn btn-secondary">❌ Cancel</button>
+                <button id="saveStaffBtn" class="btn btn-success"><i class="fas fa-save"></i> Save</button>
+                <button id="cancelBtn" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</button>
             </div>
         </div>
     </div>
@@ -629,49 +649,52 @@
     <script src="admin.js"></script>
 
     <!-- Navigation Section -->
-    <div style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); z-index: 1000;">
+    <div style="position: fixed; bottom: 20px; right: 20px; background: var(--leoni-white); padding: 15px; border-radius: 12px; box-shadow: var(--leoni-shadow-xl); z-index: 1000; border: 2px solid var(--leoni-primary-light);">
         <div style="display: flex; gap: 10px; flex-direction: column; min-width: 180px;">
             <button onclick="window.location.href='../index.html'" style="
-                background: #1a365d; 
-                color: white; 
+                background: var(--leoni-gradient-primary); 
+                color: var(--leoni-white); 
                 border: none; 
                 padding: 8px 12px; 
                 border-radius: 6px; 
                 cursor: pointer;
                 font-size: 13px;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
                 gap: 8px;
-            ">🏠 Dashboard</button>
+            "><i class="fas fa-home"></i> Dashboard</button>
             
             <button onclick="window.location.href='../Diagrams/LEONI_QMS_FLOWCHART.html'" style="
-                background: #4a90e2; 
-                color: white; 
+                background: var(--leoni-gradient-secondary); 
+                color: var(--leoni-white); 
                 border: none; 
                 padding: 8px 12px; 
                 border-radius: 6px; 
                 cursor: pointer;
                 font-size: 13px;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
                 gap: 8px;
-            ">📐 System Diagrams</button>
+            "><i class="fas fa-project-diagram"></i> System Diagrams</button>
             
             <button onclick="window.location.href='../Analysis/qrqc.html'" style="
-                background: #e53e3e; 
-                color: white; 
+                background: var(--leoni-gradient-accent); 
+                color: var(--leoni-white); 
                 border: none; 
                 padding: 8px 12px; 
                 border-radius: 6px; 
                 cursor: pointer;
                 font-size: 13px;
+                font-weight: 600;
                 transition: all 0.3s ease;
                 display: flex;
                 align-items: center;
                 gap: 8px;
-            ">📋 QRQC Analysis</button>
+            "><i class="fas fa-clipboard-check"></i> QRQC Analysis</button>
         </div>
     </div>
 </body>

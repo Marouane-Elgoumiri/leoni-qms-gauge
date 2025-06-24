@@ -8,17 +8,60 @@
     <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--leoni-gradient-bg-corporate);
+            color: #1a202c;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
+        }
+
+        .header {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+    </style>
     <link rel="stylesheet" href="qk-audit.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <div class="header-section">
-            <div class="header-badge">
-                <i class="fas fa-cogs"></i> QK - Audit Produit
-            </div>
-            <h1 class="page-title">Audit Produit Faisceaux & Cables</h1>
-            <p class="page-subtitle">Quality Assessment for Wire Harnesses and Cable Products</p>
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-cogs"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>QK - Wire Harnesses and Cable Products Assessment</p>
         </div>
 
         <!-- Main Form Container -->

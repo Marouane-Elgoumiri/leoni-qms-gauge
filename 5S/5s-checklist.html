@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5S Checklist - LEONI Quality Management</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
         * {
             margin: 0;
@@ -14,7 +16,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--leoni-gradient-bg-corporate);
             min-height: 100vh;
             padding: 20px;
         }
@@ -24,24 +26,25 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: var(--leoni-shadow-2xl);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a365d, #2c5282);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             padding: 30px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 2.5rem;
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .header p {
-            font-size: 18px;
+            font-size: 1.2rem;
             opacity: 0.9;
         }
 
@@ -51,11 +54,12 @@
 
         /* Day Selector */
         .day-selector {
-            background: #f8fafc;
+            background: var(--leoni-gray-50);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
             text-align: center;
+            border: 1px solid var(--leoni-border-light);
         }
 
         .day-tabs {
@@ -73,15 +77,15 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #e2e8f0;
-            color: #4a5568;
+            background: var(--leoni-gray-200);
+            color: var(--leoni-text-secondary);
         }
 
         .day-tab.active {
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         /* Score Dashboard */
@@ -93,17 +97,17 @@
         }
 
         .score-card {
-            background: linear-gradient(135deg, #38a169, #2f855a);
-            color: white;
+            background: var(--leoni-gradient-success);
+            color: var(--leoni-white);
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+            box-shadow: var(--leoni-shadow-green);
         }
 
         .score-card.total {
-            background: linear-gradient(135deg, #3182ce, #2c5282);
-            box-shadow: 0 5px 15px rgba(49, 130, 206, 0.3);
+            background: var(--leoni-gradient-primary);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .score-value {
@@ -126,15 +130,16 @@
         }
 
         .category-card {
-            background: white;
+            background: var(--leoni-white);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: var(--leoni-shadow-lg);
             transition: transform 0.3s ease;
         }
 
         .category-card:hover {
             transform: translateY(-5px);
+            box-shadow: var(--leoni-shadow-xl);
         }
 
         .category-header {
@@ -145,17 +150,17 @@
             font-size: 18px;
         }
 
-        .seiri { background: linear-gradient(135deg, #e53e3e, #c53030); }
-        .seiton { background: linear-gradient(135deg, #dd6b20, #c05621); }
-        .seiso { background: linear-gradient(135deg, #3182ce, #2c5282); }
-        .seiketsu { background: linear-gradient(135deg, #38a169, #2f855a); }
-        .shitsuke { background: linear-gradient(135deg, #805ad5, #6b46c1); }
+        .seiri { background: var(--leoni-gradient-error); }
+        .seiton { background: var(--leoni-gradient-warning); }
+        .seiso { background: var(--leoni-gradient-primary); }
+        .seiketsu { background: var(--leoni-gradient-success); }
+        .shitsuke { background: linear-gradient(135deg, var(--leoni-accent-orange), var(--leoni-primary-blue)); }
         
         /* LEONI Production Area Styles */
-        .prebloc { background: linear-gradient(135deg, #e53e3e, #c53030); }
-        .assemblage { background: linear-gradient(135deg, #dd6b20, #c05621); }
-        .test_electrique { background: linear-gradient(135deg, #3182ce, #2c5282); }
-        .controle_final { background: linear-gradient(135deg, #38a169, #2f855a); }
+        .prebloc { background: var(--leoni-gradient-error); }
+        .assemblage { background: var(--leoni-gradient-warning); }
+        .test_electrique { background: var(--leoni-gradient-primary); }
+        .controle_final { background: var(--leoni-gradient-success); }
 
         .criteria-list {
             padding: 20px;
@@ -169,22 +174,26 @@
             justify-content: space-between;
             padding: 12px;
             margin-bottom: 10px;
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 8px;
             border-left: 4px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
         }
 
         .criterion-item:hover {
-            background: #e6fffa;
-            border-left-color: #38a169;
+            background: var(--leoni-accent-green-50);
+            border-left-color: var(--leoni-accent-green);
+            border-color: var(--leoni-accent-green);
         }
 
         .criterion-text {
             flex: 1;
             font-size: 14px;
-            color: #2d3748;
+            color: #1a202c;
+            font-weight: 600;
             margin-right: 15px;
+            line-height: 1.4;
         }
 
         .criterion-controls {
@@ -211,18 +220,18 @@
         }
 
         .status-ok {
-            background: #38a169;
-            color: white;
+            background: var(--leoni-accent-green);
+            color: var(--leoni-white);
         }
 
         .status-not-ok {
-            background: #e53e3e;
-            color: white;
+            background: var(--leoni-accent-red);
+            color: var(--leoni-white);
         }
 
         .status-na {
-            background: #a0aec0;
-            color: white;
+            background: var(--leoni-gray-400);
+            color: var(--leoni-white);
         }
 
         /* Progress Visualization */
@@ -599,8 +608,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🏭 Système de Contrôle 5S LEONI</h1>
-            <p>Évaluation de l'Organisation des Zones de Production</p>
+            <h1><i class="fas fa-broom"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>5S Checklist - Workplace Organization & Cleanliness Assessment</p>
         </div>
 
         <div class="content">

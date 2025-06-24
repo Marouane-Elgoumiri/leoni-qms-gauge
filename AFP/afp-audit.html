@@ -6,6 +6,7 @@
     <title>AFP Audit - LEONI Quality</title>
     <link rel="icon" type="image/png" href="../assets/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/leoni-color-palette.css">
     <style>
         * {
             margin: 0;
@@ -15,7 +16,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: var(--leoni-gradient-bg-corporate);
             color: #1e293b;
             min-height: 100vh;
         }
@@ -24,16 +25,19 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            background: var(--leoni-white);
+            border-radius: 20px;
+            box-shadow: var(--leoni-shadow-2xl);
         }
 
         .header {
-            background: linear-gradient(135deg, #1a365d, #2d3748);
-            color: white;
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
             text-align: center;
             padding: 30px;
             border-radius: 15px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--leoni-shadow-blue);
         }
 
         .header h1 {
@@ -582,8 +586,8 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1><i class="fas fa-clipboard-check"></i> AFP - Audit Fonctionnement Processus</h1>
-            <p>LEONI Quality Department - Process Function Audit System</p>
+            <h1><i class="fas fa-clipboard-check"></i> LEONI QUALITY DEPARTMENT</h1>
+            <p>AFP - Audit Fonctionnement Processus (Process Function Audit System)</p>
         </div>
 
         <!-- Document Information Form -->

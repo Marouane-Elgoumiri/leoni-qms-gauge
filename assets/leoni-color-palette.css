@@ -1,0 +1,367 @@
+/*
+==================================================
+LEONI BRAND COLOR PALETTE
+Official Color System for LEONI Quality Management System
+==================================================
+Version: 1.0
+Created: June 2025
+Description: Complete brand color palette based on LEONI corporate identity
+*/
+
+:root {
+    /* ========================================
+       LEONI PRIMARY BRAND COLORS
+    ======================================== */
+    
+    /* Primary Blue - LEONI Corporate Blue */
+    --leoni-primary-blue: #1a365d;           /* Deep Corporate Blue */
+    --leoni-primary-blue-light: #2c5282;     /* Light Corporate Blue */
+    --leoni-primary-blue-dark: #0f2a44;      /* Dark Corporate Blue */
+    --leoni-primary-blue-50: rgba(26, 54, 93, 0.05);
+    --leoni-primary-blue-100: rgba(26, 54, 93, 0.1);
+    --leoni-primary-blue-200: rgba(26, 54, 93, 0.2);
+    --leoni-primary-blue-500: rgba(26, 54, 93, 0.5);
+    --leoni-primary-blue-800: rgba(26, 54, 93, 0.8);
+    
+    /* Secondary Blue Variants */
+    --leoni-secondary-blue: #3182ce;         /* Medium Blue */
+    --leoni-secondary-blue-light: #4299e1;   /* Light Medium Blue */
+    --leoni-secondary-blue-dark: #2b6cb0;    /* Dark Medium Blue */
+    
+    /* ========================================
+       LEONI ACCENT COLORS
+    ======================================== */
+    
+    /* Orange Accent - Energy & Innovation */
+    --leoni-accent-orange: #ed8936;          /* Primary Orange */
+    --leoni-accent-orange-light: #f6ad55;    /* Light Orange */
+    --leoni-accent-orange-dark: #dd6b20;     /* Dark Orange */
+    --leoni-accent-orange-50: rgba(237, 137, 54, 0.05);
+    --leoni-accent-orange-100: rgba(237, 137, 54, 0.1);
+    --leoni-accent-orange-200: rgba(237, 137, 54, 0.2);
+    
+    /* Red Accent - Quality & Safety */
+    --leoni-accent-red: #e53e3e;             /* Primary Red */
+    --leoni-accent-red-light: #f56565;       /* Light Red */
+    --leoni-accent-red-dark: #c53030;        /* Dark Red */
+    --leoni-accent-red-50: rgba(229, 62, 62, 0.05);
+    --leoni-accent-red-100: rgba(229, 62, 62, 0.1);
+    --leoni-accent-red-200: rgba(229, 62, 62, 0.2);
+    
+    /* Green Accent - Success & Quality */
+    --leoni-accent-green: #38a169;           /* Primary Green */
+    --leoni-accent-green-light: #48bb78;     /* Light Green */
+    --leoni-accent-green-dark: #2f855a;      /* Dark Green */
+    --leoni-accent-green-50: rgba(56, 161, 105, 0.05);
+    --leoni-accent-green-100: rgba(56, 161, 105, 0.1);
+    --leoni-accent-green-200: rgba(56, 161, 105, 0.2);
+    
+    /* ========================================
+       LEONI NEUTRAL COLORS
+    ======================================== */
+    
+    /* Grays - Professional & Modern */
+    --leoni-gray-50: #f7fafc;                /* Very Light Gray */
+    --leoni-gray-100: #edf2f7;               /* Light Gray */
+    --leoni-gray-200: #e2e8f0;               /* Medium Light Gray */
+    --leoni-gray-300: #cbd5e0;               /* Medium Gray */
+    --leoni-gray-400: #a0aec0;               /* Medium Dark Gray */
+    --leoni-gray-500: #718096;               /* Dark Gray */
+    --leoni-gray-600: #4a5568;               /* Very Dark Gray */
+    --leoni-gray-700: #2d3748;               /* Charcoal */
+    --leoni-gray-800: #1a202c;               /* Very Dark Charcoal */
+    --leoni-gray-900: #171923;               /* Near Black */
+    
+    /* Pure Colors */
+    --leoni-white: #ffffff;                  /* Pure White */
+    --leoni-black: #000000;                  /* Pure Black */
+    
+    /* ========================================
+       LEONI FUNCTIONAL COLORS
+    ======================================== */
+    
+    /* Status Colors */
+    --leoni-status-success: var(--leoni-accent-green);
+    --leoni-status-warning: var(--leoni-accent-orange);
+    --leoni-status-error: var(--leoni-accent-red);
+    --leoni-status-info: var(--leoni-secondary-blue);
+    
+    /* Background Colors */
+    --leoni-bg-primary: var(--leoni-white);
+    --leoni-bg-secondary: var(--leoni-gray-50);
+    --leoni-bg-tertiary: var(--leoni-gray-100);
+    --leoni-bg-dark: var(--leoni-primary-blue);
+    
+    /* Text Colors */
+    --leoni-text-primary: var(--leoni-gray-800);
+    --leoni-text-secondary: var(--leoni-gray-600);
+    --leoni-text-muted: var(--leoni-gray-500);
+    --leoni-text-light: var(--leoni-white);
+    --leoni-text-brand: var(--leoni-primary-blue);
+    
+    /* Border Colors */
+    --leoni-border-light: var(--leoni-gray-200);
+    --leoni-border-medium: var(--leoni-gray-300);
+    --leoni-border-dark: var(--leoni-gray-400);
+    
+    /* ========================================
+       LEONI GRADIENT DEFINITIONS
+    ======================================== */
+    
+    /* Primary Gradients */
+    --leoni-gradient-primary: linear-gradient(135deg, var(--leoni-primary-blue), var(--leoni-secondary-blue));
+    --leoni-gradient-secondary: linear-gradient(135deg, var(--leoni-secondary-blue), var(--leoni-primary-blue-light));
+    --leoni-gradient-accent: linear-gradient(135deg, var(--leoni-accent-orange), var(--leoni-accent-red));
+    --leoni-gradient-success: linear-gradient(135deg, var(--leoni-accent-green), var(--leoni-accent-green-light));
+    --leoni-gradient-warning: linear-gradient(135deg, var(--leoni-accent-orange), var(--leoni-accent-orange-light));
+    --leoni-gradient-error: linear-gradient(135deg, var(--leoni-accent-red), var(--leoni-accent-red-light));
+    
+    /* Background Gradients */
+    --leoni-gradient-bg-light: linear-gradient(135deg, var(--leoni-gray-50), var(--leoni-white));
+    --leoni-gradient-bg-blue: linear-gradient(135deg, var(--leoni-primary-blue), var(--leoni-primary-blue-dark));
+    --leoni-gradient-bg-corporate: linear-gradient(135deg, var(--leoni-primary-blue) 0%, var(--leoni-secondary-blue) 50%, var(--leoni-accent-orange) 100%);
+    
+    /* ========================================
+       LEONI SHADOW DEFINITIONS
+    ======================================== */
+    
+    /* Box Shadows */
+    --leoni-shadow-sm: 0 1px 3px rgba(26, 54, 93, 0.1);
+    --leoni-shadow-md: 0 4px 6px rgba(26, 54, 93, 0.1);
+    --leoni-shadow-lg: 0 10px 15px rgba(26, 54, 93, 0.15);
+    --leoni-shadow-xl: 0 20px 25px rgba(26, 54, 93, 0.15);
+    --leoni-shadow-2xl: 0 25px 50px rgba(26, 54, 93, 0.25);
+    
+    /* Colored Shadows */
+    --leoni-shadow-blue: 0 8px 25px rgba(26, 54, 93, 0.3);
+    --leoni-shadow-orange: 0 8px 25px rgba(237, 137, 54, 0.3);
+    --leoni-shadow-red: 0 8px 25px rgba(229, 62, 62, 0.3);
+    --leoni-shadow-green: 0 8px 25px rgba(56, 161, 105, 0.3);
+    
+    /* ========================================
+       LEONI DEPARTMENT COLORS
+    ======================================== */
+    
+    /* Quality Department */
+    --leoni-quality-primary: var(--leoni-accent-green);
+    --leoni-quality-secondary: var(--leoni-accent-green-light);
+    --leoni-quality-accent: var(--leoni-primary-blue);
+    
+    /* Production Department */
+    --leoni-production-primary: var(--leoni-accent-orange);
+    --leoni-production-secondary: var(--leoni-accent-orange-light);
+    --leoni-production-accent: var(--leoni-primary-blue);
+    
+    /* Safety Department */
+    --leoni-safety-primary: var(--leoni-accent-red);
+    --leoni-safety-secondary: var(--leoni-accent-red-light);
+    --leoni-safety-accent: var(--leoni-primary-blue);
+    
+    /* Engineering Department */
+    --leoni-engineering-primary: var(--leoni-secondary-blue);
+    --leoni-engineering-secondary: var(--leoni-secondary-blue-light);
+    --leoni-engineering-accent: var(--leoni-accent-orange);
+    
+    /* ========================================
+       LEONI COMPONENT SPECIFIC COLORS
+    ======================================== */
+    
+    /* Audit Colors */
+    --leoni-audit-5s: var(--leoni-accent-green);
+    --leoni-audit-afp: var(--leoni-secondary-blue);
+    --leoni-audit-qk: var(--leoni-accent-orange);
+    
+    /* Quality Metrics Colors */
+    --leoni-metric-good: var(--leoni-accent-green);
+    --leoni-metric-warning: var(--leoni-accent-orange);
+    --leoni-metric-critical: var(--leoni-accent-red);
+    --leoni-metric-neutral: var(--leoni-gray-500);
+    
+    /* Role-based Colors */
+    --leoni-role-aql: var(--leoni-secondary-blue);
+    --leoni-role-technician: var(--leoni-accent-orange);
+    --leoni-role-supervisor: var(--leoni-primary-blue);
+    --leoni-role-admin: var(--leoni-accent-red);
+}
+
+/* ========================================
+   LEONI UTILITY CLASSES
+======================================== */
+
+/* Background Utilities */
+.leoni-bg-primary { background-color: var(--leoni-primary-blue) !important; }
+.leoni-bg-secondary { background-color: var(--leoni-secondary-blue) !important; }
+.leoni-bg-accent-orange { background-color: var(--leoni-accent-orange) !important; }
+.leoni-bg-accent-red { background-color: var(--leoni-accent-red) !important; }
+.leoni-bg-accent-green { background-color: var(--leoni-accent-green) !important; }
+.leoni-bg-light { background-color: var(--leoni-gray-50) !important; }
+.leoni-bg-white { background-color: var(--leoni-white) !important; }
+
+/* Text Color Utilities */
+.leoni-text-primary { color: var(--leoni-primary-blue) !important; }
+.leoni-text-secondary { color: var(--leoni-secondary-blue) !important; }
+.leoni-text-orange { color: var(--leoni-accent-orange) !important; }
+.leoni-text-red { color: var(--leoni-accent-red) !important; }
+.leoni-text-green { color: var(--leoni-accent-green) !important; }
+.leoni-text-gray { color: var(--leoni-gray-600) !important; }
+.leoni-text-white { color: var(--leoni-white) !important; }
+
+/* Border Utilities */
+.leoni-border-primary { border-color: var(--leoni-primary-blue) !important; }
+.leoni-border-secondary { border-color: var(--leoni-secondary-blue) !important; }
+.leoni-border-orange { border-color: var(--leoni-accent-orange) !important; }
+.leoni-border-red { border-color: var(--leoni-accent-red) !important; }
+.leoni-border-green { border-color: var(--leoni-accent-green) !important; }
+.leoni-border-light { border-color: var(--leoni-border-light) !important; }
+
+/* Gradient Utilities */
+.leoni-gradient-primary { background: var(--leoni-gradient-primary) !important; }
+.leoni-gradient-secondary { background: var(--leoni-gradient-secondary) !important; }
+.leoni-gradient-accent { background: var(--leoni-gradient-accent) !important; }
+.leoni-gradient-success { background: var(--leoni-gradient-success) !important; }
+.leoni-gradient-warning { background: var(--leoni-gradient-warning) !important; }
+.leoni-gradient-error { background: var(--leoni-gradient-error) !important; }
+
+/* Shadow Utilities */
+.leoni-shadow-sm { box-shadow: var(--leoni-shadow-sm) !important; }
+.leoni-shadow-md { box-shadow: var(--leoni-shadow-md) !important; }
+.leoni-shadow-lg { box-shadow: var(--leoni-shadow-lg) !important; }
+.leoni-shadow-xl { box-shadow: var(--leoni-shadow-xl) !important; }
+.leoni-shadow-blue { box-shadow: var(--leoni-shadow-blue) !important; }
+.leoni-shadow-orange { box-shadow: var(--leoni-shadow-orange) !important; }
+.leoni-shadow-red { box-shadow: var(--leoni-shadow-red) !important; }
+.leoni-shadow-green { box-shadow: var(--leoni-shadow-green) !important; }
+
+/* ========================================
+   LEONI COMPONENT PRESETS
+======================================== */
+
+/* Button Presets */
+.leoni-btn-primary {
+    background: var(--leoni-gradient-primary);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-blue);
+}
+
+.leoni-btn-secondary {
+    background: var(--leoni-gradient-secondary);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-md);
+}
+
+.leoni-btn-accent {
+    background: var(--leoni-gradient-accent);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-orange);
+}
+
+.leoni-btn-success {
+    background: var(--leoni-gradient-success);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-green);
+}
+
+.leoni-btn-warning {
+    background: var(--leoni-gradient-warning);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-orange);
+}
+
+.leoni-btn-error {
+    background: var(--leoni-gradient-error);
+    color: var(--leoni-white);
+    border: none;
+    box-shadow: var(--leoni-shadow-red);
+}
+
+/* Card Presets */
+.leoni-card {
+    background: var(--leoni-white);
+    border: 1px solid var(--leoni-border-light);
+    border-radius: 12px;
+    box-shadow: var(--leoni-shadow-md);
+}
+
+.leoni-card-elevated {
+    background: var(--leoni-white);
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--leoni-shadow-lg);
+}
+
+/* Header Presets */
+.leoni-header {
+    background: var(--leoni-gradient-primary);
+    color: var(--leoni-white);
+    box-shadow: var(--leoni-shadow-blue);
+}
+
+.leoni-header-light {
+    background: var(--leoni-white);
+    color: var(--leoni-text-brand);
+    border-bottom: 2px solid var(--leoni-primary-blue);
+    box-shadow: var(--leoni-shadow-sm);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN CONSIDERATIONS
+======================================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark mode adjustments */
+        --leoni-bg-primary: var(--leoni-gray-800);
+        --leoni-bg-secondary: var(--leoni-gray-700);
+        --leoni-text-primary: var(--leoni-gray-100);
+        --leoni-text-secondary: var(--leoni-gray-300);
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --leoni-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --leoni-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --leoni-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+    }
+}
+
+/*
+==================================================
+END OF LEONI COLOR PALETTE
+==================================================
+Usage Instructions:
+
+1. Import this file in your HTML head:
+   <link rel="stylesheet" href="assets/leoni-color-palette.css">
+
+2. Use CSS variables in your styles:
+   color: var(--leoni-primary-blue);
+   background: var(--leoni-gradient-primary);
+
+3. Use utility classes for quick styling:
+   <div class="leoni-bg-primary leoni-text-white">Content</div>
+
+4. Use component presets for consistent UI:
+   <button class="leoni-btn-primary">Primary Button</button>
+
+For questions or updates, contact the LEONI QMS Development Team.
+==================================================
+*/
