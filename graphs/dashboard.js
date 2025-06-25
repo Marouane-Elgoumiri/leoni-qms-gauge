@@ -890,8 +890,10 @@ class LEONIChatbot {
             const response = await fetch(`${this.apiUrl}/suggestions`);
             const data = await response.json();
             
-            if (data.status === 'success') {
+            if (response.ok && data.suggestions) {
                 this.displaySuggestions(data.suggestions);
+            } else {
+                throw new Error('Invalid suggestions response');
             }
         } catch (error) {
             console.warn('Could not load suggestions:', error);
@@ -925,8 +927,8 @@ class LEONIChatbot {
             const response = await fetch(`${this.apiUrl}/welcome`);
             const data = await response.json();
             
-            if (data.status === 'success') {
-                this.addMessage(data.message, 'bot', data.isMarkdown);
+            if (response.ok && data.response) {
+                this.addMessage(data.response, 'bot', data.isMarkdown);
             } else {
                 // Fallback welcome message
                 this.addMessage('# LEONI QMS Assistant\n\nHello! I\'m your LEONI Quality Management System assistant. How can I help you?', 'bot', true);
@@ -967,11 +969,7 @@ class LEONIChatbot {
                 },
                 body: JSON.stringify({ 
                     message: message,
-                    context: {
-                        currentPage: currentPage,
-                        userRole: 'quality_manager', // Could be dynamic
-                        timestamp: new Date().toISOString()
-                    }
+                    currentPage: currentPage
                 })
             });
 
@@ -980,7 +978,8 @@ class LEONIChatbot {
             // Hide typing indicator before showing response
             this.hideTypingIndicator();
 
-            if (data.status === 'success') {
+            // Check if response was successful
+            if (response.ok && data.response) {
                 // Use the isMarkdown flag from API response, fallback to detection
                 const isMarkdownResponse = data.isMarkdown !== undefined ? data.isMarkdown : this.detectMarkdown(data.response);
                 
@@ -990,11 +989,11 @@ class LEONIChatbot {
                 this.conversationHistory.push({
                     user: message,
                     bot: data.response,
-                    timestamp: data.timestamp,
+                    timestamp: data.timestamp || new Date().toISOString(),
                     format: isMarkdownResponse ? 'markdown' : 'html'
                 });
             } else {
-                throw new Error(data.error || 'Unknown error');
+                throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
             }
         } catch (error) {
             console.error('Chat error:', error);
