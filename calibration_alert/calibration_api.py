@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 import os
 import sys
@@ -21,7 +21,10 @@ except ImportError as e:
     ALERT_SYSTEM_AVAILABLE = False
 
 app = Flask(__name__)
-CORS(app)
+# Configure CORS explicitly
+CORS(app, origins=["*"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+     allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+     supports_credentials=True)
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
@@ -48,16 +51,35 @@ def format_date_for_json(date_obj):
 
 def process_equipment_data(data):
     """Process equipment data and ensure dates are properly formatted"""
+    import pandas as pd
     processed_data = []
     for item in data:
         processed_item = item.copy()
         # Convert datetime objects to strings for JSON serialization
         if 'Next Due Date' in processed_item:
             processed_item['Next Due Date'] = format_date_for_json(processed_item['Next Due Date'])
+        
+        # Handle NaN values - convert to empty strings
+        for key, value in processed_item.items():
+            if pd.isna(value) or str(value).lower() == 'nan':
+                processed_item[key] = ''
+            elif isinstance(value, float) and str(value) == 'nan':
+                processed_item[key] = ''
+        
         processed_data.append(processed_item)
     return processed_data
 
-@app.route('/api/health', methods=['GET'])
+# Global OPTIONS handler for CORS preflight requests
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add('Access-Control-Allow-Headers', "*")
+        response.headers.add('Access-Control-Allow-Methods', "*")
+        return response
+
+@app.route('/api/health', methods=['GET', 'OPTIONS'])
 def health_check():
     return jsonify({
         'status': 'healthy',
@@ -320,6 +342,66 @@ def send_alerts():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/equipment/<int:equipment_id>', methods=['PUT'])
+def update_equipment(equipment_id):
+    """Update existing equipment by index"""
+    try:
+        global current_equipment_data
+        
+        if equipment_id < 0 or equipment_id >= len(current_equipment_data):
+            return jsonify({'error': 'Equipment not found'}), 404
+        
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['Type-Description', 'Serial no.', 'Manufacturer', 'Location', 'InternalNo', 'Next Due Date']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Parse the date
+        try:
+            if isinstance(data['Next Due Date'], str):
+                due_date = datetime.strptime(data['Next Due Date'], '%Y-%m-%d')
+                data['Next Due Date'] = due_date
+        except ValueError:
+            return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD'}), 400
+        
+        # Update the equipment
+        current_equipment_data[equipment_id] = data
+        
+        return jsonify({
+            'message': 'Equipment updated successfully',
+            'equipment': process_equipment_data([data])[0]
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/equipment/<int:equipment_id>', methods=['DELETE'])
+def delete_equipment(equipment_id):
+    """Delete equipment by index"""
+    try:
+        global current_equipment_data
+        
+        if equipment_id < 0 or equipment_id >= len(current_equipment_data):
+            return jsonify({'error': 'Equipment not found'}), 404
+        
+        # Get the equipment info for response
+        deleted_equipment = current_equipment_data[equipment_id]
+        
+        # Remove the equipment
+        current_equipment_data.pop(equipment_id)
+        
+        return jsonify({
+            'message': 'Equipment deleted successfully',
+            'deleted_equipment': process_equipment_data([deleted_equipment])[0],
+            'remaining_count': len(current_equipment_data)
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/config', methods=['GET', 'POST'])
 def manage_config():
     """Get or update system configuration"""
@@ -355,6 +437,8 @@ if __name__ == '__main__':
     print("   - GET  /api/health")
     print("   - GET  /api/equipment")
     print("   - POST /api/equipment (add new equipment)")
+    print("   - PUT  /api/equipment/<id> (update equipment)")
+    print("   - DELETE /api/equipment/<id> (delete equipment)")
     print("   - POST /api/upload")
     print("   - GET  /api/alerts")
     print("   - GET  /api/statistics")

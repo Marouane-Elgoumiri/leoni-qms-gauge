@@ -8,271 +8,32 @@ let alertThreshold = 30;
 let lastUpdateTime = null;
 let apiAvailable = false;
 
-// Simple test function to force table population
-window.forceTablePopulation = async function() {
-    console.log('Force table population started...');
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/equipment`);
-        const data = await response.json();
-        
-        console.log('API response:', data);
-        
-        if (data.equipment && data.equipment.length > 0) {
-            // Update global equipmentData
-            equipmentData = data.equipment.map(item => ({
-                ...item,
-                'Next Due Date': new Date(item['Next Due Date'])
-            }));
-            
-            console.log('equipmentData updated:', equipmentData.length, 'items');
-            
-            // Force table update
-            const tableBody = document.getElementById('equipmentTableBody');
-            const tableContainer = document.getElementById('tableContainer');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            
-            if (tableContainer) tableContainer.style.display = 'block';
-            if (loadingSpinner) loadingSpinner.style.display = 'none';
-            
-            tableBody.innerHTML = '';
-            
-            // Add first 10 items to table
-            equipmentData.slice(0, 10).forEach((equipment, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${equipment['Type-Description'] || 'N/A'}</td>
-                    <td>${equipment['Serial no.'] || 'N/A'}</td>
-                    <td>${equipment['Manufacturer'] || 'N/A'}</td>
-                    <td>${equipment['Location'] || 'N/A'}</td>
-                    <td>${equipment['InternalNo'] || 'N/A'}</td>
-                    <td>${equipment['Next Due Date'] ? equipment['Next Due Date'].toLocaleDateString() : 'N/A'}</td>
-                    <td><span class="status-good">UP TO DATE</span></td>
-                    <td>30 days</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editEquipment(${index})">Edit</button>
-                        <button class="action-btn delete" onclick="deleteEquipment(${index})">Delete</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            console.log('Table populated with', tableBody.children.length, 'rows');
-            
-            // Also update statistics
-            updateStatistics();
-            
-            console.log('Force table population completed successfully!');
-        } else {
-            console.error('No equipment data in API response');
-        }
-    } catch (error) {
-        console.error('Force table population failed:', error);
-    }
-};
-window.debugEquipmentData = function() {
-    console.log('Debug: equipmentData length:', equipmentData.length);
-    console.log('Debug: equipmentData:', equipmentData);
-    console.log('Debug: apiAvailable:', apiAvailable);
-    console.log('Debug: API_BASE_URL:', API_BASE_URL);
-    
-    // Test API call
-    fetch(`${API_BASE_URL}/equipment`)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Debug: Direct API call result:', data);
-            console.log('Debug: Equipment count from API:', data.equipment ? data.equipment.length : 'No equipment array');
-        })
-        .catch(error => console.error('Debug: API call failed:', error));
-};
-
-// Manual reload function for testing
-window.manualReload = async function() {
-    console.log('Manual reload triggered...');
-    console.log('Before reload - equipmentData:', equipmentData.length);
-    
-    // Force check API connection first
-    console.log('Checking API connection first...');
-    await checkApiConnection();
-    console.log('API available after check:', apiAvailable);
-    
-    await loadEquipmentData();
-    console.log('After reload - equipmentData:', equipmentData.length);
-    console.log('Sample equipment data:', equipmentData[0]);
-    
-    updateDisplay();
-    console.log('Display updated manually');
-    
-    // Additional debug - check if table has content after update
-    setTimeout(() => {
-        const tableBody = document.getElementById('equipmentTableBody');
-        console.log('Table body HTML after update:', tableBody ? tableBody.innerHTML.substring(0, 200) : 'TABLE BODY NOT FOUND');
-        console.log('Table body children count:', tableBody ? tableBody.children.length : 'TABLE BODY NOT FOUND');
-    }, 100);
-};
-
-// Test function to directly populate table
-window.testDirectTable = function() {
-    console.log('Testing direct table population...');
-    const tableBody = document.getElementById('equipmentTableBody');
-    
-    if (!tableBody) {
-        console.error('Table body not found!');
-        return;
-    }
-    
-    // Show table container
-    const tableContainer = document.getElementById('tableContainer');
-    if (tableContainer) {
-        tableContainer.style.display = 'block';
-    }
-    
-    // Hide loading spinner
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    if (loadingSpinner) {
-        loadingSpinner.style.display = 'none';
-    }
-    
-    // Clear table
-    tableBody.innerHTML = '';
-    
-    // Check current equipmentData
-    console.log('Current equipmentData length:', equipmentData.length);
-    
-    if (equipmentData.length === 0) {
-        console.log('equipmentData is empty, trying direct API call...');
-        
-        fetch(`${API_BASE_URL}/equipment`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Direct API call result:', data);
-                if (data.equipment && data.equipment.length > 0) {
-                    // Clear the table and manually populate from API data
-                    tableBody.innerHTML = '';
-                    
-                    // Process first 5 items for testing
-                    data.equipment.slice(0, 5).forEach((equipment, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${equipment['Type-Description'] || 'N/A'}</td>
-                            <td>${equipment['Serial no.'] || 'N/A'}</td>
-                            <td>${equipment['Manufacturer'] || 'N/A'}</td>
-                            <td>${equipment['Location'] || 'N/A'}</td>
-                            <td>${equipment['InternalNo'] || 'N/A'}</td>
-                            <td>${equipment['Next Due Date'] || 'N/A'}</td>
-                            <td><span class="status-good">UP TO DATE</span></td>
-                            <td>30 days</td>
-                            <td>
-                                <button class="action-btn edit">Edit</button>
-                                <button class="action-btn delete">Delete</button>
-                            </td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
-                    console.log('Test rows added directly to table from API data');
-                    
-                    // Also update the global equipmentData
-                    equipmentData = data.equipment.map(item => ({
-                        ...item,
-                        'Next Due Date': new Date(item['Next Due Date'])
-                    }));
-                    console.log('Global equipmentData updated:', equipmentData.length, 'items');
-                }
-            })
-            .catch(error => console.error('Direct API call failed:', error));
-    } else {
-        console.log('equipmentData has', equipmentData.length, 'items, adding to table...');
-        // Try to add rows using current equipmentData
-        equipmentData.slice(0, 3).forEach((equipment, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${equipment['Type-Description'] || 'N/A'}</td>
-                <td>${equipment['Serial no.'] || 'N/A'}</td>
-                <td>${equipment['Manufacturer'] || 'N/A'}</td>
-                <td>${equipment['Location'] || 'N/A'}</td>
-                <td>${equipment['InternalNo'] || 'N/A'}</td>
-                <td>${equipment['Next Due Date'] || 'N/A'}</td>
-                <td><span class="status-good">UP TO DATE</span></td>
-                <td>30 days</td>
-                <td>
-                    <button class="action-btn edit">Edit</button>
-                    <button class="action-btn delete">Delete</button>
-                </td>
-            `;
-            tableBody.appendChild(row);
-        });
-        console.log('Test rows added from equipmentData');
-    }
-};
-
 // Initialize the application
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('🚀 DOM Content Loaded - Starting initialization');
-    
-    // Step 1: Initialize system settings
+document.addEventListener('DOMContentLoaded', function() {
     initializeCalibrationSystem();
-    
-    // Step 2: Check API connection
-    console.log('🔍 Checking API connection...');
-    await checkApiConnection();
-    console.log('✅ API check complete. Available:', apiAvailable);
-    
-    // Step 3: Load equipment data if API is available
-    if (apiAvailable) {
-        console.log('📊 Loading equipment data from API...');
-        await loadEquipmentData();
-        console.log('📊 Equipment data loaded:', equipmentData.length, 'items');
-    } else {
-        console.log('⚠️ API not available - will wait for file upload');
-        equipmentData = [];
-    }
-    
-    // Step 4: Update display
-    console.log('🎨 Updating display...');
+    checkApiConnection();
+    loadEquipmentData();
     updateDisplay();
-    console.log('✅ Initialization complete');
-    
-    // Step 5: Additional debug info
-    setTimeout(() => {
-        console.log('🔍 Final state check:');
-        console.log('  - API Available:', apiAvailable);
-        console.log('  - Equipment Data Length:', equipmentData.length);
-        console.log('  - Table Body Children:', document.getElementById('equipmentTableBody')?.children.length || 'N/A');
-    }, 500);
 });
 
 // Check if API is available
 async function checkApiConnection() {
-    console.log('🔍 Checking API connection...');
     try {
         const response = await fetch(`${API_BASE_URL}/health`);
-        console.log('📡 API health response status:', response.status);
-        
         if (response.ok) {
-            const data = await response.json();
-            console.log('📡 API health data:', data);
-            
             apiAvailable = true;
             console.log('✅ API connection established');
-            
-            const apiStatus = document.getElementById('apiStatus');
-            if (apiStatus) {
-                apiStatus.textContent = 'Connected';
-                apiStatus.className = 'status-indicator status-connected';
-            }
+            document.getElementById('apiStatus').textContent = 'Connected';
+            document.getElementById('apiStatus').className = 'status-indicator status-connected';
         } else {
             throw new Error('API not responding');
         }
     } catch (error) {
-        console.error('⚠️ API connection failed:', error);
         apiAvailable = false;
-        console.log('⚠️ API not available - system requires API connection');
-        
-        const apiStatus = document.getElementById('apiStatus');
-        if (apiStatus) {
-            apiStatus.textContent = 'Offline - Upload Excel file';
-            apiStatus.className = 'status-indicator status-offline';
-        }
+        console.log('⚠️ API not available, using mock data');
+        document.getElementById('apiStatus').textContent = 'Offline (Mock Data)';
+        document.getElementById('apiStatus').className = 'status-indicator status-offline';
+        loadMockData(); // Fallback to mock data
     }
 }
 
@@ -294,93 +55,102 @@ function initializeCalibrationSystem() {
     setupFileUpload();
 }
 
-// Load equipment data from API
+// Load equipment data from API or fallback to mock data
 async function loadEquipmentData() {
-    console.log('🔄 Loading equipment data...');
     if (apiAvailable) {
         try {
-            console.log('📡 Fetching from API...');
             const response = await fetch(`${API_BASE_URL}/equipment`);
-            console.log('📡 API Response status:', response.status);
-            
             if (response.ok) {
                 const data = await response.json();
-                console.log('📊 Raw API data:', data);
-                console.log('📊 Equipment array from API:', data.equipment);
-                console.log('📊 Equipment array length:', data.equipment ? data.equipment.length : 'undefined');
-                
-                if (data.equipment && Array.isArray(data.equipment)) {
-                    equipmentData = data.equipment.map(item => ({
-                        ...item,
-                        'Next Due Date': new Date(item['Next Due Date'])
-                    }));
-                    lastUpdateTime = new Date();
-                    console.log(`📊 Loaded ${equipmentData.length} equipment records from API`);
-                    console.log('📊 Sample equipment:', equipmentData[0]);
-                    console.log('📊 Global equipmentData variable:', equipmentData);
-                } else {
-                    console.error('❌ Invalid equipment data structure:', data);
-                    equipmentData = [];
-                }
+                equipmentData = data.equipment.map(item => ({
+                    ...item,
+                    'Next Due Date': new Date(item['Next Due Date'])
+                }));
+                lastUpdateTime = new Date();
+                console.log(`📊 Loaded ${equipmentData.length} equipment records from API`);
                 
                 // Show the table container and hide loading spinner
                 const tableContainer = document.getElementById('tableContainer');
                 const loadingSpinner = document.getElementById('loadingSpinner');
-                if (tableContainer) {
-                    tableContainer.style.display = 'block';
-                    console.log('📋 Table container shown');
-                }
-                if (loadingSpinner) {
-                    loadingSpinner.style.display = 'none';
-                    console.log('⏳ Loading spinner hidden');
-                }
+                if (tableContainer) tableContainer.style.display = 'block';
+                if (loadingSpinner) loadingSpinner.style.display = 'none';
                 
                 return;
-            } else {
-                console.error('Failed to load equipment data:', response.status);
-                equipmentData = [];
             }
         } catch (error) {
             console.error('Failed to load from API:', error);
-            equipmentData = [];
         }
-    } else {
-        // No API connection - equipmentData will remain empty until file is uploaded
-        equipmentData = [];
-        console.log('⚠️ No API connection - waiting for file upload');
     }
     
-    // Always show table container and hide loading spinner after attempting to load data
-    const tableContainer = document.getElementById('tableContainer');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    if (tableContainer) {
-        tableContainer.style.display = 'block';
-        console.log('📋 Table container shown');
-    }
-    if (loadingSpinner) {
-        loadingSpinner.style.display = 'none';
-        console.log('⏳ Loading spinner hidden');
-    }
+    // Fallback to mock data
+    loadMockData();
+}
+
+// Load mock equipment data for demonstration (fallback when API is not available)
+function loadMockData() {
+    const today = new Date();
+    
+    equipmentData = [
+        {
+            'Type-Description': 'Digital Multimeter',
+            'Serial no.': 'DMM-001',
+            'Manufacturer': 'Fluke',
+            'Location': 'Lab A - Station 1',
+            'InternalNo': 'LEONI-001',
+            'Next Due Date': new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000) // 5 days overdue
+        },
+        {
+            'Type-Description': 'Oscilloscope',
+            'Serial no.': 'OSC-002',
+            'Manufacturer': 'Keysight',
+            'Location': 'Lab A - Station 2',
+            'InternalNo': 'LEONI-002',
+            'Next Due Date': new Date(today.getTime() + 15 * 24 * 60 * 60 * 1000) // 15 days remaining
+        },
+        {
+            'Type-Description': 'Power Supply',
+            'Serial no.': 'PSU-003',
+            'Manufacturer': 'Rigol',
+            'Location': 'Lab B - Station 1',
+            'InternalNo': 'LEONI-003',
+            'Next Due Date': new Date(today.getTime() + 45 * 24 * 60 * 60 * 1000) // 45 days remaining
+        },
+        {
+            'Type-Description': 'Function Generator',
+            'Serial no.': 'FG-004',
+            'Manufacturer': 'Tektronix',
+            'Location': 'Lab B - Station 2',
+            'InternalNo': 'LEONI-004',
+            'Next Due Date': new Date(today.getTime() + 5 * 24 * 60 * 60 * 1000) // 5 days remaining
+        },
+        {
+            'Type-Description': 'Spectrum Analyzer',
+            'Serial no.': 'SA-005',
+            'Manufacturer': 'Rohde & Schwarz',
+            'Location': 'Lab C - Station 1',
+            'InternalNo': 'LEONI-005',
+            'Next Due Date': new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000) // 2 days overdue
+        },
+        {
+            'Type-Description': 'LCR Meter',
+            'Serial no.': 'LCR-006',
+            'Manufacturer': 'Keysight',
+            'Location': 'Lab C - Station 2',
+            'InternalNo': 'LEONI-006',
+            'Next Due Date': new Date(today.getTime() + 90 * 24 * 60 * 60 * 1000) // 90 days remaining
+        }
+    ];
+    
+    lastUpdateTime = new Date();
+    console.log(`📊 Loaded ${equipmentData.length} equipment records`);
 }
 
 // Update the display with current data
 function updateDisplay() {
-    console.log('🔄 Updating display with', equipmentData.length, 'equipment items');
-    console.log('🔄 equipmentData sample:', equipmentData[0]);
-    
     updateStatistics();
-    console.log('📊 Statistics updated');
-    
-    displayEquipmentTable(); // Use the CRUD version instead of updateEquipmentTable
-    console.log('📋 Equipment table displayed');
-    
+    updateEquipmentTable();
     updateLastUpdated();
-    console.log('🕒 Last updated time set');
-    
     checkForAlerts();
-    console.log('⚠️ Alerts checked');
-    
-    console.log('✅ Display update completed');
 }
 
 // Update statistics cards
@@ -473,7 +243,7 @@ function createEquipmentRow(equipment, today) {
         <td>${equipment['Location'] || 'N/A'}</td>
         <td>${equipment['InternalNo'] || 'N/A'}</td>
         <td>${dueDate ? dueDate.toLocaleDateString() : 'N/A'}</td>
-        <td><span class="${statusClass}">${statusText}</span></td>
+        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
         <td>${daysText}</td>
     `;
     
@@ -599,8 +369,12 @@ async function updateData() {
         updateDisplay();
         showSuccessMessage('Equipment data updated successfully');
     } else {
-        console.log('⚠️ Cannot update data - API not available');
-        showErrorMessage('Cannot update data - API connection required. Please check your connection or upload an Excel file.');
+        // Simulate data update when API not available
+        setTimeout(() => {
+            lastUpdateTime = new Date();
+            updateDisplay();
+            showSuccessMessage('Equipment data updated successfully (using mock data)');
+        }, 1500);
     }
 }
 
@@ -650,8 +424,6 @@ async function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
     
-    console.log('📁 File selected:', file.name, file.size, file.type);
-    
     if (!file.name.match(/\.(xls|xlsx)$/)) {
         alert('Please select a valid Excel file (.xls or .xlsx)');
         return;
@@ -663,45 +435,40 @@ async function handleFileUpload(event) {
     }
     
     showSuccessMessage(`Uploading file: ${file.name}...`);
-    console.log('🚀 Starting file upload...');
     
     if (apiAvailable) {
         try {
             const formData = new FormData();
             formData.append('file', file);
             
-            console.log('📡 Sending to API...');
             const response = await fetch(`${API_BASE_URL}/upload`, {
                 method: 'POST',
                 body: formData
             });
             
-            console.log('📡 Upload response status:', response.status);
             const result = await response.json();
-            console.log('📡 Upload result:', result);
             
             if (response.ok) {
                 console.log('✅ File uploaded successfully:', result.message);
-                showSuccessMessage(`Upload successful: ${result.message}`);
-                
-                // Reload data and update display immediately
-                console.log('🔄 Reloading data after upload...');
-                console.log('🔄 equipmentData before reload:', equipmentData.length, 'items');
-                await loadEquipmentData();
-                console.log('📊 Equipment data after reload:', equipmentData.length, 'items');
-                console.log('📊 equipmentData after reload:', equipmentData);
+                await loadEquipmentData(); // Reload data from API
                 updateDisplay();
-                console.log('✅ Display updated after upload');
+                showSuccessMessage(result.message);
             } else {
                 throw new Error(result.error || 'Upload failed');
             }
         } catch (error) {
             console.error('Upload error:', error);
-            showErrorMessage(`Upload failed: ${error.message}`);
+            showSuccessMessage(`Upload failed: ${error.message}`);
         }
     } else {
-        console.log('⚠️ Cannot upload file - API not available');
-        showErrorMessage(`Cannot upload file "${file.name}" - API connection required. Please check your connection and try again.`);
+        // Simulate file upload and processing when API not available
+        setTimeout(() => {
+            // In production, this would process the actual Excel file
+            // For now, we'll just reload mock data
+            loadMockData();
+            updateDisplay();
+            showSuccessMessage(`File "${file.name}" processed (using mock data - API not available)`);
+        }, 2000);
     }
 }
 
@@ -748,96 +515,33 @@ function showSuccessMessage(message) {
     }, 3000);
 }
 
-// Show error message to user
-function showErrorMessage(message) {
-    const errorMessage = document.getElementById('errorMessage');
-    const errorText = document.getElementById('errorText');
-    
-    if (errorMessage && errorText) {
-        errorText.textContent = message;
-        errorMessage.style.display = 'block';
-        
-        // Hide after 5 seconds
-        setTimeout(() => {
-            errorMessage.style.display = 'none';
-        }, 5000);
-    } else {
-        // Fallback to alert if error message elements don't exist
-        alert('Error: ' + message);
-    }
-}
-
 // ========================================
 // CRUD Operations for Equipment Management
 // ========================================
 
 // Display equipment data in the table with CRUD controls
 function displayEquipmentTable() {
-    console.log('📋 Displaying equipment table...');
     const tableBody = document.getElementById('equipmentTableBody');
-    const tableContainer = document.getElementById('tableContainer');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    
-    console.log('📋 Table elements found:', {
-        tableBody: !!tableBody,
-        tableContainer: !!tableContainer,
-        loadingSpinner: !!loadingSpinner,
-        equipmentDataLength: equipmentData.length
-    });
-    
-    if (!tableBody) {
-        console.error('❌ Table body not found!');
-        return;
-    }
-    
-    // Show table container and hide loading spinner
-    if (tableContainer) {
-        tableContainer.style.display = 'block';
-        console.log('📋 Table container shown');
-    }
-    if (loadingSpinner) {
-        loadingSpinner.style.display = 'none';
-        console.log('⏳ Loading spinner hidden');
-    }
+    if (!tableBody) return;
     
     tableBody.innerHTML = '';
     
     if (equipmentData.length === 0) {
-        console.log('📋 No equipment data, showing empty message');
-        const apiStatusText = apiAvailable ? 
-            'Upload your laboratory_measures.xls/.xlsx file above or add equipment manually using the form.' :
-            'API connection not available. Please upload your laboratory_measures.xls/.xlsx file to load equipment data.';
-        
         tableBody.innerHTML = `
             <tr>
                 <td colspan="9" style="text-align: center; color: #64748b; padding: 40px;">
-                    <i class="fas fa-upload" style="font-size: 2rem; margin-bottom: 10px; display: block; color: var(--leoni-primary);"></i>
-                    <strong style="display: block; margin-bottom: 10px; color: #1a202c;">No Equipment Data Loaded</strong>
-                    ${apiStatusText}
+                    <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                    No equipment data available. Upload an Excel file or add equipment manually.
                 </td>
             </tr>
         `;
-        
-        // Update row count display
-        const rowCountElement = document.getElementById('tableRowCount');
-        if (rowCountElement) {
-            rowCountElement.textContent = '0';
-        }
-        
         return;
     }
     
-    console.log('📋 Creating table rows for', equipmentData.length, 'equipment items');
     equipmentData.forEach((equipment, index) => {
         const row = createEquipmentRow(equipment, index);
         tableBody.appendChild(row);
     });
-    
-    // Update row count display
-    const rowCountElement = document.getElementById('tableRowCount');
-    if (rowCountElement) {
-        rowCountElement.textContent = equipmentData.length;
-    }
     
     console.log(`📋 Displayed ${equipmentData.length} equipment records`);
 }
@@ -871,7 +575,7 @@ function createEquipmentRow(equipment, index) {
         <td class="location">${escapeHtml(equipment['Location'] || '')}</td>
         <td class="internal-number">${escapeHtml(equipment['InternalNo'] || '')}</td>
         <td class="due-date">${formatDate(dueDate)}</td>
-        <td><span class="${statusClass}">${statusText}</span></td>
+        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
         <td class="days-remaining" style="font-weight: 600; color: ${daysRemaining < 0 ? '#dc2626' : daysRemaining <= alertThreshold ? '#d97706' : '#059669'}">
             ${daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` : `${daysRemaining} days`}
         </td>
@@ -1112,16 +816,88 @@ function resetNewEquipmentForm() {
 }
 
 // ========================================
+// File Upload with Drag & Drop
+// ========================================
+
+// Handle file upload
+async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    await uploadFile(file);
+}
+
+// Upload file to API
+async function uploadFile(file) {
+    try {
+        // Validate file type
+        const allowedTypes = [
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+        
+        if (!allowedTypes.includes(file.type) && !file.name.match(/\.(xls|xlsx)$/i)) {
+            showMessage('Invalid file type. Please upload an Excel file (.xls or .xlsx)', 'error');
+            return;
+        }
+        
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+            showMessage('File too large. Maximum size is 10MB', 'error');
+            return;
+        }
+        
+        showMessage('Uploading file...', 'info');
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        if (apiAvailable) {
+            const response = await fetch(`${API_BASE_URL}/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                showMessage(`File uploaded successfully! Processed ${result.equipment_count} equipment records.`, 'success');
+                await loadEquipmentData(); // Reload data from API
+                updateDisplay(); // Update entire display including table
+            } else {
+                const error = await response.json();
+                showMessage(`Upload failed: ${error.error}`, 'error');
+            }
+        } else {
+            // Mock file processing for demo
+            showMessage('API not available. File upload simulated with mock data.', 'warning');
+            loadMockData();
+            displayEquipmentTable();
+            updateStatistics();
+        }
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        showMessage('Error uploading file. Please try again.', 'error');
+    }
+    
+    // Reset file input
+    document.getElementById('fileInput').value = '';
+}
+
+// ========================================
 // Utility Functions
 // ========================================
 
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // Format date for display
-function formatDate(dateObj) {
-    if (!dateObj) return 'N/A';
-    
-    const date = new Date(dateObj);
-    if (isNaN(date.getTime())) return 'Invalid Date';
-    
+function formatDate(date) {
+    if (!date || !(date instanceof Date)) return 'N/A';
     return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -1129,129 +905,94 @@ function formatDate(dateObj) {
     });
 }
 
-// Format date for input field (YYYY-MM-DD)
-function formatDateForInput(dateObj) {
-    if (!dateObj) return '';
-    
-    const date = new Date(dateObj);
-    if (isNaN(date.getTime())) return '';
-    
+// Format date for input field
+function formatDateForInput(date) {
+    if (!date || !(date instanceof Date)) return '';
     return date.toISOString().split('T')[0];
 }
 
-// Escape HTML to prevent XSS
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 // Show message to user
-function showMessage(message, type) {
-    console.log(`${type.toUpperCase()}: ${message}`);
+function showMessage(message, type = 'info') {
+    const messageElement = document.getElementById('successMessage');
+    const textElement = document.getElementById('successText');
     
-    if (type === 'success') {
-        showSuccessMessage(message);
-    } else if (type === 'error') {
-        alert(`Error: ${message}`);
-    } else {
-        alert(message);
+    if (messageElement && textElement) {
+        textElement.textContent = message;
+        
+        // Update styling based on type
+        messageElement.className = 'success-message';
+        if (type === 'error') {
+            messageElement.style.background = 'linear-gradient(135deg, #fef2f2, #ffffff)';
+            messageElement.style.borderColor = '#fca5a5';
+            messageElement.querySelector('i').className = 'fas fa-exclamation-circle';
+            messageElement.querySelector('i').style.color = '#dc2626';
+        } else if (type === 'warning') {
+            messageElement.style.background = 'linear-gradient(135deg, #fffbeb, #ffffff)';
+            messageElement.style.borderColor = '#fed7aa';
+            messageElement.querySelector('i').className = 'fas fa-exclamation-triangle';
+            messageElement.querySelector('i').style.color = '#d97706';
+        } else {
+            messageElement.style.background = 'linear-gradient(135deg, #f0fdf4, #ffffff)';
+            messageElement.style.borderColor = '#86efac';
+            messageElement.querySelector('i').className = 'fas fa-check-circle';
+            messageElement.querySelector('i').style.color = '#059669';
+        }
+        
+        messageElement.style.display = 'block';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 5000);
     }
 }
 
-// ========================================
-// Table Navigation and Scrolling Features
-// ========================================
-
-// Setup table keyboard navigation and scrolling features
-function setupTableFeatures() {
-    const tableContainer = document.getElementById('tableContainer');
+// Setup drag and drop for file upload
+function setupFileUpload() {
+    const uploadArea = document.querySelector('.file-upload-area');
     
-    if (!tableContainer) return;
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
     
-    // Add keyboard navigation for table
-    tableContainer.addEventListener('keydown', function(e) {
-        const focusedElement = document.activeElement;
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    uploadArea.addEventListener('drop', handleDrop, false);
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function highlight(e) {
+        uploadArea.classList.add('drag-over');
+    }
+    
+    function unhighlight(e) {
+        uploadArea.classList.remove('drag-over');
+    }
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
         
-        // Allow arrow key navigation between action buttons
-        if (focusedElement && focusedElement.classList.contains('action-btn')) {
-            const allButtons = Array.from(tableContainer.querySelectorAll('.action-btn'));
-            const currentIndex = allButtons.indexOf(focusedElement);
-            
-            switch(e.key) {
-                case 'ArrowRight':
-                    e.preventDefault();
-                    const nextIndex = (currentIndex + 1) % allButtons.length;
-                    allButtons[nextIndex].focus();
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    const prevIndex = currentIndex > 0 ? currentIndex - 1 : allButtons.length - 1;
-                    allButtons[prevIndex].focus();
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    // Find next row's first button
-                    const currentRow = focusedElement.closest('tr');
-                    const nextRow = currentRow.nextElementSibling;
-                    if (nextRow) {
-                        const nextRowFirstButton = nextRow.querySelector('.action-btn');
-                        if (nextRowFirstButton) nextRowFirstButton.focus();
-                    }
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    // Find previous row's first button
-                    const currentRowUp = focusedElement.closest('tr');
-                    const prevRow = currentRowUp.previousElementSibling;
-                    if (prevRow) {
-                        const prevRowFirstButton = prevRow.querySelector('.action-btn');
-                        if (prevRowFirstButton) prevRowFirstButton.focus();
-                    }
-                    break;
-            }
+        if (files.length > 0) {
+            uploadFile(files[0]);
         }
-    });
-    
-    // Add smooth scrolling to top/bottom functions
-    window.scrollToTableTop = function() {
-        tableContainer.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-    
-    window.scrollToTableBottom = function() {
-        tableContainer.scrollTo({ top: tableContainer.scrollHeight, behavior: 'smooth' });
-    };
-    
-    // Add scroll position indicator
-    let scrollTimeout;
-    tableContainer.addEventListener('scroll', function() {
-        const scrollIndicator = tableContainer.querySelector('.table-scroll-indicator');
-        if (scrollIndicator) {
-            scrollIndicator.style.opacity = '1';
-            
-            // Update scroll indicator text based on position
-            const scrollPercentage = Math.round((this.scrollTop / (this.scrollHeight - this.clientHeight)) * 100);
-            if (scrollPercentage === 0) {
-                scrollIndicator.innerHTML = '<i class="fas fa-arrow-down"></i> Scroll down for more';
-            } else if (scrollPercentage === 100 || scrollPercentage >= 99) {
-                scrollIndicator.innerHTML = '<i class="fas fa-arrow-up"></i> Scroll up to top';
-            } else {
-                scrollIndicator.innerHTML = `<i class="fas fa-arrows-alt-v"></i> ${scrollPercentage}% scrolled`;
-            }
-            
-            // Hide indicator after scroll stops
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                scrollIndicator.style.opacity = '0';
-            }, 2000);
-        }
-    });
+    }
 }
 
-// Call setup function when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(setupTableFeatures, 100); // Small delay to ensure table is rendered
-});
+// Auto-refresh data every 5 minutes
+setInterval(() => {
+    console.log('🔄 Auto-refreshing calibration data...');
+    updateData();
+}, 5 * 60 * 1000);
 
 console.log('✅ LEONI Calibration Management System loaded successfully');

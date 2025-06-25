@@ -257,116 +257,74 @@
             margin-bottom: 20px;
         }
 
-        .equipment-table-container {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 2px solid var(--leoni-border-light);
+        /* Equipment Table Action Buttons */
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .equipment-table {
+        .action-btn.edit {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+        }
+
+        .action-btn.edit:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--leoni-shadow-blue);
+        }
+
+        .action-btn.delete {
+            background: var(--leoni-gradient-error);
+            color: var(--leoni-white);
+        }
+
+        .action-btn.delete:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--leoni-shadow-red);
+        }
+
+        .action-btn.save {
+            background: var(--leoni-gradient-success);
+            color: var(--leoni-white);
+        }
+
+        .action-btn.save:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--leoni-shadow-green);
+        }
+
+        .action-btn.cancel {
+            background: var(--leoni-gray-500);
+            color: var(--leoni-white);
+        }
+
+        .action-btn.cancel:hover {
+            background: var(--leoni-gray-600);
+            transform: translateY(-1px);
+        }
+
+        /* Inline editing styles */
+        .editing-cell input {
             width: 100%;
-            border-collapse: collapse;
+            padding: 4px 8px;
+            border: 2px solid var(--leoni-primary-blue);
+            border-radius: 4px;
+            font-size: 0.875rem;
             background: var(--leoni-white);
         }
 
-        .equipment-table th {
-            background: var(--leoni-gradient-secondary);
-            color: var(--leoni-white);
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .equipment-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--leoni-border-light);
-            color: #1a202c;
-            font-size: 0.875rem;
-        }
-
-        .equipment-table tr:hover {
-            background: var(--leoni-gray-50);
-        }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-overdue {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .status-due-soon {
-            background: #fed7aa;
-            color: #d97706;
-        }
-
-        .status-good {
-            background: #d1fae5;
-            color: #059669;
-        }
-
-        .status-indicator {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
-        .status-connected {
-            background: #d1fae5;
-            color: #059669;
-        }
-
-        .status-offline {
-            background: #fed7aa;
-            color: #d97706;
-        }
-
-        .status-checking {
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .alert-panel {
-            background: linear-gradient(135deg, #fef2f2, #ffffff);
-            border: 2px solid #fca5a5;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .alert-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .alert-icon {
-            font-size: 1.5rem;
-            color: #dc2626;
-        }
-
-        .alert-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #dc2626;
-        }
-
-        .alert-count {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #dc2626;
-            text-align: center;
-            margin-bottom: 10px;
+        .editing-cell input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--leoni-primary-blue-200);
         }
 
         .file-upload-area {
@@ -429,6 +387,216 @@
             font-size: 1.5rem;
         }
 
+        .error-message {
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+            border: 2px solid #fca5a5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-icon {
+            color: #dc2626;
+            font-size: 1.5rem;
+        }
+
+        .status-indicator {
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .status-checking {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-connected {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-offline {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Alert Panel Styles */
+        .alert-panel {
+            background: linear-gradient(135deg, #fef2f2, #ffffff);
+            border: 2px solid #fca5a5;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--leoni-shadow-md);
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .alert-icon {
+            color: #dc2626;
+            font-size: 2rem;
+        }
+
+        .alert-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .alert-count {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 10px;
+        }
+
+        /* Equipment Table Styles */
+        .equipment-table-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 70vh;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: var(--leoni-shadow-md);
+            position: relative;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .equipment-table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .equipment-table-container::-webkit-scrollbar-track {
+            background: var(--leoni-gray-100);
+            border-radius: 4px;
+        }
+
+        .equipment-table-container::-webkit-scrollbar-thumb {
+            background: var(--leoni-primary);
+            border-radius: 4px;
+        }
+
+        .equipment-table-container::-webkit-scrollbar-thumb:hover {
+            background: var(--leoni-primary-dark);
+        }
+
+        /* Scrollbar for Firefox */
+        .equipment-table-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--leoni-primary) var(--leoni-gray-100);
+        }
+
+        .equipment-table {
+            width: 100%;
+            min-width: 1000px; /* Ensure table doesn't get too compressed */
+            border-collapse: collapse;
+            background: var(--leoni-white);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .equipment-table th {
+            background: var(--leoni-gradient-primary);
+            color: var(--leoni-white);
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-bottom: 2px solid var(--leoni-primary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .equipment-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--leoni-border-light);
+            font-size: 0.875rem;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        /* Allow certain columns to be wider */
+        .equipment-table td.equipment-type,
+        .equipment-table td.location {
+            max-width: 200px;
+        }
+
+        .equipment-table td.actions {
+            max-width: 120px;
+            white-space: nowrap;
+        }
+
+        .equipment-table tr:hover {
+            background: var(--leoni-gray-50);
+        }
+
+        .equipment-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Table scroll indicator */
+        .table-scroll-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--leoni-primary);
+            color: var(--leoni-white);
+            padding: 5px 10px;
+            border-radius: 0 8px 0 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .equipment-table-container:hover .table-scroll-indicator {
+            opacity: 1;
+        }
+
+        /* Status styling */
+        .status-overdue {
+            color: #dc2626;
+            font-weight: 600;
+            background: #fee2e2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .status-due-soon {
+            color: #d97706;
+            font-weight: 600;
+            background: #fed7aa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .status-good {
+            color: #059669;
+            font-weight: 600;
+            background: #d1fae5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
         @media (max-width: 768px) {
             .control-panel {
                 grid-template-columns: 1fr;
@@ -440,6 +608,27 @@
             
             .action-buttons {
                 justify-content: center;
+            }
+            
+            .equipment-table-container {
+                max-height: 50vh;
+            }
+            
+            .equipment-table {
+                min-width: 800px; /* Reduced for mobile */
+            }
+            
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .section-title > div {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
             }
         }
     </style>
@@ -471,6 +660,14 @@
             <div style="display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-check-circle success-icon"></i>
                 <span id="successText">Operation completed successfully</span>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-exclamation-triangle error-icon"></i>
+                <span id="errorText">An error occurred</span>
             </div>
         </div>
 
@@ -584,6 +781,19 @@
                 <button class="btn btn-secondary" onclick="downloadReport()">
                     <i class="fas fa-download"></i> Download Report
                 </button>
+                <!-- Debug button -->
+                <button class="btn btn-secondary" onclick="debugEquipmentData()" style="background: #fbbf24; color: #000;">
+                    <i class="fas fa-bug"></i> Debug Data
+                </button>
+                <button class="btn btn-secondary" onclick="manualReload()" style="background: #10b981; color: #fff;">
+                    <i class="fas fa-sync"></i> Manual Reload
+                </button>
+                <button class="btn btn-secondary" onclick="testDirectTable()" style="background: #8b5cf6; color: #fff;">
+                    <i class="fas fa-table"></i> Test Table
+                </button>
+                <button class="btn btn-secondary" onclick="forceTablePopulation()" style="background: #ef4444; color: #fff;">
+                    <i class="fas fa-exclamation"></i> Force Load
+                </button>
             </div>
         </div>
 
@@ -683,17 +893,29 @@
             <div class="section-title">
                 <i class="fas fa-list"></i> Equipment Calibration Status
                 <div style="margin-left: auto; font-size: 0.875rem; font-weight: normal; color: #64748b; display: flex; gap: 20px; align-items: center;">
+                    <div>Showing: <span id="tableRowCount">0</span> equipment items</div>
                     <div>API: <span id="apiStatus" class="status-indicator status-checking">Checking...</span></div>
                     <div>Last updated: <span id="lastUpdated">Never</span></div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-secondary" onclick="scrollToTableTop()" style="padding: 4px 8px; font-size: 0.75rem;" title="Scroll to top">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-secondary" onclick="scrollToTableBottom()" style="padding: 4px 8px; font-size: 0.75rem;" title="Scroll to bottom">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <div class="loading-spinner" id="loadingSpinner">
                 <i class="fas fa-spinner"></i>
-                <p style="margin-top: 10px; color: #64748b;">Loading equipment data...</p>
+                <p style="margin-top: 10px; color: #64748b;">Initializing system...</p>
             </div>
 
             <div class="equipment-table-container" id="tableContainer" style="display: none;">
+                <div class="table-scroll-indicator">
+                    <i class="fas fa-arrows-alt"></i> Scroll to view more
+                </div>
                 <table class="equipment-table">
                     <thead>
                         <tr>
@@ -705,6 +927,7 @@
                             <th><i class="fas fa-calendar"></i> Next Due Date</th>
                             <th><i class="fas fa-info-circle"></i> Status</th>
                             <th><i class="fas fa-clock"></i> Days Remaining</th>
+                            <th><i class="fas fa-cogs"></i> Actions</th>
                         </tr>
                     </thead>
                     <tbody id="equipmentTableBody">

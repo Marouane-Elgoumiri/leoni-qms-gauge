@@ -17,6 +17,11 @@ source venv/bin/activate
 
 # Install dependencies
 echo "📋 Installing dependencies..."
+# Fix numpy/pandas compatibility issue
+pip install --upgrade pip
+pip uninstall numpy pandas -y 2>/dev/null || true
+pip install numpy==1.26.4
+pip install pandas==2.2.2
 pip install -r requirements_api.txt
 
 # Check if the Alert System exists and dependencies are available
