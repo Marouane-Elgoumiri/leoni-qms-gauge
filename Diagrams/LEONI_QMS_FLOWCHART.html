@@ -157,6 +157,7 @@
             <button class="btn" onclick="showSequenceDiagram()">Sequence Diagram</button>
             <button class="btn" onclick="showUseCaseDiagram()">Use Case Diagram</button>
             <button class="btn" onclick="showFlowchartDiagram()">Process Flow</button>
+            <button class="btn" onclick="showCalibrationSequenceDiagram()">Calibration Flow</button>
         </div>
 
         <div class="diagram-container">
@@ -378,8 +379,49 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
+    
+    EQUIPMENT {
+        int id PK
+        string name
+        string serial_number
+        string model
+        int line_id FK
+        int post_id FK
+        string status
+        jsonb specifications
+        datetime created_at
+        datetime updated_at
+    }
+    
+    EQUIPMENT_CALIBRATION {
+        int id PK
+        int equipment_id FK
+        int performed_by FK
+        date calibration_date
+        date next_due_date
+        string calibration_status
+        jsonb calibration_data
+        jsonb alert_config
+        text notes
+        datetime created_at
+        datetime updated_at
+    }
 
-    %% Relationships with cardinalities - 15 Tables Total
+    CALIBRATION_ALERTS {
+        int id PK
+        int equipment_id FK
+        int calibration_id FK
+        date alert_date
+        string alert_type
+        string alert_status
+        jsonb notification_data
+        boolean is_acknowledged
+        int acknowledged_by FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    %% Relationships with cardinalities - 18 Tables Total
     USERS ||--o{ USER_SESSIONS : "HAS_SESSIONS"
     USERS ||--|| USER_PERMISSIONS : "HAS_PERMISSIONS"
     PRODUCTION_LINES ||--o{ POSTS : "CONTAINS"
@@ -400,6 +442,13 @@ erDiagram
     PROJECTS ||--o{ KPI : "PROJECT_METRICS"
     PRODUCTION_LINES ||--o{ VALUES : "MEASURES_QUALITY"
     USERS ||--o{ VALUES : "ENTERS_VALUES"
+    PRODUCTION_LINES ||--o{ EQUIPMENT : "CONTAINS_EQUIPMENT"
+    POSTS ||--o{ EQUIPMENT : "USES_EQUIPMENT"
+    EQUIPMENT ||--o{ EQUIPMENT_CALIBRATION : "REQUIRES_CALIBRATION"
+    USERS ||--o{ EQUIPMENT_CALIBRATION : "PERFORMS_CALIBRATION"
+    EQUIPMENT ||--o{ CALIBRATION_ALERTS : "GENERATES_ALERTS"
+    EQUIPMENT_CALIBRATION ||--o{ CALIBRATION_ALERTS : "TRIGGERS_ALERTS"
+    USERS ||--o{ CALIBRATION_ALERTS : "ACKNOWLEDGES_ALERTS"
             `,
             
             classDiagram: `
@@ -615,6 +664,79 @@ classDiagram
         +validateConfig() Boolean
     }
     
+    class Equipment {
+        -Long id
+        -String name
+        -String serialNumber
+        -String model
+        -Long lineId
+        -Long postId
+        -String status
+        -JsonB specifications
+        -Date createdAt
+        -Date updatedAt
+        +getCalibrationHistory() List~EquipmentCalibration~
+        +getCurrentCalibration() EquipmentCalibration
+        +getSpecification(key) Object
+        +updateStatus(newStatus) void
+        +isCalibrationDue() Boolean
+        +getDaysUntilCalibration() Integer
+    }
+    
+    class EquipmentCalibration {
+        -Long id
+        -Long equipmentId
+        -Long performedById
+        -Date calibrationDate
+        -Date nextDueDate
+        -String calibrationStatus
+        -JsonB calibrationData
+        -JsonB alertConfig
+        -String notes
+        -Date createdAt
+        -Date updatedAt
+        +scheduleNextCalibration() Date
+        +updateCalibrationData(key, value) void
+        +getCalibrationParameter(key) Object
+        +calculateDaysUntilDue() Integer
+        +isOverdue() Boolean
+        +isDueSoon(thresholdDays) Boolean
+        +generateAlerts() List~CalibrationAlert~
+        +getCalibrationCertificateUrl() String
+    }
+    
+    class CalibrationAlert {
+        -Long id
+        -Long equipmentId
+        -Long calibrationId
+        -Date alertDate
+        -String alertType
+        -String alertStatus
+        -JsonB notificationData
+        -Boolean isAcknowledged
+        -Long acknowledgedById
+        -Date createdAt
+        -Date updatedAt
+        +acknowledge(userId) void
+        +sendNotification() void
+        +escalateAlert() void
+        +getRecipients() List~String~
+        +updateStatus(newStatus) void
+    }
+    
+    class CalibrationService {
+        -EquipmentRepository equipmentRepo
+        -CalibrationRepository calibrationRepo
+        -AlertRepository alertRepo
+        +scheduleCalibration(equipmentId, dueDate) EquipmentCalibration
+        +checkCalibrationDue() List~EquipmentCalibration~
+        +generateCalibrationAlerts() List~CalibrationAlert~
+        +sendCalibrationNotifications() void
+        +getCalibrationStatistics() JsonB
+        +updateCalibrationStatus(calibrationId, status) void
+        +generateCalibrationReport(criteria) Blob
+    }
+    
     class AuditService {
         -Audit5SRepository audit5SRepo
         -AuditAFPRepository auditAFPRepo
@@ -635,6 +757,8 @@ classDiagram
     User "1" --> "*" Analysis : performs
     User "1" --> "*" SystemConfig : updates
     User "1" --> "*" Values : enters
+    User "1" --> "*" EquipmentCalibration : performs
+    User "1" --> "*" CalibrationAlert : acknowledges
     
     ProductionLine "1" --> "*" Post : contains
     ProductionLine "1" --> "*" KPI : measures
@@ -642,18 +766,27 @@ classDiagram
     ProductionLine "1" --> "*" AuditAFP : audited_by
     ProductionLine "1" --> "*" Defect : line_defects
     ProductionLine "1" --> "*" Values : measures_quality
+    ProductionLine "1" --> "*" Equipment : contains_equipment
     
     Project "1" --> "*" Defect : concerns
     Project "1" --> "*" KPI : project_metrics
     
     Post "1" --> "*" Defect : occurs_on
+    Post "1" --> "*" Equipment : uses_equipment
     
     BibleDefects "1" --> "*" Defect : references
     Defect "1" --> "0..1" Analysis : analyzed_by
     
-    %% Service Dependencies (Only valid services)
+    Equipment "1" --> "*" EquipmentCalibration : requires_calibration
+    Equipment "1" --> "*" CalibrationAlert : generates_alerts
+    EquipmentCalibration "1" --> "*" CalibrationAlert : triggers_alerts
+    
+    %% Service Dependencies
     AuditService --> Audit5S : manages
     AuditService --> AuditAFP : manages
+    CalibrationService --> Equipment : manages
+    CalibrationService --> EquipmentCalibration : manages
+    CalibrationService --> CalibrationAlert : manages
         `,
             
             sequenceDiagram: `
@@ -821,6 +954,16 @@ graph TD
             UC27["📈 Track Performance"]
         end
         
+        subgraph CalibrationMgmt["🔧 Equipment Calibration"]
+            UC33["🔧 Register Equipment"]
+            UC34["📅 Schedule Calibration"]
+            UC35["📊 Record Calibration Data"]
+            UC36["🔔 Configure Alerts"]
+            UC37["📈 View Calibration Status"]
+            UC38["📄 Generate Calibration Reports"]
+            UC39["✉️ Send Calibration Notifications"]
+        end
+        
         subgraph ExtSystems["🌐 External Systems"]
             ERP["🏭 ERP System"]
             MES["⚙️ MES System"]
@@ -854,6 +997,8 @@ graph TD
     QT --> UC29
     QT --> UC30
     QT --> UC31
+    QT --> UC35
+    QT --> UC37
     
     TL --> UC2
     TL --> UC3
@@ -866,19 +1011,24 @@ graph TD
     TL --> UC18
     TL --> UC19
     TL --> UC26
-    TL --> UC27
     TL --> UC31
     TL --> UC32
+    TL --> UC33
+    TL --> UC34
+    TL --> UC36
+    TL --> UC37
+    TL --> UC39
     
     QM --> UC4
     QM --> UC10
     QM --> UC11
-    QM --> UC16
     QM --> UC18
     QM --> UC19
     QM --> UC20
+    QM --> UC27
     QM --> UC31
     QM --> UC32
+    QM --> UC38
     
     ADM --> UC21
     ADM --> UC22
@@ -946,8 +1096,9 @@ graph TD
     
     H --> O["📅 Weekly Review"]
     O --> P{"📈 Trend Analysis"}
-    P -->|⚠️ Concerning| G
-    P -->|✅ Normal| Q["👁️ Continue Monitoring"]
+    P -->|⚠️ Degrading| A9["🔄 Trigger Analysis"]
+    P -->|✅ Stable| A10["📊 Continue Monitoring"]
+    A9 --> G
     
     N --> R["📊 Update Dashboard"]
     R --> S["📈 Generate Reports"]
@@ -992,6 +1143,97 @@ graph TD
     
     MM --> PP["📊 Update Records"]
     PP --> QQ["📈 Performance Tracking"]
+            `,
+            
+            calibrationSequenceDiagram: `
+sequenceDiagram
+    participant TL as Team Leader
+    participant CS as CalibrationService
+    participant EC as EquipmentController
+    participant CC as CalibrationController
+    participant AC as AlertController
+    participant DB as Database
+    participant NS as NotificationService
+    participant QT as Quality Technician
+    participant QM as Quality Manager
+    
+    Note over TL,QM: Equipment Calibration Management Workflow
+    
+    %% Equipment Registration and Configuration
+    TL->>+EC: POST /api/equipment
+    EC->>+DB: INSERT INTO equipment (specifications JSONB)
+    Note over DB: JSONB structure: {model_specs, thresholds, measurements}
+    DB-->>-EC: equipment_id
+    EC-->>-TL: HTTP 201 - Equipment registered
+    
+    %% Schedule Initial Calibration
+    TL->>+CC: POST /api/calibrations
+    CC->>+CS: scheduleCalibration(equipment_id, due_date)
+    CS->>+DB: INSERT INTO equipment_calibration (alert_config JSONB)
+    Note over DB: JSONB alert_config: {threshold_days, recipients, notification_methods}
+    DB-->>-CS: calibration_id
+    CS-->>-CC: Calibration scheduled
+    CC-->>-TL: HTTP 201 - Calibration scheduled
+    
+    %% Automatic Daily Check for Due Calibrations
+    Note over CS: Daily scheduled job
+    CS->>CS: checkCalibrationDue()
+    CS->>+DB: SELECT * FROM equipment_calibration WHERE next_due_date <= threshold_date
+    DB-->>-CS: Due calibrations list
+    
+    %% Generate Alerts for Due Calibrations
+    CS->>CS: generateCalibrationAlerts()
+    CS->>+DB: INSERT INTO calibration_alerts (notification_data JSONB)
+    Note over DB: JSONB notification_data: {priority, message, action_required}
+    DB-->>-CS: alert_ids
+    
+    %% Send Notifications
+    CS->>+NS: sendCalibrationNotifications()
+    NS->>NS: formatAlertMessages()
+    NS->>QT: Email: Equipment calibration due
+    NS->>TL: Email & SMS: Critical equipment calibration required
+    NS-->>-CS: Notifications sent
+    
+    %% View Calibration Dashboard
+    TL->>+EC: GET /api/equipment/calibration-dashboard
+    EC->>+DB: SELECT equipment, calibration, alerts with stats
+    DB-->>-EC: Dashboard data
+    EC->>EC: calculateStatistics()
+    EC-->>-TL: Dashboard with overdue, due soon, and up-to-date counts
+    
+    %% Perform Equipment Calibration
+    QT->>+CC: GET /api/calibrations/:id/details
+    CC->>+DB: SELECT calibration details
+    DB-->>-CC: Calibration procedure and requirements
+    CC-->>-QT: Calibration details
+    
+    QT->>+CC: PUT /api/calibrations/:id
+    Note over QT,CC: After physical calibration is performed
+    CC->>+DB: UPDATE equipment_calibration SET calibration_data = JSONB
+    Note over DB: JSONB calibration_data: {measurements, results, tolerance_checks}
+    DB-->>-CC: Updated calibration
+    CC-->>-QT: HTTP 200 - Calibration recorded
+    
+    %% Update Next Calibration Date
+    CC->>+CS: scheduleNextCalibration(equipment_id)
+    CS->>+DB: UPDATE equipment_calibration SET next_due_date
+    DB-->>-CS: Updated schedule
+    CS-->>-CC: Next calibration scheduled
+    
+    %% Acknowledge Calibration Alerts
+    TL->>+AC: PUT /api/alerts/:id/acknowledge
+    AC->>+DB: UPDATE calibration_alerts SET is_acknowledged = true
+    DB-->>-AC: Updated alert
+    AC-->>-TL: Alert acknowledged
+    
+    %% Generate Calibration Reports
+    QM->>+CC: GET /api/calibrations/reports
+    CC->>+CS: generateCalibrationReport(criteria)
+    CS->>+DB: SELECT equipment_calibration with complex filters
+    DB-->>-CS: Filtered calibration data
+    CS->>CS: formatReportData()
+    CS-->>-CC: Formatted report data
+    CC-->>-QM: Calibration compliance report
             `
         };
 
@@ -1003,15 +1245,70 @@ graph TD
                 title: "Class Diagram - LEONI QMS Architecture"
             },
             sequenceDiagram: {
-                title: "Sequence Diagram -"
+                title: "Sequence Diagram - QRQC Process Flow"
             },
             useCaseDiagram: {
-                title: "Use Case Diagram - System Functionality"
+                title: "Use Case Diagram - User Interactions"
             },
             flowchartDiagram: {
-                title: "Process Flow - Quality Management Workflow"
+                title: "Process Flowchart - Quality Management Workflow"
+            },
+            calibrationSequenceDiagram: {
+                title: "Equipment Calibration Management Workflow"
             }
         };
+
+        // Update the diagram descriptions and titles
+        function updateDiagramInfo(type) {
+            const titleElement = document.getElementById('diagramTitle');
+            const descriptionElement = document.getElementById('diagramDescription');
+            
+            switch(type) {
+                case 'mcdDiagram':
+                    titleElement.textContent = 'MCD Diagram - LEONI QMS Data Model';
+                    descriptionElement.innerHTML = `
+                        <h3>MCD (Modèle Conceptuel de Données) Overview</h3>
+                        <p>This diagram shows the conceptual data model of the LEONI Quality Management System with entities, attributes, and relationships.</p>
+                    `;
+                    break;
+                case 'classDiagram':
+                    titleElement.textContent = 'Class Diagram - LEONI QMS Object Model';
+                    descriptionElement.innerHTML = `
+                        <h3>Class Diagram Overview</h3>
+                        <p>This diagram illustrates the object-oriented design of the LEONI QMS, showing classes, attributes, methods, and their relationships.</p>
+                    `;
+                    break;
+                case 'sequenceDiagram':
+                    titleElement.textContent = 'Sequence Diagram - QRQC Process Flow';
+                    descriptionElement.innerHTML = `
+                        <h3>Sequence Diagram Overview</h3>
+                        <p>This diagram details the interaction between components during the quality metrics entry and QRQC analysis workflow.</p>
+                    `;
+                    break;
+                case 'useCaseDiagram':
+                    titleElement.textContent = 'Use Case Diagram - User Interactions';
+                    descriptionElement.innerHTML = `
+                        <h3>Use Case Diagram Overview</h3>
+                        <p>This diagram shows the different actors and the use cases they can perform within the LEONI QMS system.</p>
+                    `;
+                    break;
+                case 'flowchartDiagram':
+                    titleElement.textContent = 'Process Flowchart - Quality Management Workflow';
+                    descriptionElement.innerHTML = `
+                        <h3>Process Flow Overview</h3>
+                        <p>This diagram presents the step-by-step workflow for quality audits, defect management, and vigilance testing processes.</p>
+                    `;
+                    break;
+                case 'calibrationSequenceDiagram':
+                    titleElement.textContent = 'Equipment Calibration Management Workflow';
+                    descriptionElement.innerHTML = `
+                        <h3>Calibration System Overview</h3>
+                        <p>This sequence diagram illustrates the equipment calibration management process, including registration, scheduling, alert generation, notification, and reporting workflows.</p>
+                        <p>The system uses JSONB data structures for flexible equipment specifications, calibration data storage, and alert configurations, ensuring adaptable equipment tracking and proactive maintenance.</p>
+                    `;
+                    break;
+            }
+        }
 
         // Function to render diagram with proper cleanup
         async function renderDiagram(diagramType) {
@@ -1129,6 +1426,16 @@ graph TD
             setButtonsState(true);
             event.target.classList.add('active');
             await renderDiagram('flowchartDiagram');
+            setButtonsState(false);
+            isRendering = false;
+        }
+        
+        async function showCalibrationSequenceDiagram() {
+            if (isRendering || currentDiagram === 'calibrationSequenceDiagram') return;
+            isRendering = true;
+            setButtonsState(true);
+            event.target.classList.add('active');
+            await renderDiagram('calibrationSequenceDiagram');
             setButtonsState(false);
             isRendering = false;
         }
