@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Analytics - LEONI Technician Dashboard</title>
+    <title>Quality Predictions - LEONI Technician Dashboard</title>
     <link rel="icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="shortcut icon" href="../assets/logo.png?v=2025" type="image/png">
     <link rel="apple-touch-icon" href="../assets/logo.png?v=2025">
@@ -23,13 +23,13 @@
             </div>
             
             <div class="header-title">
-                <h1><i class="fas fa-robot"></i> AI-Powered Analytics</h1>
-                <p class="header-subtitle">Machine Learning Assistant for Technician Operations</p>
+                <h1><i class="fas fa-chart-line"></i> Quality Predictions</h1>
+                <p class="header-subtitle">Smart Quality Forecasting for Production Lines</p>
             </div>
             
             <div class="ai-status">
                 <div class="pulse"></div>
-                <span>AI Active</span>
+                <span>System Ready</span>
             </div>
         </header>
 
@@ -76,15 +76,15 @@
             </div>
 
             <div style="background: #f8fafc; border-radius: var(--border-radius); padding: 1rem;">
-                <h4 style="color: #374151; margin-bottom: 0.5rem;">Quick Actions</h4>
+                <h4 style="color: #374151; margin-bottom: 0.5rem;">Quick Tasks</h4>
                 <div style="display: grid; gap: 0.5rem;">
                     <button class="ml-button" style="font-size: 0.875rem; padding: 0.5rem;">
                         <i class="fas fa-calculator"></i>
-                        Calculate TRAM
+                        Check Quality
                     </button>
                     <button class="ml-button" style="font-size: 0.875rem; padding: 0.5rem;">
-                        <i class="fas fa-chart-bar"></i>
-                        Generate Report
+                        <i class="fas fa-file-alt"></i>
+                        View Report
                     </button>
                 </div>
             </div>
@@ -92,11 +92,11 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- ML Controls -->
+            <!-- Simple Quality Check Controls -->
             <section class="ml-controls">
                 <div class="ml-controls-title">
-                    <i class="fas fa-brain"></i>
-                    Machine Learning Configuration
+                    <i class="fas fa-search"></i>
+                    Quality Check Settings
                 </div>
                 
                 <div class="ml-controls-grid">
@@ -111,44 +111,41 @@
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label">Time Period</label>
+                        <label class="control-label">Check Period</label>
                         <select class="control-select" id="timePeriod">
-                            <option value="1h">Last Hour</option>
-                            <option value="8h">Last 8 Hours</option>
-                            <option value="24h">Last 24 Hours</option>
-                            <option value="7d">Last 7 Days</option>
+                            <option value="1h">Next Hour</option>
+                            <option value="8h">Next Shift</option>
+                            <option value="24h">Next Day</option>
+                            <option value="7d">Next Week</option>
                         </select>
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label">Confidence Level</label>
-                        <input type="range" class="control-input" id="confidence" min="70" max="99" value="85">
-                        <span id="confidenceValue" style="font-size: 0.875rem; color: #6b7280;">85%</span>
+                        <label class="control-label">Alert Level</label>
+                        <select class="control-select" id="alertLevel">
+                            <option value="high">High Alerts Only</option>
+                            <option value="medium">Medium & High</option>
+                            <option value="all">All Alerts</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="ml-actions">
-                    <button class="ml-button" onclick="runMLAnalysis()">
+                    <button class="ml-button" onclick="runQualityCheck()">
                         <i class="fas fa-play"></i>
-                        Run Analysis
+                        Check Quality
                     </button>
                     <button class="ml-button" onclick="exportResults()" style="background: var(--gradient-success);">
                         <i class="fas fa-download"></i>
-                        Export
+                        Save Report
                     </button>
-                </div>
-
-                <div class="ml-algorithm-selector">
-                    <button class="algorithm-btn active" data-algorithm="neural">Neural Network</button>
-                    <button class="algorithm-btn" data-algorithm="forest">Random Forest</button>
-                    <button class="algorithm-btn" data-algorithm="svm">SVM</button>
                 </div>
             </section>
 
             <!-- TRAM Metrics Container -->
             <section class="tram-metrics-container">
                 <div class="metrics-header">
-                    <h2 class="metrics-title">TRAM Analytics Dashboard</h2>
+                    <h2 class="metrics-title">Current Quality Status</h2>
                     <div class="metrics-controls">
                         <button class="metric-filter active" data-filter="all">All Metrics</button>
                         <button class="metric-filter" data-filter="quality">Quality</button>
@@ -156,7 +153,7 @@
                     </div>
                     <div class="ml-status-indicator">
                         <div class="pulse"></div>
-                        <span>ML Active</span>
+                        <span>Live Data</span>
                     </div>
                 </div>
 
@@ -168,7 +165,7 @@
                                 <div class="tram-value" id="rftValue">
                                     96.8<span class="tram-unit">%</span>
                                 </div>
-                                <div class="tram-label">Right First Time</div>
+                                <div class="tram-label">First Time Right</div>
                             </div>
                             <div class="tram-icon">
                                 <i class="fas fa-check-circle"></i>
@@ -179,12 +176,12 @@
                         </div>
                         <div class="tram-details">
                             <div class="detail-item">
-                                <span>Target:</span>
+                                <span>Goal:</span>
                                 <span class="detail-value">95.0%</span>
                             </div>
                             <div class="detail-item">
                                 <span>Trend:</span>
-                                <span class="detail-value" style="color: var(--success-color);">↗ +1.8%</span>
+                                <span class="detail-value" style="color: var(--success-color);">↗ Better</span>
                             </div>
                         </div>
                     </div>
@@ -195,7 +192,7 @@
                                 <div class="tram-value" id="ppmValue">
                                     142<span class="tram-unit">PPM</span>
                                 </div>
-                                <div class="tram-label">Parts Per Million</div>
+                                <div class="tram-label">Defects Per Million</div>
                             </div>
                             <div class="tram-icon">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -206,12 +203,12 @@
                         </div>
                         <div class="tram-details">
                             <div class="detail-item">
-                                <span>Target:</span>
+                                <span>Limit:</span>
                                 <span class="detail-value">< 200</span>
                             </div>
                             <div class="detail-item">
                                 <span>Trend:</span>
-                                <span class="detail-value" style="color: var(--success-color);">↘ -12</span>
+                                <span class="detail-value" style="color: var(--success-color);">↘ Better</span>
                             </div>
                         </div>
                     </div>
@@ -222,7 +219,7 @@
                                 <div class="tram-value" id="scrapValue">
                                     2.3<span class="tram-unit">kg</span>
                                 </div>
-                                <div class="tram-label">Scrap Weight</div>
+                                <div class="tram-label">Waste Material</div>
                             </div>
                             <div class="tram-icon">
                                 <i class="fas fa-trash"></i>
@@ -233,12 +230,12 @@
                         </div>
                         <div class="tram-details">
                             <div class="detail-item">
-                                <span>Target:</span>
+                                <span>Limit:</span>
                                 <span class="detail-value">< 3.0kg</span>
                             </div>
                             <div class="detail-item">
                                 <span>Trend:</span>
-                                <span class="detail-value" style="color: var(--success-color);">↘ -0.7kg</span>
+                                <span class="detail-value" style="color: var(--success-color);">↘ Better</span>
                             </div>
                         </div>
                     </div>
@@ -249,7 +246,7 @@
                                 <div class="tram-value" id="efficiencyValue">
                                     89.2<span class="tram-unit">%</span>
                                 </div>
-                                <div class="tram-label">Line Efficiency</div>
+                                <div class="tram-label">Production Efficiency</div>
                             </div>
                             <div class="tram-icon">
                                 <i class="fas fa-cogs"></i>
@@ -260,51 +257,60 @@
                         </div>
                         <div class="tram-details">
                             <div class="detail-item">
-                                <span>Target:</span>
+                                <span>Goal:</span>
                                 <span class="detail-value">85.0%</span>
                             </div>
                             <div class="detail-item">
                                 <span>Trend:</span>
-                                <span class="detail-value" style="color: var(--success-color);">↗ +4.2%</span>
+                                <span class="detail-value" style="color: var(--success-color);">↗ Better</span>
                             </div>
                         </div>
                     </div>
                 </section>
             </section>
 
-            <!-- ML Results -->
+            <!-- Quality Predictions -->
             <section class="ml-results">
                 <div class="results-section predictions">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-crystal-ball"></i>
+                            <i class="fas fa-clock"></i>
                         </div>
-                        <h3 class="section-title">Predictions</h3>
+                        <h3 class="section-title">What to Expect Next</h3>
                     </div>
                     
                     <div class="prediction-grid" id="predictionsGrid">
                         <div class="prediction-item high-confidence">
                             <div class="prediction-header">
-                                <span class="prediction-metric">RFT Next Hour</span>
-                                <span class="confidence-badge confidence-high">95% Confidence</span>
+                                <span class="prediction-metric">Next Hour Quality</span>
+                                <span class="confidence-badge confidence-high">Very Likely</span>
                             </div>
                             <div class="prediction-value">97.2%</div>
+                            <div style="font-size: 0.75rem; color: #059669; margin-top: 0.5rem;">
+                                ✓ Quality will stay excellent
+                            </div>
                         </div>
 
                         <div class="prediction-item medium-confidence">
                             <div class="prediction-header">
-                                <span class="prediction-metric">PPM Forecast</span>
-                                <span class="confidence-badge confidence-medium">82% Confidence</span>
+                                <span class="prediction-metric">Expected Defects</span>
+                                <span class="confidence-badge confidence-medium">Likely</span>
                             </div>
                             <div class="prediction-value">156 PPM</div>
+                            <div style="font-size: 0.75rem; color: #d97706; margin-top: 0.5rem;">
+                                ⚠ Monitor closely
+                            </div>
                         </div>
 
                         <div class="prediction-item high-confidence">
                             <div class="prediction-header">
-                                <span class="prediction-metric">Scrap Prediction</span>
-                                <span class="confidence-badge confidence-high">91% Confidence</span>
+                                <span class="prediction-metric">Waste Forecast</span>
+                                <span class="confidence-badge confidence-high">Very Likely</span>
                             </div>
                             <div class="prediction-value">1.8kg</div>
+                            <div style="font-size: 0.75rem; color: #059669; margin-top: 0.5rem;">
+                                ✓ Within acceptable limits
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -312,34 +318,85 @@
                 <div class="results-section classification">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-tags"></i>
+                            <i class="fas fa-clipboard-check"></i>
                         </div>
-                        <h3 class="section-title">Classification</h3>
+                        <h3 class="section-title">Quality Assessment</h3>
                     </div>
                     
                     <div class="prediction-grid" id="classificationGrid">
                         <div class="prediction-item high-confidence">
                             <div class="prediction-header">
-                                <span class="prediction-metric">Quality Status</span>
-                                <span class="confidence-badge confidence-high">98% Confidence</span>
+                                <span class="prediction-metric">Overall Status</span>
+                                <span class="confidence-badge confidence-high">Confirmed</span>
                             </div>
-                            <div class="prediction-value" style="font-size: 1.2rem;">Excellent</div>
+                            <div class="prediction-value" style="font-size: 1.2rem; color: #059669;">Excellent</div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">
+                                All metrics on target
+                            </div>
                         </div>
 
                         <div class="prediction-item medium-confidence">
                             <div class="prediction-header">
                                 <span class="prediction-metric">Risk Level</span>
-                                <span class="confidence-badge confidence-medium">76% Confidence</span>
+                                <span class="confidence-badge confidence-medium">Likely</span>
                             </div>
-                            <div class="prediction-value" style="font-size: 1.2rem;">Low Risk</div>
+                            <div class="prediction-value" style="font-size: 1.2rem; color: #059669;">Low Risk</div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">
+                                No immediate action needed
+                            </div>
                         </div>
 
                         <div class="prediction-item high-confidence">
                             <div class="prediction-header">
-                                <span class="prediction-metric">Maintenance</span>
-                                <span class="confidence-badge confidence-high">89% Confidence</span>
+                                <span class="prediction-metric">Maintenance Need</span>
+                                <span class="confidence-badge confidence-high">Confirmed</span>
                             </div>
-                            <div class="prediction-value" style="font-size: 1.2rem;">Not Required</div>
+                            <div class="prediction-value" style="font-size: 1.2rem; color: #059669;">Not Required</div>
+                            <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">
+                                Equipment running well
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Recommendations -->
+                <div class="results-section recommendations" style="margin-top: 2rem;">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="section-title">Recommended Actions</h3>
+                    </div>
+                    
+                    <div class="recommendations-list" id="recommendationsList">
+                        <div class="recommendation-item priority-low">
+                            <div class="recommendation-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Continue Current Process</div>
+                                <div class="recommendation-description">Quality metrics are excellent. Maintain current operating procedures.</div>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-item priority-medium">
+                            <div class="recommendation-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Monitor PPM Levels</div>
+                                <div class="recommendation-description">Keep watching defect rates. Alert supervisor if it goes above 180 PPM.</div>
+                            </div>
+                        </div>
+
+                        <div class="recommendation-item priority-low">
+                            <div class="recommendation-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Document Best Practices</div>
+                                <div class="recommendation-description">Current efficiency is high. Record what's working well for future reference.</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -358,7 +415,7 @@
             </div>
             
             <div style="color: #6b7280; font-size: 0.875rem;">
-                <i class="fas fa-robot"></i> AI Engine v2.1 | Last Updated: June 2025
+                <i class="fas fa-shield-alt"></i> Quality System v2.1 | Last Updated: July 2025
             </div>
         </footer>
     </div>
@@ -370,14 +427,14 @@
 
     <div class="chat-container" id="chatContainer">
         <div class="chat-header">
-            <h3><i class="fas fa-robot"></i> LEONI AI Assistant</h3>
-            <p>AI-powered analytics and quality insights</p>
+            <h3><i class="fas fa-headset"></i> Quality Assistant</h3>
+            <p>Get help with quality questions and procedures</p>
             <button class="chat-close" id="chatClose">×</button>
         </div>
         
         <div class="chat-messages" id="chatMessages">
             <div style="color: #6b7280; font-style: italic; text-align: center; padding: 2rem;">
-                Ask me about quality metrics, ML predictions, TRAM analytics, or optimization suggestions...
+                Ask me about quality standards, procedures, troubleshooting, or what these numbers mean...
             </div>
         </div>
         
@@ -387,7 +444,7 @@
         
         <div class="chat-input-container">
             <div class="chat-input-group">
-                <input type="text" class="chat-input" placeholder="Ask about analytics, predictions, quality metrics..." id="chatInput">
+                <input type="text" class="chat-input" placeholder="Ask about quality standards, procedures, or numbers..." id="chatInput">
                 <button class="chat-send" id="chatSend">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -398,17 +455,17 @@
     </div>
 
     <script>
-        // Enhanced ML Analytics Engine
-        class MLAnalyticsEngine {
+        // Simple Quality Check Engine
+        class QualityCheckEngine {
             constructor() {
-                this.algorithms = {
-                    neural: { name: 'Neural Network', accuracy: 0.94 },
-                    forest: { name: 'Random Forest', accuracy: 0.89 },
-                    svm: { name: 'Support Vector Machine', accuracy: 0.91 }
-                };
-                this.currentAlgorithm = 'neural';
                 this.isRunning = false;
                 this.historicalData = this.generateHistoricalData();
+                this.alertThresholds = {
+                    rft: 95.0,
+                    ppm: 200,
+                    scrap: 3.0,
+                    efficiency: 85.0
+                };
             }
 
             generateHistoricalData() {
@@ -425,52 +482,150 @@
                 return data;
             }
 
-            async runPrediction(metric, timeframe) {
-                const algorithm = this.algorithms[this.currentAlgorithm];
-                const baseAccuracy = algorithm.accuracy;
+            async runQualityCheck(period) {
+                // Simulate quality check processing
+                await this.simulateProcessing(1500);
                 
-                // Simulate ML processing
-                await this.simulateProcessing(2000);
+                const recent = this.historicalData.slice(0, period === '1h' ? 1 : period === '8h' ? 8 : 24);
                 
-                const recent = this.historicalData.slice(0, timeframe);
-                const average = recent.reduce((sum, item) => sum + item[metric], 0) / recent.length;
-                
-                const prediction = {
-                    value: this.generatePrediction(average, metric),
-                    confidence: baseAccuracy + (Math.random() * 0.1 - 0.05),
-                    algorithm: algorithm.name,
-                    factors: this.generateFactors(metric)
+                const predictions = {
+                    rft: this.predictMetric(recent, 'rft'),
+                    ppm: this.predictMetric(recent, 'ppm'),
+                    scrap: this.predictMetric(recent, 'scrap'),
+                    efficiency: this.predictMetric(recent, 'efficiency')
                 };
 
-                return prediction;
+                const assessment = this.assessQuality(predictions);
+                const recommendations = this.generateRecommendations(predictions, assessment);
+
+                return { predictions, assessment, recommendations };
             }
 
-            generatePrediction(average, metric) {
-                const variation = (Math.random() - 0.5) * 0.1;
-                const trend = Math.sin(Date.now() / 1000000) * 0.05;
+            predictMetric(data, metric) {
+                const average = data.reduce((sum, item) => sum + item[metric], 0) / data.length;
+                const variation = (Math.random() - 0.5) * 0.05;
+                const trend = Math.sin(Date.now() / 1000000) * 0.03;
+                
+                let prediction = average + (average * variation) + (average * trend);
+                
+                // Ensure realistic bounds
+                switch(metric) {
+                    case 'rft':
+                        prediction = Math.max(90, Math.min(99, prediction));
+                        break;
+                    case 'ppm':
+                        prediction = Math.max(50, Math.min(300, prediction));
+                        break;
+                    case 'scrap':
+                        prediction = Math.max(0.5, Math.min(5, prediction));
+                        break;
+                    case 'efficiency':
+                        prediction = Math.max(75, Math.min(95, prediction));
+                        break;
+                }
+                
+                return {
+                    value: prediction,
+                    confidence: this.calculateConfidence(prediction, metric),
+                    status: this.getStatus(prediction, metric)
+                };
+            }
+
+            calculateConfidence(value, metric) {
+                const threshold = this.alertThresholds[metric];
+                let confidence = 0.8;
+                
+                // Higher confidence when values are clearly good or bad
+                switch(metric) {
+                    case 'rft':
+                        confidence = value > threshold ? 0.9 + Math.random() * 0.08 : 0.75 + Math.random() * 0.1;
+                        break;
+                    case 'ppm':
+                        confidence = value < threshold ? 0.9 + Math.random() * 0.08 : 0.75 + Math.random() * 0.1;
+                        break;
+                    case 'scrap':
+                        confidence = value < threshold ? 0.9 + Math.random() * 0.08 : 0.75 + Math.random() * 0.1;
+                        break;
+                    case 'efficiency':
+                        confidence = value > threshold ? 0.9 + Math.random() * 0.08 : 0.75 + Math.random() * 0.1;
+                        break;
+                }
+                
+                return Math.min(0.98, confidence);
+            }
+
+            getStatus(value, metric) {
+                const threshold = this.alertThresholds[metric];
                 
                 switch(metric) {
                     case 'rft':
-                        return Math.max(90, Math.min(99, average + variation + trend));
+                        return value >= threshold ? 'good' : 'warning';
                     case 'ppm':
-                        return Math.max(50, Math.min(300, average + variation * 50));
+                        return value <= threshold ? 'good' : 'warning';
                     case 'scrap':
-                        return Math.max(0.5, Math.min(5, average + variation * 2));
+                        return value <= threshold ? 'good' : 'warning';
                     case 'efficiency':
-                        return Math.max(75, Math.min(95, average + variation * 10));
+                        return value >= threshold ? 'good' : 'warning';
                     default:
-                        return average;
+                        return 'unknown';
                 }
             }
 
-            generateFactors(metric) {
-                const factors = {
-                    rft: ['Process Stability', 'Operator Skill', 'Material Quality', 'Equipment Condition'],
-                    ppm: ['Quality Control', 'Inspection Rate', 'Process Variation', 'Supplier Quality'],
-                    scrap: ['Material Waste', 'Rework Rate', 'Process Efficiency', 'Quality Issues'],
-                    efficiency: ['Downtime', 'Cycle Time', 'Operator Performance', 'Equipment OEE']
-                };
-                return factors[metric] || [];
+            assessQuality(predictions) {
+                const goodCount = Object.values(predictions).filter(p => p.status === 'good').length;
+                const totalCount = Object.keys(predictions).length;
+                
+                if (goodCount === totalCount) {
+                    return { overall: 'excellent', risk: 'low', maintenance: 'not-required' };
+                } else if (goodCount >= totalCount * 0.75) {
+                    return { overall: 'good', risk: 'low', maintenance: 'not-required' };
+                } else if (goodCount >= totalCount * 0.5) {
+                    return { overall: 'acceptable', risk: 'medium', maintenance: 'consider' };
+                } else {
+                    return { overall: 'poor', risk: 'high', maintenance: 'required' };
+                }
+            }
+
+            generateRecommendations(predictions, assessment) {
+                const recommendations = [];
+                
+                if (assessment.overall === 'excellent') {
+                    recommendations.push({
+                        priority: 'low',
+                        title: 'Continue Current Process',
+                        description: 'Quality metrics are excellent. Maintain current operating procedures.',
+                        icon: 'info-circle'
+                    });
+                }
+                
+                if (predictions.ppm.value > 150) {
+                    recommendations.push({
+                        priority: 'medium',
+                        title: 'Monitor PPM Levels',
+                        description: 'Keep watching defect rates. Alert supervisor if it goes above 180 PPM.',
+                        icon: 'eye'
+                    });
+                }
+                
+                if (predictions.efficiency.value > this.alertThresholds.efficiency + 2) {
+                    recommendations.push({
+                        priority: 'low',
+                        title: 'Document Best Practices',
+                        description: 'Current efficiency is high. Record what\'s working well for future reference.',
+                        icon: 'chart-line'
+                    });
+                }
+                
+                if (predictions.scrap.value > this.alertThresholds.scrap * 0.8) {
+                    recommendations.push({
+                        priority: 'medium',
+                        title: 'Check Material Waste',
+                        description: 'Waste levels are increasing. Review cutting and handling procedures.',
+                        icon: 'recycle'
+                    });
+                }
+                
+                return recommendations;
             }
 
             async simulateProcessing(duration) {
@@ -478,13 +633,12 @@
             }
         }
 
-        // Initialize ML Engine
-        const mlEngine = new MLAnalyticsEngine();
+        // Initialize Quality Check Engine
+        const qualityEngine = new QualityCheckEngine();
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
             initializeDashboard();
-            initializeAlgorithmButtons();
             initializeMetricFilters();
             startRealTimeUpdates();
             startAdvancedAnimations();
@@ -497,27 +651,6 @@
                 setTimeout(() => {
                     card.classList.add('fade-in');
                 }, index * 100);
-            });
-
-            // Initialize confidence slider
-            const confidenceSlider = document.getElementById('confidence');
-            const confidenceValue = document.getElementById('confidenceValue');
-            
-            confidenceSlider.addEventListener('input', function() {
-                confidenceValue.textContent = this.value + '%';
-                updateConfidenceThreshold(this.value);
-            });
-        }
-
-        function initializeAlgorithmButtons() {
-            const algorithmBtns = document.querySelectorAll('.algorithm-btn');
-            algorithmBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    algorithmBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    mlEngine.currentAlgorithm = this.dataset.algorithm;
-                    showNotification(`Switched to ${mlEngine.algorithms[this.dataset.algorithm].name}`, 'info');
-                });
             });
         }
 
@@ -545,15 +678,15 @@
             });
         }
 
-        async function runMLAnalysis() {
-            if (mlEngine.isRunning) return;
+        async function runQualityCheck() {
+            if (qualityEngine.isRunning) return;
             
-            mlEngine.isRunning = true;
+            qualityEngine.isRunning = true;
             const button = document.querySelector('.ml-button');
             const originalText = button.innerHTML;
             
             // Show loading state
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking Quality...';
             button.disabled = true;
             
             // Add loading animation to results
@@ -561,94 +694,166 @@
             resultsSections.forEach(section => section.classList.add('loading'));
             
             try {
-                // Run ML predictions for each metric
-                const predictions = await Promise.all([
-                    mlEngine.runPrediction('rft', 24),
-                    mlEngine.runPrediction('ppm', 24),
-                    mlEngine.runPrediction('scrap', 24),
-                    mlEngine.runPrediction('efficiency', 24)
-                ]);
-
-                // Update UI with predictions
-                await updatePredictionsAdvanced(predictions);
-                await updateClassificationsAdvanced();
+                const timePeriod = document.getElementById('timePeriod').value;
+                const period = timePeriod === '1h' ? 1 : timePeriod === '8h' ? 8 : 24;
+                
+                // Run quality check
+                const results = await qualityEngine.runQualityCheck(period);
+                
+                // Update UI with results
+                await updatePredictionsSimple(results.predictions, timePeriod);
+                await updateAssessmentSimple(results.assessment);
+                await updateRecommendationsSimple(results.recommendations);
                 await updateTRAMValuesAdvanced();
                 
                 // Update chart animations
                 updateChartVisuals();
                 
-                showNotification('Advanced ML analysis completed successfully!', 'success');
+                showNotification('Quality check completed successfully!', 'success');
             } catch (error) {
-                showNotification('Analysis failed: ' + error.message, 'error');
+                showNotification('Quality check failed: ' + error.message, 'error');
             } finally {
                 // Remove loading state
                 resultsSections.forEach(section => section.classList.remove('loading'));
                 button.innerHTML = originalText;
                 button.disabled = false;
-                mlEngine.isRunning = false;
+                qualityEngine.isRunning = false;
             }
         }
 
-        async function updatePredictionsAdvanced(predictions) {
-            const metrics = ['RFT Next Hour', 'PPM Forecast', 'Scrap Prediction', 'Efficiency Forecast'];
+        async function updatePredictionsSimple(predictions, timePeriod) {
+            const periodLabels = {
+                '1h': 'Next Hour',
+                '8h': 'Next Shift', 
+                '24h': 'Next Day',
+                '7d': 'Next Week'
+            };
+            
+            const metrics = [
+                { key: 'rft', label: `${periodLabels[timePeriod]} Quality`, unit: '%' },
+                { key: 'ppm', label: 'Expected Defects', unit: ' PPM' },
+                { key: 'scrap', label: 'Waste Forecast', unit: 'kg' }
+            ];
+            
             const grid = document.getElementById('predictionsGrid');
             
-            grid.innerHTML = predictions.map((pred, index) => {
+            grid.innerHTML = metrics.map(metric => {
+                const pred = predictions[metric.key];
                 const confidence = Math.floor(pred.confidence * 100);
                 const confidenceClass = confidence > 90 ? 'high' : confidence > 75 ? 'medium' : 'low';
+                const confidenceLabel = confidence > 90 ? 'Very Likely' : confidence > 75 ? 'Likely' : 'Possible';
+                const statusIcon = pred.status === 'good' ? '✓' : '⚠';
+                const statusColor = pred.status === 'good' ? '#059669' : '#d97706';
+                const statusText = pred.status === 'good' ? 
+                    (metric.key === 'rft' ? 'Quality will stay excellent' : 
+                     metric.key === 'ppm' ? 'Within acceptable limits' : 'Within acceptable limits') :
+                    (metric.key === 'rft' ? 'Quality may decline' :
+                     metric.key === 'ppm' ? 'Monitor closely' : 'Monitor closely');
                 
                 return `
                     <div class="prediction-item ${confidenceClass}-confidence fade-in">
                         <div class="prediction-header">
-                            <span class="prediction-metric">${metrics[index]}</span>
+                            <span class="prediction-metric">${metric.label}</span>
                             <span class="confidence-badge confidence-${confidenceClass}">
-                                ${confidence}% Confidence
+                                ${confidenceLabel}
                             </span>
                         </div>
-                        <div class="prediction-value">${formatPredictionValue(pred.value, index)}</div>
-                        <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">
-                            Algorithm: ${pred.algorithm}
+                        <div class="prediction-value">${formatPredictionValueSimple(pred.value, metric.key)}</div>
+                        <div style="font-size: 0.75rem; color: ${statusColor}; margin-top: 0.5rem;">
+                            ${statusIcon} ${statusText}
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function formatPredictionValue(value, index) {
-            switch(index) {
-                case 0: return value.toFixed(1) + '%';
-                case 1: return Math.floor(value) + ' PPM';
-                case 2: return value.toFixed(1) + 'kg';
-                case 3: return value.toFixed(1) + '%';
+        function formatPredictionValueSimple(value, metric) {
+            switch(metric) {
+                case 'rft': return value.toFixed(1) + '%';
+                case 'ppm': return Math.floor(value) + ' PPM';
+                case 'scrap': return value.toFixed(1) + 'kg';
+                case 'efficiency': return value.toFixed(1) + '%';
                 default: return value.toString();
             }
         }
 
-        async function updateClassificationsAdvanced() {
-            const classifications = [
-                { metric: 'Quality Status', value: 'Excellent', confidence: 0.98 },
-                { metric: 'Risk Level', value: 'Low Risk', confidence: 0.85 },
-                { metric: 'Maintenance', value: 'Optimal', confidence: 0.91 },
-                { metric: 'Performance', value: 'Above Target', confidence: 0.94 }
+        async function updateAssessmentSimple(assessment) {
+            const assessments = [
+                { 
+                    metric: 'Overall Status', 
+                    value: assessment.overall.charAt(0).toUpperCase() + assessment.overall.slice(1), 
+                    confidence: 0.98,
+                    description: 'All metrics on target'
+                },
+                { 
+                    metric: 'Risk Level', 
+                    value: assessment.risk.charAt(0).toUpperCase() + assessment.risk.slice(1) + ' Risk', 
+                    confidence: 0.85,
+                    description: assessment.risk === 'low' ? 'No immediate action needed' : 'Monitor situation'
+                },
+                { 
+                    metric: 'Maintenance Need', 
+                    value: assessment.maintenance === 'not-required' ? 'Not Required' : 
+                           assessment.maintenance === 'consider' ? 'Consider Soon' : 'Required', 
+                    confidence: 0.91,
+                    description: assessment.maintenance === 'not-required' ? 'Equipment running well' : 'Check equipment status'
+                }
             ];
 
             const grid = document.getElementById('classificationGrid');
-            grid.innerHTML = classifications.map(cls => {
+            grid.innerHTML = assessments.map(cls => {
                 const confidence = Math.floor(cls.confidence * 100);
                 const confidenceClass = confidence > 90 ? 'high' : confidence > 75 ? 'medium' : 'low';
+                const confidenceLabel = confidence > 90 ? 'Confirmed' : confidence > 75 ? 'Likely' : 'Possible';
+                const valueColor = cls.value.includes('Excellent') || cls.value.includes('Low Risk') || cls.value.includes('Not Required') ? 
+                                  '#059669' : cls.value.includes('Good') ? '#10b981' : '#d97706';
                 
                 return `
                     <div class="prediction-item ${confidenceClass}-confidence fade-in">
                         <div class="prediction-header">
                             <span class="prediction-metric">${cls.metric}</span>
                             <span class="confidence-badge confidence-${confidenceClass}">
-                                ${confidence}% Confidence
+                                ${confidenceLabel}
                             </span>
                         </div>
-                        <div class="prediction-value" style="font-size: 1.2rem;">${cls.value}</div>
+                        <div class="prediction-value" style="font-size: 1.2rem; color: ${valueColor};">${cls.value}</div>
+                        <div style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">
+                            ${cls.description}
+                        </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        async function updateRecommendationsSimple(recommendations) {
+            const list = document.getElementById('recommendationsList');
+            
+            if (recommendations.length === 0) {
+                list.innerHTML = `
+                    <div class="recommendation-item priority-low">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">No Actions Required</div>
+                            <div class="recommendation-description">All quality metrics are within acceptable ranges.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item priority-${rec.priority}">
+                    <div class="recommendation-icon">
+                        <i class="fas fa-${rec.icon}"></i>
+                    </div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">${rec.title}</div>
+                        <div class="recommendation-description">${rec.description}</div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function updateTRAMValuesAdvanced() {
@@ -710,7 +915,8 @@
         function exportResults() {
             const data = {
                 timestamp: new Date().toISOString(),
-                algorithm: mlEngine.currentAlgorithm,
+                productionLine: document.getElementById('productionLine').value,
+                timePeriod: document.getElementById('timePeriod').value,
                 metrics: {
                     rft: document.getElementById('rftValue').textContent,
                     ppm: document.getElementById('ppmValue').textContent,
@@ -721,6 +927,10 @@
                     metric: item.querySelector('.prediction-metric').textContent,
                     value: item.querySelector('.prediction-value').textContent,
                     confidence: item.querySelector('.confidence-badge').textContent
+                })),
+                recommendations: Array.from(document.querySelectorAll('#recommendationsList .recommendation-item')).map(item => ({
+                    title: item.querySelector('.recommendation-title').textContent,
+                    description: item.querySelector('.recommendation-description').textContent
                 }))
             };
 
@@ -728,33 +938,22 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ml-analysis-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `quality-check-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
             
-            showNotification('Analysis results exported successfully!', 'success');
+            showNotification('Quality report saved successfully!', 'success');
         }
 
         function updateConfidenceThreshold(threshold) {
-            const predictionItems = document.querySelectorAll('.prediction-item');
-            predictionItems.forEach(item => {
-                const confidenceBadge = item.querySelector('.confidence-badge');
-                const confidence = parseInt(confidenceBadge.textContent);
-                
-                if (confidence < threshold) {
-                    item.style.opacity = '0.5';
-                    item.style.filter = 'grayscale(50%)';
-                } else {
-                    item.style.opacity = '1';
-                    item.style.filter = 'grayscale(0%)';
-                }
-            });
+            // This function is no longer needed in the simplified version
+            // but keeping it for compatibility
         }
 
         function startRealTimeUpdates() {
-            // Update TRAM values every 30 seconds
+            // Update quality values every 30 seconds
             setInterval(() => {
-                if (!mlEngine.isRunning) {
+                if (!qualityEngine.isRunning) {
                     updateTRAMValuesAdvanced();
                     updateChartVisuals();
                 }
@@ -778,9 +977,9 @@
             isTyping: false,
             apiUrl: 'http://localhost:5001/api',
             currentContext: {
-                currentPage: 'Technician Analytics',
+                currentPage: 'Quality Predictions',
                 userRole: 'Technician',
-                features: ['AI-Analytics', 'TRAM-Metrics', 'ML-Predictions']
+                features: ['Quality-Check', 'Predictions', 'Standards']
             }
         };
 
@@ -852,7 +1051,7 @@
                     displayMessage(data.message, 'bot', data.isMarkdown);
                 }
             } catch (error) {
-                displayMessage('Welcome to LEONI AI Analytics Assistant! I can help you with quality metrics, ML predictions, and TRAM analytics.', 'bot');
+                displayMessage('Welcome to LEONI Quality Assistant! I can help you understand quality standards, procedures, and what these numbers mean.', 'bot');
             }
         }
 
@@ -864,13 +1063,13 @@
                     displaySuggestions(data.suggestions);
                 }
             } catch (error) {
-                // Fallback suggestions for analytics
+                // Fallback suggestions for quality technicians
                 const suggestions = [
-                    "How do I interpret ML predictions?",
-                    "What do the TRAM metrics mean?",
-                    "Calculate process capability",
-                    "Explain quality trends",
-                    "Show efficiency improvements"
+                    "What does PPM mean?",
+                    "How do I improve quality?",
+                    "What should I do if quality drops?",
+                    "Explain the trend arrows",
+                    "When should I call supervisor?"
                 ];
                 displaySuggestions(suggestions);
             }
@@ -1031,15 +1230,18 @@
 
         function generateContextualResponse(message) {
             const responses = {
-                'quality': "Current quality metrics show excellent performance with RFT at 96.8%. The neural network predicts continued stability with 95% confidence.",
-                'efficiency': "Line efficiency is at 89.2%, which is 4.2% above target. Consider applying these best practices to other production lines.",
-                'prediction': "ML predictions indicate a 2% improvement in RFT over the next hour with 95% confidence. The Random Forest model suggests optimal conditions.",
-                'scrap': "Scrap levels are well below target at 2.3kg. This suggests effective waste management practices. Continue current protocols.",
-                'ppm': "Current PPM at 142 is within acceptable range. Monitor for any upward trends and implement preventive measures if needed.",
-                'maintenance': "Predictive maintenance indicates optimal equipment condition. No immediate action required based on current sensor data.",
-                'tram': "TRAM metrics show: RFT 96.8% (↗ +1.8%), PPM 142 (↘ -12), Scrap 2.3kg (↘ -0.7kg), Efficiency 89.2% (↗ +4.2%)",
-                'algorithm': `Currently using ${mlEngine.algorithms[mlEngine.currentAlgorithm].name} with ${(mlEngine.algorithms[mlEngine.currentAlgorithm].accuracy * 100).toFixed(1)}% accuracy for predictions.`,
-                'ml': "Machine Learning analysis shows high confidence predictions across all metrics. Neural network performance is optimal for current data patterns."
+                'ppm': "PPM means 'Parts Per Million' - it shows how many defective parts we might find in a million parts. Lower numbers are better. Our current 142 PPM is good (under 200 limit).",
+                'quality': "Current quality shows 'First Time Right' at 96.8% - this means almost 97 out of 100 parts are perfect on the first try. This is excellent!",
+                'efficiency': "Production efficiency at 89.2% means our line is running well - we're making 89 parts for every 100 we should make per hour. Above our 85% goal!",
+                'prediction': "The system checks patterns to predict what might happen next. It's like weather forecast but for quality - helps us prepare ahead of time.",
+                'scrap': "Waste material at 2.3kg is good - we're throwing away less than 3kg limit. The arrow shows we're doing better than before.",
+                'trend': "Arrows show if things are getting better (↗) or worse (↘). Green arrows mean improvement, red arrows mean we need to watch more carefully.",
+                'defect': "Defects are parts that don't meet quality standards. We track them to find problems early and fix them before they get worse.",
+                'rft': "'First Time Right' means parts that pass quality check on the first attempt - no rework needed. Higher percentages are better.",
+                'maintenance': "Based on current data, equipment is running normally. No maintenance needed right now - all systems are healthy.",
+                'supervisor': "Call your supervisor if: PPM goes above 180, quality drops below 95%, waste goes above 2.8kg, or you see red alerts.",
+                'limit': "Quality limits are set by engineering to ensure customer satisfaction. Stay within green zones - yellow means caution, red means stop and check.",
+                'help': "I can explain any numbers you see, help with procedures, or answer questions about quality standards. Just ask in simple words!"
             };
 
             const keywords = Object.keys(responses);
@@ -1049,13 +1251,12 @@
                 return responses[foundKeyword];
             }
             
-            return "I'm analyzing your request using advanced ML algorithms. I can help with quality metrics, TRAM analytics, predictions, and optimization suggestions. What specific aspect would you like to explore?";
+            return "I can help explain quality numbers, procedures, and standards. Try asking about PPM, quality trends, when to call supervisor, or what any of these numbers mean!";
         }
 
         // Initialize chatbot when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             initializeDashboard();
-            initializeAlgorithmButtons();
             initializeMetricFilters();
             startRealTimeUpdates();
             startAdvancedAnimations();
@@ -1108,12 +1309,91 @@
         //     }
         // });
 
-        // Add fadeOut animation
+        // Add fadeOut animation and recommendation styles
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fadeOut {
                 from { opacity: 1; transform: translateY(0); }
                 to { opacity: 0; transform: translateY(-20px); }
+            }
+            
+            .recommendations-list {
+                display: grid;
+                gap: 1rem;
+            }
+            
+            .recommendation-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+                border-radius: var(--border-radius);
+                border-left: 4px solid;
+                background: #f8fafc;
+                transition: all 0.3s ease;
+            }
+            
+            .recommendation-item:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .recommendation-item.priority-low {
+                border-left-color: #10b981;
+                background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+            }
+            
+            .recommendation-item.priority-medium {
+                border-left-color: #f59e0b;
+                background: linear-gradient(135deg, #fffbeb 0%, #f8fafc 100%);
+            }
+            
+            .recommendation-item.priority-high {
+                border-left-color: #ef4444;
+                background: linear-gradient(135deg, #fef2f2 0%, #f8fafc 100%);
+            }
+            
+            .recommendation-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-size: 1.125rem;
+            }
+            
+            .priority-low .recommendation-icon {
+                background: #10b981;
+                color: white;
+            }
+            
+            .priority-medium .recommendation-icon {
+                background: #f59e0b;
+                color: white;
+            }
+            
+            .priority-high .recommendation-icon {
+                background: #ef4444;
+                color: white;
+            }
+            
+            .recommendation-content {
+                flex: 1;
+            }
+            
+            .recommendation-title {
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 0.25rem;
+                font-size: 0.875rem;
+            }
+            
+            .recommendation-description {
+                color: #6b7280;
+                font-size: 0.8rem;
+                line-height: 1.4;
             }
         `;
         document.head.appendChild(style);
