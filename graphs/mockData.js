@@ -12,13 +12,13 @@ const mockData = {
     // KPI data for production lines
     kpiData: [
         {
-            label: "Line 1 Efficiency",
+            label: "Efficiency",
             value: (Math.random() * 10 + 85).toFixed(1) + "%",
             trend: "up"
         },
         {
-            label: "Line 2 Efficiency", 
-            value: (Math.random() * 10 + 85).toFixed(1) + "%",
+            label: "RFT", // Line 2 Efficiency replaced by RFT
+            value: (Math.random() * 5 + 93).toFixed(1) + "%",
             trend: "up"
         },
         {
@@ -27,19 +27,19 @@ const mockData = {
             trend: "stable"
         },
         {
-            label: "Yield Rate",
-            value: (Math.random() * 5 + 92).toFixed(1) + "%",
-            trend: "up"
-        },
-        {
-            label: "Downtime",
-            value: (Math.random() * 3 + 2).toFixed(1) + "h",
+            label: "PPM", // Yield Rate replaced by PPM
+            value: (Math.floor(Math.random() * 10) + 8) + " PPM",
             trend: "down"
         },
         {
-            label: "Cycle Time",
-            value: (Math.random() * 10 + 45).toFixed(0) + "s",
-            trend: "stable"
+            label: "Customer Complaints", // Downtime replaced by Customer Complaints
+            value: (Math.floor(Math.random() * 2) + 1) + "/" + (Math.floor(Math.random() * 10) + 5),
+            trend: "down"
+        },
+        {
+            label: "Scrap Rate",
+            value: (Math.random() * 3 + 2).toFixed(2) + "%",
+            trend: "down"
         }
     ],
     

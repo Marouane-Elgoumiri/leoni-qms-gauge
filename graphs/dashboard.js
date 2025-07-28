@@ -31,17 +31,24 @@ class ProductionDashboard {
         const kpiGrid = document.getElementById('kpiGrid');
         kpiGrid.innerHTML = '';
         
-        mockData.kpiData.forEach(kpi => {
+        mockData.kpiData.forEach((kpi, idx) => {
             const kpiItem = document.createElement('div');
             kpiItem.className = 'kpi-item';
-            
+            let value = kpi.value;
+            let label = kpi.label;
+            // Custom label/value logic for requested changes
+            if (idx === 1) { label = 'RFT'; }
+            if (idx === 3) { label = 'PPM'; }
+            if (idx === 4) { label = 'Customer Complaints'; }
+            // Show Scrap Rate in the last card
+            if (label === 'Scrap Rate') {
+                value = kpi.value;
+            }
             const trendIcon = this.getTrendIcon(kpi.trend);
-            
             kpiItem.innerHTML = `
-                <div class="kpi-value">${kpi.value} ${trendIcon}</div>
-                <div class="kpi-label">${kpi.label}</div>
+                <div class="kpi-value">${value} ${trendIcon}</div>
+                <div class="kpi-label">${label}</div>
             `;
-            
             kpiGrid.appendChild(kpiItem);
         });
     }
