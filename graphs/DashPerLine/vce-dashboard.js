@@ -103,31 +103,39 @@ class VCEDashboard {
     // Update all KPI cards with current data and status
     updateKPICards() {
         const kpis = vceData.qualityKPIs;
-        
-        // Update each KPI card
+
         Object.keys(kpis).forEach(kpiName => {
             const kpiData = kpis[kpiName];
             const value = kpiData.value;
             const status = vceData.getKPIStatus(kpiName, parseFloat(value));
-            
-            // Update card class for color coding
+
             const card = document.getElementById(`${kpiName}Card`) || 
                         document.getElementById(`${this.getCardId(kpiName)}Card`);
             if (card) {
                 card.className = `kpi-card ${status}`;
             }
-            
-            // Update value display
+
             const valueElement = document.getElementById(this.getElementId(kpiName));
             if (valueElement) {
                 if (kpiName === 'processCapability') {
                     valueElement.textContent = value;
-                } else if (kpiName === 'defectRate' || kpiName === 'customerComplaints') {
+                } else if (kpiName === 'defectRate') {
                     valueElement.textContent = `${value} PPM`;
+                } else if (kpiName === 'customerComplaints') {
+                    const complaints = vceData.qualityKPIs.customerComplaints;
+                    if (complaints && typeof complaints === 'object' && 'j1' in complaints && 'year' in complaints) {
+                        valueElement.textContent = `${complaints.j1} / ${complaints.year}`;
+                    } else {
+                        valueElement.textContent = `${value}`;
+                    }
                 } else if (kpiName === 'defectCount') {
                     valueElement.textContent = `${value}`;
                 } else if (kpiName === 'scrapWeight') {
                     valueElement.textContent = `${value}g`;
+                } else if (kpiName === 'rftRate') {
+                    valueElement.textContent = `${value}%`;
+                } else if (kpiName === 'reworkRate') {
+                    valueElement.textContent = `${value}%`;
                 } else if (kpiName === 'reworkStatus') {
                     const reworkData = vceData.qualityKPIs.reworkStatus;
                     valueElement.textContent = `${reworkData.reworked}/${reworkData.total}`;
@@ -135,8 +143,7 @@ class VCEDashboard {
                     valueElement.textContent = `${value}%`;
                 }
             }
-            
-            // Update trend indicators
+
             this.updateTrendIndicator(kpiName, kpiData.trend, kpiData.trendValue);
         });
     }

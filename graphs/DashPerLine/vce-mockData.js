@@ -31,6 +31,18 @@ const vceData = {
             trend: "down",
             trendValue: -3
         },
+        rftRate: {
+            value: (Math.random() * 5 + 93).toFixed(1), // 93-98%
+            target: 95,
+            trend: "up",
+            trendValue: 1.2
+        },
+        reworkRate: {
+            value: (Math.random() * 3 + 2).toFixed(2), // 2-5%
+            target: 3,
+            trend: "down",
+            trendValue: -0.5
+        },
         processCapability: {
             value: (Math.random() * 0.3 + 1.5).toFixed(2), // 1.5-1.8 Cpk
             target: 1.33,
@@ -38,7 +50,8 @@ const vceData = {
             trendValue: 0.05
         },
         customerComplaints: {
-            value: Math.floor(Math.random() * 3) + 2, // 2-5 PPM
+            j1: Math.floor(Math.random() * 2) + 1, // yesterday's complaints
+            year: Math.floor(Math.random() * 10) + 5, // total year complaints
             target: 5,
             trend: "down",
             trendValue: -1

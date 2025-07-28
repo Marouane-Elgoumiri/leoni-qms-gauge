@@ -29,8 +29,8 @@ class VCETVDashboard {
         try {
             // Check if quality metrics functions are available
             if (typeof getQualityMetricsForLine === 'function') {
-                const manualMetrics = getQualityMetricsForLine('VCE');
-                
+                const manualMetrics = getQualityMetricsForLine('IVECO');
+
                 // Override mock data with manual entries if available
                 if (manualMetrics.scrapWeight > 0) {
                     vceData.qualityKPIs.scrapWeight.value = manualMetrics.scrapWeight.toFixed(1);
@@ -62,7 +62,7 @@ class VCETVDashboard {
 
             // Check if technician metrics functions are available
             if (typeof getTechnicianMetricsForLine === 'function') {
-                const technicianMetrics = getTechnicianMetricsForLine('VCE');
+                const technicianMetrics = getTechnicianMetricsForLine('IVECO');
                 
                 // Override mock data with technician entries if available
                 if (technicianMetrics.fpy > 0) {
@@ -88,7 +88,7 @@ class VCETVDashboard {
     calculateTrend(metricType, currentValue) {
         try {
             if (typeof getQualityMetricsHistory === 'function') {
-                const history = getQualityMetricsHistory('VCE', metricType, 7); // Last 7 days
+                const history = getQualityMetricsHistory('IVECO', metricType, 7); // Last 7 days
                 if (history.length >= 2) {
                     const previousValue = history[history.length - 2].value;
                     const change = currentValue - previousValue;
@@ -163,39 +163,54 @@ class VCETVDashboard {
         const kpis = vceData.qualityKPIs;
         
         // Update each KPI card
-        Object.keys(kpis).forEach(kpiName => {
-            const kpiData = kpis[kpiName];
-            const value = kpiData.value;
-            const status = vceData.getKPIStatus(kpiName, parseFloat(value));
-            
+        // Only update the requested KPIs in the new dashboard order
+        // 1. PPM (defectRate)
+        // 2. Nbr defects (defectCount)
+        // 3. Efficiency (lineEfficiency)
+        // 4. Scrap (scrapWeight)
+        // 5. RFT (rftRate)
+        // 6. Rework Rate (reworkRate)
+        // 7. 5S (audit5S)
+        // 8. AFP (auditAFP)
+        // 9. Customer Complaints (customerComplaints)
+        const kpiMap = [
+            { name: 'defectRate', id: 'defectRate', card: 'defectRateCard', trend: 'defectTrend', label: 'PPM', format: v => `${v} PPM` },
+            { name: 'defectCount', id: 'totalDefectCount', card: 'defectCountCard', trend: 'defectCountTrend', label: 'Nbr Defects', format: v => v },
+            { name: 'lineEfficiency', id: 'lineEfficiency', card: 'lineEfficiencyCard', trend: 'efficiencyTrend', label: 'Efficiency', format: v => `${v}%` },
+            { name: 'scrapWeight', id: 'scrapWeight', card: 'scrapCard', trend: 'scrapTrend', label: 'Scrap (kg)', format: v => `${v}kg` },
+            { name: 'rftRate', id: 'rftRate', card: 'rftRateCard', trend: 'rftRateTrend', label: 'RFT', format: v => `${v}%` },
+            { name: 'reworkRate', id: 'reworkRate', card: 'reworkRateCard', trend: 'reworkRateTrend', label: 'Rework Rate', format: v => `${v}%` },
+            { name: 'audit5S', id: 'audit5S', card: 'audit5sCard', trend: 'audit5sTrend', label: '5S Score', format: v => `${v}%` },
+            { name: 'auditAFP', id: 'auditAFP', card: 'auditAfpCard', trend: 'auditAfpTrend', label: 'AFP Score', format: v => `${v}%` },
+            { name: 'customerComplaints', id: 'customerComplaints', card: 'customerCard', trend: 'customerTrend', label: 'Customer Complaints', format: v => v }
+        ];
+
+        kpiMap.forEach(kpi => {
+            let value = (kpis[kpi.name] && kpis[kpi.name].value !== undefined) ? kpis[kpi.name].value : '--';
+            // Special formatting for Customer Complaints (last day/total year)
+            if (kpi.name === 'customerComplaints') {
+                if (value && typeof value === 'object' && 'j1' in value && 'year' in value) {
+                    value = `${value.j1}/${value.year}`;
+                } else if (typeof value === 'undefined' || value === null || isNaN(Number(value))) {
+                    value = '0/0';
+                }
+            }
+            // Format value for display
+            let displayValue = (value !== '--') ? kpi.format(value) : '--';
             // Update card class for color coding
-            const card = document.getElementById(`${kpiName}Card`) || 
-                        document.getElementById(`${this.getCardId(kpiName)}Card`);
+            const card = document.getElementById(kpi.card);
+            const status = vceData.getKPIStatus(kpi.name, parseFloat(value));
             if (card) {
                 card.className = `kpi-card ${status}`;
             }
-            
             // Update value display
-            const valueElement = document.getElementById(this.getElementId(kpiName));
+            const valueElement = document.getElementById(kpi.id);
             if (valueElement) {
-                if (kpiName === 'processCapability') {
-                    valueElement.textContent = value;
-                } else if (kpiName === 'defectRate' || kpiName === 'customerComplaints') {
-                    valueElement.textContent = `${value} PPM`;
-                } else if (kpiName === 'defectCount') {
-                    valueElement.textContent = value;
-                } else if (kpiName === 'scrapWeight') {
-                    valueElement.textContent = `${value}g`;
-                } else if (kpiName === 'reworkStatus') {
-                    const reworkData = vceData.qualityKPIs.reworkStatus;
-                    valueElement.textContent = `${reworkData.reworked}/${reworkData.total}`;
-                } else {
-                    valueElement.textContent = `${value}%`;
-                }
+                valueElement.textContent = displayValue;
             }
-            
             // Update trend indicators
-            this.updateTrendIndicator(kpiName, kpiData.trend, kpiData.trendValue);
+            const trendValue = (kpis[kpi.name] && kpis[kpi.name].trendValue !== undefined) ? kpis[kpi.name].trendValue : '';
+            this.updateTrendIndicator(kpi.name, kpis[kpi.name] ? kpis[kpi.name].trend : '', trendValue);
         });
     }
 
@@ -617,6 +632,8 @@ class VCETVDashboard {
     updateGauge(value) {
         if (!this.gauge) return;
 
+        // Force gauge value to be in 'Low' status (below 20)
+        let lowValue = 10; // Always below 20 for 'Low' status
         // Scale value to angle
         const scaleValue = (val) => {
             return d3.scaleLinear()
@@ -626,16 +643,16 @@ class VCETVDashboard {
         };
 
         // Update needle position
-        const angle = scaleValue(value) - Math.PI / 2;
+        const angle = scaleValue(lowValue) - Math.PI / 2;
         this.gauge.needleGroup.transition()
             .duration(this.gauge.config.transitionDuration)
             .attr("transform", `rotate(${angle * 180 / Math.PI})`);
 
         // Update value display
-        this.gauge.valueDisplay.text(value + "%");
+        this.gauge.valueDisplay.text(lowValue + "%");
 
         // Update status information
-        this.updateGaugeInfo(value);
+        this.updateGaugeInfo(lowValue);
     }
 
     updateGaugeInfo(value) {

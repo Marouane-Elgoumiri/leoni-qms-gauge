@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VCE TV Dashboard - LEONI Production Monitor</title>
+    <title>Iveco TV Dashboard - LEONI Production Monitor</title>
     <link rel="icon" type="image/png" href="../../assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -927,8 +927,8 @@
         <!-- Header - Fixed -->
         <div class="header">
             <div class="header-info">
-                <h1><i class="fas fa-tv"></i> VCE Production Monitor</h1>
-                <p>VOLVO Cable Engine - Live Quality Dashboard</p>
+                <h1><i class="fas fa-tv"></i> Iveco Production Monitor</h1>
+                <p>IVECO Cable Engine - Live Quality Dashboard</p>
             </div>
             <div class="header-status">
                 <div class="status-indicator status-online">
@@ -963,93 +963,93 @@
             <!-- Page 1: KPIs Overview -->
             <div class="page kpi-page active" id="page1">
                 <div class="kpi-grid">
+                    <!-- PPM (Defect Rate) -->
                     <div class="kpi-card excellent" id="defectRateCard">
                         <div class="kpi-icon">🎯</div>
-                        <div class="kpi-title">Defect Rate</div>
+                        <div class="kpi-title">PPM</div>
                         <div class="kpi-value" id="defectRate">--</div>
                         <div class="kpi-trend trend-down" id="defectTrend">
                             <i class="fas fa-arrow-down"></i> <span>-2.3 PPM</span>
                         </div>
                     </div>
 
-                    <div class="kpi-card excellent" id="fpyCard">
-                        <div class="kpi-icon">✅</div>
-                        <div class="kpi-title">First Pass Yield</div>
-                        <div class="kpi-value" id="firstPassYield">--</div>
-                        <div class="kpi-trend trend-up" id="fpyTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+1.2%</span>
-                        </div>
-                    </div>
-
+                    <!-- Nbr defects -->
                     <div class="kpi-card good" id="defectCountCard">
                         <div class="kpi-icon">🔍</div>
-                        <div class="kpi-title">Total Defects</div>
+                        <div class="kpi-title">Nbr Defects</div>
                         <div class="kpi-value" id="totalDefectCount">--</div>
                         <div class="kpi-trend trend-down" id="defectCountTrend">
                             <i class="fas fa-arrow-down"></i> <span>-3</span>
                         </div>
                     </div>
 
-                    <div class="kpi-card warning" id="reworkCard">
-                        <div class="kpi-icon">🔄</div>
-                        <div class="kpi-title">Rework Status</div>
-                        <div class="kpi-value" id="reworkStatus">--</div>
-                        <div class="kpi-trend trend-down" id="reworkTrend">
-                            <i class="fas fa-arrow-down"></i> <span>+2</span>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card good" id="cpkCard">
-                        <div class="kpi-icon">📊</div>
-                        <div class="kpi-title">Process Capability</div>
-                        <div class="kpi-value" id="processCapability">--</div>
-                        <div class="kpi-trend trend-up" id="cpkTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+0.05</span>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card excellent" id="customerCard">
-                        <div class="kpi-icon">👥</div>
-                        <div class="kpi-title">Customer Issues</div>
-                        <div class="kpi-value" id="customerComplaints">--</div>
-                        <div class="kpi-trend trend-down" id="customerTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-1 PPM</span>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card good" id="audit5sCard">
-                        <div class="kpi-icon">🏭</div>
-                        <div class="kpi-title">5S Audit Score</div>
-                        <div class="kpi-value" id="audit5S">--</div>
-                        <div class="kpi-trend trend-up" id="audit5sTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+2%</span>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card good" id="auditAfpCard">
-                        <div class="kpi-icon">📋</div>
-                        <div class="kpi-title">AFP Audit Score</div>
-                        <div class="kpi-value" id="auditAFP">--</div>
-                        <div class="kpi-trend trend-stable" id="auditAfpTrend">
-                            <i class="fas fa-minus"></i> <span>-0.5%</span>
-                        </div>
-                    </div>
-
+                    <!-- Efficiency -->
                     <div class="kpi-card good" id="lineEfficiencyCard">
                         <div class="kpi-icon">⚡</div>
-                        <div class="kpi-title">Line Efficiency</div>
+                        <div class="kpi-title">Efficiency</div>
                         <div class="kpi-value" id="lineEfficiency">--</div>
                         <div class="kpi-trend trend-up" id="efficiencyTrend">
                             <i class="fas fa-arrow-up"></i> <span>+1.8%</span>
                         </div>
                     </div>
 
+                    <!-- Scrap (kg tt, kg/h) -->
                     <div class="kpi-card warning" id="scrapCard">
                         <div class="kpi-icon">⚖️</div>
-                        <div class="kpi-title">Scrap Weight</div>
+                        <div class="kpi-title">Scrap (kg)</div>
                         <div class="kpi-value" id="scrapWeight">--</div>
                         <div class="kpi-trend trend-down" id="scrapTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-5.2g</span>
+                            <i class="fas fa-arrow-down"></i> <span>-5.2kg</span>
+                        </div>
+                    </div>
+
+                    <!-- RFT -->
+                    <div class="kpi-card excellent" id="rftRateCard">
+                        <div class="kpi-icon">✅</div>
+                        <div class="kpi-title">RFT</div>
+                        <div class="kpi-value" id="rftRate">--</div>
+                        <div class="kpi-trend trend-up" id="rftRateTrend">
+                            <i class="fas fa-arrow-up"></i> <span>+1.2%</span>
+                        </div>
+                    </div>
+
+                    <!-- Rework Rate -->
+                    <div class="kpi-card warning" id="reworkRateCard">
+                        <div class="kpi-icon">�</div>
+                        <div class="kpi-title">Rework Rate</div>
+                        <div class="kpi-value" id="reworkRate">--</div>
+                        <div class="kpi-trend trend-down" id="reworkRateTrend">
+                            <i class="fas fa-arrow-down"></i> <span>-0.5%</span>
+                        </div>
+                    </div>
+
+                    <!-- 5S Score -->
+                    <div class="kpi-card good" id="audit5sCard">
+                        <div class="kpi-icon">🏭</div>
+                        <div class="kpi-title">5S Score</div>
+                        <div class="kpi-value" id="audit5S">--</div>
+                        <div class="kpi-trend trend-up" id="audit5sTrend">
+                            <i class="fas fa-arrow-up"></i> <span>+2%</span>
+                        </div>
+                    </div>
+
+                    <!-- AFP Score -->
+                    <div class="kpi-card good" id="auditAfpCard">
+                        <div class="kpi-icon">📋</div>
+                        <div class="kpi-title">AFP Score</div>
+                        <div class="kpi-value" id="auditAFP">--</div>
+                        <div class="kpi-trend trend-stable" id="auditAfpTrend">
+                            <i class="fas fa-minus"></i> <span>-0.5%</span>
+                        </div>
+                    </div>
+
+                    <!-- Customer Complaints (last day/total year) -->
+                    <div class="kpi-card excellent" id="customerCard">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-title">Customer Complaints</div>
+                        <div class="kpi-value" id="customerComplaints">--</div>
+                        <div class="kpi-trend trend-down" id="customerTrend">
+                            <i class="fas fa-arrow-down"></i> <span>-1</span>
                         </div>
                     </div>
                 </div>
@@ -1107,7 +1107,7 @@
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Total Defects</div>
                         <div class="gauge-info-value" id="currentDefectCount">0</div>
-                        <div class="gauge-info-subtitle">VCE Line</div>
+                        <div class="gauge-info-subtitle">IVECO Line</div>
                     </div>
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Defect Rate</div>
