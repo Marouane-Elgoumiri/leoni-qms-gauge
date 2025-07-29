@@ -215,15 +215,18 @@
         /* Page 2 - Charts */
         .charts-page {
             gap: 30px;
+            height: 100%;
+            min-height: 0;
         }
 
         
 
         .charts-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: row;
             gap: 30px;
-            flex: 1;
+            height: 100%;
+            min-height: 0;
         }
 
         .chart-section {
@@ -235,6 +238,10 @@
             color: #1e293b;
             display: flex;
             flex-direction: column;
+            flex: 1 1 0;
+            min-width: 0;
+            min-height: 0;
+            max-height: 100%;
         }
 
         .chart-title {
@@ -247,8 +254,10 @@
 
         .chart-container {
             position: relative;
-            flex: 1;
-            min-height: 300px;
+            flex: 1 1 0;
+            min-height: 220px;
+            max-height: 100%;
+            min-width: 0;
         }
 
         /* Table styling */
@@ -510,19 +519,20 @@
             padding: 10px 0 0 0;
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(197, 48, 48, 0.1));
             animation: flashAlert 2s infinite alternate;
-            overflow: hidden;
+            overflow: auto;
+            min-height: 100vh;
             height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             gap: 10px;
             box-sizing: border-box;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
             z-index: 1000;
-            transform: scale(0.8);
-            transform-origin: top center;
+            transform: none;
+            transform-origin: unset;
         }
 
         @keyframes flashAlert {
@@ -736,9 +746,10 @@
 
         .comparison-image {
             width: 100%;
-            max-width: 220px;
-            height: 160px;
-            max-height: 160px;
+            max-width: 350px;
+            min-width: 220px;
+            height: 220px;
+            max-height: 220px;
             border-radius: 15px;
             margin: 0 auto 12px auto;
             overflow: visible;
@@ -973,7 +984,7 @@
 
                     <!-- External PPM -->
                     <div class="kpi-card excellent" id="externalPpmCard">
-                        <div class="kpi-icon">🌍</div>
+                        <div class="kpi-icon"><i class="fas fa-globe"></i></div>
                         <div class="kpi-title">External PPM</div>
                         <div class="kpi-value" id="externalPpm">59</div>
                         <div class="kpi-target" id="externalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 62</div>
@@ -984,7 +995,7 @@
 
                     <!-- Internal PPM -->
                     <div class="kpi-card good" id="internalPpmCard">
-                        <div class="kpi-icon">�</div>
+                        <div class="kpi-icon"><i class="fas fa-industry"></i></div>
                         <div class="kpi-title">Internal PPM</div>
                         <div class="kpi-value" id="internalPpm">1669</div>
                         <div class="kpi-target" id="internalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 3156</div>
@@ -1130,7 +1141,7 @@
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Current Status</div>
                         <div class="gauge-info-value" id="currentStatus">Excellent</div>
-                        <div class="gauge-info-subtitle">Quality Level</div>
+                        <div class="gauge-info-subtitle">Defect Status</div>
                     </div>
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Total Defects</div>
@@ -1170,12 +1181,12 @@
                         <!-- NOK vs OK Comparison -->
                         <div class="comparison-container">
                             <div class="comparison-item nok">
-                                <div class="comparison-header">
-                                    <span class="status-badge nok-badge">NOK</span>
-                                    <h4>Non Conforme</h4>
-                                </div>
                                 <div class="comparison-image">
                                     <img src="../../assets/NOTOK.png" alt="État NOK - Pin not in position" />
+                                </div>
+                                <div class="comparison-header">
+                                    <span class="status-badge nok-badge">NOK</span>
+                                    <h4 style="color:#b91c1c;">Non Conforme</h4>
                                 </div>
                                 <div class="comparison-description">
                                     ❌ Pin not in position<br>
@@ -1185,12 +1196,12 @@
                             </div>
 
                             <div class="comparison-item ok">
-                                <div class="comparison-header">
-                                    <span class="status-badge ok-badge">OK</span>
-                                    <h4>Conforme</h4>
-                                </div>
                                 <div class="comparison-image">
                                     <img src="../../assets/OK.png" alt="État OK - Pin in position" />
+                                </div>
+                                <div class="comparison-header">
+                                    <span class="status-badge ok-badge">OK</span>
+                                    <h4 style="color:#166534;">Conforme</h4>
                                 </div>
                                 <div class="comparison-description">
                                     ✅ Pin bien positionné<br>
