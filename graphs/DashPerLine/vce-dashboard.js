@@ -106,7 +106,7 @@ class VCEDashboard {
 
         Object.keys(kpis).forEach(kpiName => {
             const kpiData = kpis[kpiName];
-            const value = kpiData.value;
+            let value = kpiData.value;
             const status = vceData.getKPIStatus(kpiName, parseFloat(value));
 
             const card = document.getElementById(`${kpiName}Card`) || 
@@ -131,7 +131,8 @@ class VCEDashboard {
                 } else if (kpiName === 'defectCount') {
                     valueElement.textContent = `${value}`;
                 } else if (kpiName === 'scrapWeight') {
-                    valueElement.textContent = `${value}g`;
+                    // Show both total and per hour in kg
+                    valueElement.textContent = `${kpiData.totalKg} kg / ${kpiData.perHourKg} kg/h`;
                 } else if (kpiName === 'rftRate') {
                     valueElement.textContent = `${value}%`;
                 } else if (kpiName === 'reworkRate') {

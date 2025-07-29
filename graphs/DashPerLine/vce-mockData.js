@@ -75,11 +75,12 @@ const vceData = {
             trendValue: 1.8
         },
         scrapWeight: {
-            value: (Math.random() * 50 + 25).toFixed(1), // 25-75 grams
-            unit: "g",
-            target: 60,
+            totalKg: (Math.random() * 0.08 + 0.02).toFixed(3), // 0.02-0.1 kg (20-100g, low)
+            perHourKg: (Math.random() * 0.02 + 0.005).toFixed(3), // 0.005-0.025 kg/h (5-25g/h)
+            unit: "kg",
+            target: 0.06, // 60g
             trend: "down",
-            trendValue: -5.2
+            trendValue: -0.005
         },
         reworkStatus: {
             reworked: Math.floor(Math.random() * 15) + 8, // 8-23 harnesses reworked
