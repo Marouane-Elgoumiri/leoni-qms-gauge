@@ -119,7 +119,7 @@ class VCEDashboard {
             if (valueElement) {
                 if (kpiName === 'processCapability') {
                     valueElement.textContent = value;
-                } else if (kpiName === 'defectRate') {
+                } else if (kpiName === 'defectRate' || kpiName === 'externalPPM' || kpiName === 'internalPPM') {
                     valueElement.textContent = `${value} PPM`;
                 } else if (kpiName === 'customerComplaints') {
                     const complaints = vceData.qualityKPIs.customerComplaints;
@@ -153,6 +153,8 @@ class VCEDashboard {
     getElementId(kpiName) {
         const mapping = {
             defectRate: 'defectRate',
+            externalPPM: 'externalPPM',
+            internalPPM: 'internalPPM',
             firstPassYield: 'firstPassYield',
             defectCount: 'totalDefectCount',
             reworkStatus: 'reworkStatus',
@@ -170,6 +172,8 @@ class VCEDashboard {
     getCardId(kpiName) {
         const mapping = {
             defectRate: 'defectRate',
+            externalPPM: 'externalPPM',
+            internalPPM: 'internalPPM',
             firstPassYield: 'fpy',
             defectCount: 'defectCount',
             reworkStatus: 'rework',

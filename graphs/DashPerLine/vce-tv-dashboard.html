@@ -507,20 +507,22 @@
 
         /* Page 4 - Flash Qualité - Full Screen Design */
         .flash-page {
-            padding: 30px;
+            padding: 10px 0 0 0;
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(197, 48, 48, 0.1));
             animation: flashAlert 2s infinite alternate;
             overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 10px;
             box-sizing: border-box;
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             z-index: 1000;
+            transform: scale(0.8);
+            transform-origin: top center;
         }
 
         @keyframes flashAlert {
@@ -734,10 +736,12 @@
 
         .comparison-image {
             width: 100%;
-            height: 250px;
+            max-width: 220px;
+            height: 160px;
+            max-height: 160px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            overflow: hidden;
+            margin: 0 auto 12px auto;
+            overflow: visible;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             flex-shrink: 0;
         }
@@ -745,7 +749,10 @@
         .comparison-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         .comparison-description {
@@ -963,12 +970,25 @@
             <!-- Page 1: KPIs Overview -->
             <div class="page kpi-page active" id="page1">
                 <div class="kpi-grid">
-                    <!-- PPM (Defect Rate) -->
-                    <div class="kpi-card excellent" id="defectRateCard">
-                        <div class="kpi-icon">🎯</div>
-                        <div class="kpi-title">PPM</div>
-                        <div class="kpi-value" id="defectRate">--</div>
-                        <div class="kpi-trend trend-down" id="defectTrend">
+
+                    <!-- External PPM -->
+                    <div class="kpi-card excellent" id="externalPpmCard">
+                        <div class="kpi-icon">🌍</div>
+                        <div class="kpi-title">External PPM</div>
+                        <div class="kpi-value" id="externalPpm">59</div>
+                        <div class="kpi-target" id="externalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 62</div>
+                        <div class="kpi-trend trend-down" id="externalPpmTrend">
+                            <i class="fas fa-arrow-down"></i> <span>-1.2 PPM</span>
+                        </div>
+                    </div>
+
+                    <!-- Internal PPM -->
+                    <div class="kpi-card good" id="internalPpmCard">
+                        <div class="kpi-icon">�</div>
+                        <div class="kpi-title">Internal PPM</div>
+                        <div class="kpi-value" id="internalPpm">1669</div>
+                        <div class="kpi-target" id="internalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 3156</div>
+                        <div class="kpi-trend trend-down" id="internalPpmTrend">
                             <i class="fas fa-arrow-down"></i> <span>-2.3 PPM</span>
                         </div>
                     </div>
@@ -977,7 +997,8 @@
                     <div class="kpi-card good" id="defectCountCard">
                         <div class="kpi-icon">🔍</div>
                         <div class="kpi-title">Nbr Defects</div>
-                        <div class="kpi-value" id="totalDefectCount">--</div>
+                        <div class="kpi-value" id="totalDefectCount">0 / 5</div>
+<div class="kpi-target" id="totalDefectCountTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0</div>
                         <div class="kpi-trend trend-down" id="defectCountTrend">
                             <i class="fas fa-arrow-down"></i> <span>-3</span>
                         </div>
@@ -987,7 +1008,8 @@
                     <div class="kpi-card good" id="lineEfficiencyCard">
                         <div class="kpi-icon">⚡</div>
                         <div class="kpi-title">Efficiency</div>
-                        <div class="kpi-value" id="lineEfficiency">--</div>
+                        <div class="kpi-value" id="lineEfficiency">52.6%</div>
+<div class="kpi-target" id="lineEfficiencyTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 70%</div>
                         <div class="kpi-trend trend-up" id="efficiencyTrend">
                             <i class="fas fa-arrow-up"></i> <span>+1.8%</span>
                         </div>
@@ -996,8 +1018,9 @@
                     <!-- Scrap (kg tt, kg/h) -->
                     <div class="kpi-card warning" id="scrapCard">
                         <div class="kpi-icon">⚖️</div>
-                        <div class="kpi-title" style="font-size:1.2rem;">Scrap (kg tt, kg/h)</div>
-                        <div class="kpi-value" id="scrapWeight" style="font-size:1.7rem;">--</div>
+                        <div class="kpi-title" style="font-size:1.2rem;">Scrap (kg total, kg/h)</div>
+                        <div class="kpi-value" id="scrapWeight" style="font-size:1.7rem;">1141 kg / 410 g/h</div>
+<div class="kpi-target" id="scrapWeightTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0.5 kg / 0.05 kg/h</div>
                         <div class="kpi-trend trend-down" id="scrapTrend">
                             <i class="fas fa-arrow-down"></i> <span>-5.2kg</span>
                         </div>
@@ -1007,7 +1030,8 @@
                     <div class="kpi-card excellent" id="rftRateCard">
                         <div class="kpi-icon">✅</div>
                         <div class="kpi-title">RFT</div>
-                        <div class="kpi-value" id="rftRate">--</div>
+                        <div class="kpi-value" id="rftRate">99.83%</div>
+<div class="kpi-target" id="rftRateTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 96%</div>
                         <div class="kpi-trend trend-up" id="rftRateTrend">
                             <i class="fas fa-arrow-up"></i> <span>+1.2%</span>
                         </div>
@@ -1017,7 +1041,8 @@
                     <div class="kpi-card warning" id="reworkRateCard">
                         <div class="kpi-icon"><i class="fas fa-screwdriver-wrench"></i></div>
                         <div class="kpi-title">Rework Rate</div>
-                        <div class="kpi-value" id="reworkRate">--</div>
+                        <div class="kpi-value" id="reworkRate">0.285%</div>
+<div class="kpi-target" id="reworkRateTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 2%</div>
                         <div class="kpi-trend trend-down" id="reworkRateTrend">
                             <i class="fas fa-arrow-down"></i> <span>-0.5%</span>
                         </div>
@@ -1027,7 +1052,8 @@
                     <div class="kpi-card good" id="audit5sCard">
                         <div class="kpi-icon">🏭</div>
                         <div class="kpi-title">5S Score</div>
-                        <div class="kpi-value" id="audit5S">--</div>
+                        <div class="kpi-value" id="audit5S">92%</div>
+<div class="kpi-target" id="audit5STarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 95%</div>
                         <div class="kpi-trend trend-up" id="audit5sTrend">
                             <i class="fas fa-arrow-up"></i> <span>+2%</span>
                         </div>
@@ -1037,7 +1063,8 @@
                     <div class="kpi-card good" id="auditAfpCard">
                         <div class="kpi-icon">📋</div>
                         <div class="kpi-title">AFP Score</div>
-                        <div class="kpi-value" id="auditAFP">--</div>
+                        <div class="kpi-value" id="auditAFP">91%</div>
+<div class="kpi-target" id="auditAFPTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 95%</div>
                         <div class="kpi-trend trend-stable" id="auditAfpTrend">
                             <i class="fas fa-minus"></i> <span>-0.5%</span>
                         </div>
@@ -1047,7 +1074,8 @@
                     <div class="kpi-card excellent" id="customerCard">
                         <div class="kpi-icon">👥</div>
                         <div class="kpi-title">Customer Complaints</div>
-                        <div class="kpi-value" id="customerComplaints">--</div>
+                        <div class="kpi-value" id="customerComplaints">0 / 5</div>
+<div class="kpi-target" id="customerComplaintsTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0</div>
                         <div class="kpi-trend trend-down" id="customerTrend">
                             <i class="fas fa-arrow-down"></i> <span>-1</span>
                         </div>
@@ -1121,22 +1149,22 @@
             <div class="page flash-page" id="page4">
                 <div class="flash-header">
                     <div class="flash-title">⚠️ FLASH QUALITÉ</div>
-                    <div class="flash-subtitle">Alerte Client Critique</div>
+                    <div class="flash-subtitle">Dernier incident client</div>
                 </div>
 
                 <div class="alert-container">
                     <!-- Alert Header -->
                     <div class="alert-header">
-                        <div class="alert-id">REF: 23831314</div>
-                        <div class="alert-type">DÉFAUT CRITIQUE - VERROUILLAGE CÂBLE</div>
-                        <div class="alert-customer">IVECO</div>
+                        <div class="alert-id">REF: 23257177</div>
+                        <div class="alert-type">Pin not in position - A45A</div>
+                        <div class="alert-customer">HDEP</div>
                     </div>
 
                     <!-- Alert Details -->
                     <div class="alert-details">
                         <div class="alert-description">
                             <h3>🔴 Incident Détecté</h3>
-                            <p>Défaut de verrouillage câbles identifié sur ligne IVECO. Système de verrouillage défaillant - risque de déconnexions intempestives.</p>
+                            <p>Problème détecté : Pin not in position.<br>Référence : A45A<br>Ref : 23257177 (HDEP)</p>
                         </div>
 
                         <!-- NOK vs OK Comparison -->
@@ -1147,12 +1175,12 @@
                                     <h4>Non Conforme</h4>
                                 </div>
                                 <div class="comparison-image">
-                                    <img src="../../assets/NOK.jpeg" alt="État NOK - Verrouillage défaillant" />
+                                    <img src="../../assets/NOTOK.png" alt="État NOK - Pin not in position" />
                                 </div>
                                 <div class="comparison-description">
-                                    ❌ Verrouillage défaillant<br>
-                                    ❌ Fixation non fonctionnelle<br>
-                                    ❌ Risque déconnexion
+                                    ❌ Pin not in position<br>
+                                    ❌ Mauvais verrouillage<br>
+                                    ❌ Risque de non-fonctionnement
                                 </div>
                             </div>
 
@@ -1162,12 +1190,12 @@
                                     <h4>Conforme</h4>
                                 </div>
                                 <div class="comparison-image">
-                                    <img src="../../assets/OK.jpeg" alt="État OK - Verrouillage correct" />
+                                    <img src="../../assets/OK.png" alt="État OK - Pin in position" />
                                 </div>
                                 <div class="comparison-description">
-                                    ✅ Verrouillage fonctionnel<br>
-                                    ✅ Fixation sécurisée<br>
-                                    ✅ Connexion stable
+                                    ✅ Pin bien positionné<br>
+                                    ✅ Verrouillage correct<br>
+                                    ✅ Fonctionnement assuré
                                 </div>
                             </div>
                         </div>

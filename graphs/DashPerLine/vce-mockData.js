@@ -14,80 +14,92 @@ const vceData = {
     // Real-time Quality KPIs
     qualityKPIs: {
         defectRate: {
-            value: Math.floor(Math.random() * 10) + 8, // 8-18 PPM
+            value: 12,
             target: 15,
             trend: "down",
             trendValue: -2.3
         },
         firstPassYield: {
-            value: (Math.random() * 3 + 97).toFixed(1), // 97-100%
+            value: 98.7,
             target: 98.5,
             trend: "up",
             trendValue: 1.2
         },
         defectCount: {
-            value: Math.floor(Math.random() * 20) + 25, // 25-45 total defects
+            value: 28,
             target: 30,
             trend: "down",
             trendValue: -3
         },
         rftRate: {
-            value: (Math.random() * 5 + 93).toFixed(1), // 93-98%
+            value: 96.2,
             target: 95,
             trend: "up",
             trendValue: 1.2
         },
         reworkRate: {
-            value: (Math.random() * 3 + 2).toFixed(2), // 2-5%
+            value: 2.8,
             target: 3,
             trend: "down",
             trendValue: -0.5
         },
         processCapability: {
-            value: (Math.random() * 0.3 + 1.5).toFixed(2), // 1.5-1.8 Cpk
+            value: 1.62,
             target: 1.33,
             trend: "up",
             trendValue: 0.05
         },
         customerComplaints: {
-            j1: Math.floor(Math.random() * 2) + 1, // yesterday's complaints
-            year: Math.floor(Math.random() * 10) + 5, // total year complaints
+            j1: 1,
+            year: 7,
             target: 5,
             trend: "down",
             trendValue: -1
         },
         audit5S: {
-            value: Math.floor(Math.random() * 8) + 92, // 92-100%
+            value: 97,
             target: 95,
             trend: "up",
             trendValue: 2
         },
         auditAFP: {
-            value: Math.floor(Math.random() * 6) + 94, // 94-100%
+            value: 98,
             target: 95,
             trend: "stable",
             trendValue: -0.5
         },
         lineEfficiency: {
-            value: (Math.random() * 5 + 93).toFixed(1), // 93-98%
+            value: 96.5,
             target: 95,
             trend: "up",
             trendValue: 1.8
         },
         scrapWeight: {
-            totalKg: (Math.random() * 0.08 + 0.02).toFixed(3), // 0.02-0.1 kg (20-100g, low)
-            perHourKg: (Math.random() * 0.02 + 0.005).toFixed(3), // 0.005-0.025 kg/h (5-25g/h)
+            totalKg: 0.045,
+            perHourKg: 0.008,
             unit: "kg",
-            target: 0.06, // 60g
+            target: 0.06,
             trend: "down",
             trendValue: -0.005
         },
         reworkStatus: {
-            reworked: Math.floor(Math.random() * 15) + 8, // 8-23 harnesses reworked
-            total: Math.floor(Math.random() * 20) + 15, // 15-35 total harnesses with defects
+            reworked: 12,
+            total: 19,
             unit: "harnesses",
             trend: "up",
             trendValue: 2
+        },
+        externalPPM: {
+            value: 8,
+            target: 10,
+            trend: "down",
+            trendValue: -1
+        },
+        internalPPM: {
+            value: 14,
+            target: 20,
+            trend: "down",
+            trendValue: -2
         }
     },
 
