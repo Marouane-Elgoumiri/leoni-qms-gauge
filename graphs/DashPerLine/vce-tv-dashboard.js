@@ -177,7 +177,16 @@ class VCETVDashboard {
             { name: 'defectRate', id: 'defectRate', card: 'defectRateCard', trend: 'defectTrend', label: 'PPM', format: v => `${v} PPM` },
             { name: 'defectCount', id: 'totalDefectCount', card: 'defectCountCard', trend: 'defectCountTrend', label: 'Nbr Defects', format: v => v },
             { name: 'lineEfficiency', id: 'lineEfficiency', card: 'lineEfficiencyCard', trend: 'efficiencyTrend', label: 'Efficiency', format: v => `${v}%` },
-            { name: 'scrapWeight', id: 'scrapWeight', card: 'scrapCard', trend: 'scrapTrend', label: 'Scrap (kg)', format: v => `${v}kg` },
+            { name: 'scrapWeight', id: 'scrapWeight', card: 'scrapCard', trend: 'scrapTrend', label: 'Scrap (kg tt, kg/h)', format: v => {
+                // v can be a number (legacy) or an object (new mockData)
+                if (typeof v === 'object' && v !== null && 'totalKg' in v && 'perHourKg' in v) {
+                    return `${v.totalKg} kg / ${v.perHourKg} kg/h`;
+                } else if (!isNaN(Number(v))) {
+                    return `${v} kg`;
+                } else {
+                    return '--';
+                }
+            } },
             { name: 'rftRate', id: 'rftRate', card: 'rftRateCard', trend: 'rftRateTrend', label: 'RFT', format: v => `${v}%` },
             { name: 'reworkRate', id: 'reworkRate', card: 'reworkRateCard', trend: 'reworkRateTrend', label: 'Rework Rate', format: v => `${v}%` },
             { name: 'audit5S', id: 'audit5S', card: 'audit5sCard', trend: 'audit5sTrend', label: '5S Score', format: v => `${v}%` },
@@ -186,7 +195,13 @@ class VCETVDashboard {
         ];
 
         kpiMap.forEach(kpi => {
-            let value = (kpis[kpi.name] && kpis[kpi.name].value !== undefined) ? kpis[kpi.name].value : '--';
+            let value;
+            if (kpi.name === 'scrapWeight') {
+                // Use the whole object for scrapWeight
+                value = kpis[kpi.name] ? kpis[kpi.name] : '--';
+            } else {
+                value = (kpis[kpi.name] && kpis[kpi.name].value !== undefined) ? kpis[kpi.name].value : '--';
+            }
             // Special formatting for Customer Complaints (last day/total year)
             if (kpi.name === 'customerComplaints') {
                 if (value && typeof value === 'object' && 'j1' in value && 'year' in value) {
