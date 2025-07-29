@@ -182,7 +182,7 @@ class VCETVDashboard {
         const defectCount = document.getElementById('totalDefectCount');
         if (defectCount) defectCount.textContent = '145';
         const defectCountTarget = document.getElementById('totalDefectCountTarget');
-        if (defectCountTarget) defectCountTarget.textContent = 'Target: 0';
+        if (defectCountTarget) defectCountTarget.textContent = '';
 
         // Rework Rate
         const reworkRate = document.getElementById('reworkRate');
