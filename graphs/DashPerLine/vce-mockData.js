@@ -142,11 +142,11 @@ const vceData = {
         }
         ,
         {
-            name: "Erreur clip 2",
-            count: 1,
+            name: "Erreur clip",
+            count: 2,
             severity: "low",
             ppm: null,
-            description: "Erreur clip 2 détectée"
+            description: "Erreur clip détectée"
         }
     ],
 
