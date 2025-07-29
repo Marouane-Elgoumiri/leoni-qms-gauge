@@ -158,75 +158,61 @@ class VCETVDashboard {
         }, 500); // Small delay to ensure gauge is created
     }
 
-    // Update all KPI cards with current data and status
+    // Completely static KPI values, no dynamic update or override
     updateKPICards() {
-        const kpis = vceData.qualityKPIs;
-        
-        // Update each KPI card
-        // Only update the requested KPIs in the new dashboard order
-        // 1. PPM (defectRate)
-        // 2. Nbr defects (defectCount)
-        // 3. Efficiency (lineEfficiency)
-        // 4. Scrap (scrapWeight)
-        // 5. RFT (rftRate)
-        // 6. Rework Rate (reworkRate)
-        // 7. 5S (audit5S)
-        // 8. AFP (auditAFP)
-        // 9. Customer Complaints (customerComplaints)
-        const kpiMap = [
-            { name: 'defectRate', id: 'defectRate', card: 'defectRateCard', trend: 'defectTrend', label: 'PPM', format: v => `${v} PPM` },
-            { name: 'defectCount', id: 'totalDefectCount', card: 'defectCountCard', trend: 'defectCountTrend', label: 'Nbr Defects', format: v => v },
-            { name: 'lineEfficiency', id: 'lineEfficiency', card: 'lineEfficiencyCard', trend: 'efficiencyTrend', label: 'Efficiency', format: v => `${v}%` },
-            { name: 'scrapWeight', id: 'scrapWeight', card: 'scrapCard', trend: 'scrapTrend', label: 'Scrap (kg tt, kg/h)', format: v => {
-                // v can be a number (legacy) or an object (new mockData)
-                if (typeof v === 'object' && v !== null && 'totalKg' in v && 'perHourKg' in v) {
-                    return `${v.totalKg} kg / ${v.perHourKg} kg/h`;
-                } else if (!isNaN(Number(v))) {
-                    return `${v} kg`;
-                } else {
-                    return '--';
-                }
-            } },
-            { name: 'rftRate', id: 'rftRate', card: 'rftRateCard', trend: 'rftRateTrend', label: 'RFT', format: v => `${v}%` },
-            { name: 'reworkRate', id: 'reworkRate', card: 'reworkRateCard', trend: 'reworkRateTrend', label: 'Rework Rate', format: v => `${v}%` },
-            { name: 'audit5S', id: 'audit5S', card: 'audit5sCard', trend: 'audit5sTrend', label: '5S Score', format: v => `${v}%` },
-            { name: 'auditAFP', id: 'auditAFP', card: 'auditAfpCard', trend: 'auditAfpTrend', label: 'AFP Score', format: v => `${v}%` },
-            { name: 'customerComplaints', id: 'customerComplaints', card: 'customerCard', trend: 'customerTrend', label: 'Customer Complaints', format: v => v }
-        ];
+        // Customer Complaints
+        const customerComplaints = document.getElementById('customerComplaints');
+        if (customerComplaints) customerComplaints.textContent = '0/5';
+        const customerComplaintsTarget = document.getElementById('customerComplaintsTarget');
+        if (customerComplaintsTarget) customerComplaintsTarget.textContent = 'Target: 0';
 
-        kpiMap.forEach(kpi => {
-            let value;
-            if (kpi.name === 'scrapWeight') {
-                // Use the whole object for scrapWeight
-                value = kpis[kpi.name] ? kpis[kpi.name] : '--';
-            } else {
-                value = (kpis[kpi.name] && kpis[kpi.name].value !== undefined) ? kpis[kpi.name].value : '--';
-            }
-            // Special formatting for Customer Complaints (last day/total year)
-            if (kpi.name === 'customerComplaints') {
-                if (value && typeof value === 'object' && 'j1' in value && 'year' in value) {
-                    value = `${value.j1}/${value.year}`;
-                } else if (typeof value === 'undefined' || value === null || isNaN(Number(value))) {
-                    value = '0/0';
-                }
-            }
-            // Format value for display
-            let displayValue = (value !== '--') ? kpi.format(value) : '--';
-            // Update card class for color coding
-            const card = document.getElementById(kpi.card);
-            const status = vceData.getKPIStatus(kpi.name, parseFloat(value));
-            if (card) {
-                card.className = `kpi-card ${status}`;
-            }
-            // Update value display
-            const valueElement = document.getElementById(kpi.id);
-            if (valueElement) {
-                valueElement.textContent = displayValue;
-            }
-            // Update trend indicators
-            const trendValue = (kpis[kpi.name] && kpis[kpi.name].trendValue !== undefined) ? kpis[kpi.name].trendValue : '';
-            this.updateTrendIndicator(kpi.name, kpis[kpi.name] ? kpis[kpi.name].trend : '', trendValue);
-        });
+        // PPM External
+        const defectRate = document.getElementById('defectRate');
+        if (defectRate) defectRate.textContent = '59';
+        const defectRateTarget = document.getElementById('defectRateTarget');
+        if (defectRateTarget) defectRateTarget.textContent = 'Target: 62';
+
+        // RFT
+        const rftRate = document.getElementById('rftRate');
+        if (rftRate) rftRate.textContent = '99.83%';
+        const rftRateTarget = document.getElementById('rftRateTarget');
+        if (rftRateTarget) rftRateTarget.textContent = 'Target: 96%';
+
+        // PPM Internal (NBR of defect)
+        const defectCount = document.getElementById('totalDefectCount');
+        if (defectCount) defectCount.textContent = '145';
+        const defectCountTarget = document.getElementById('totalDefectCountTarget');
+        if (defectCountTarget) defectCountTarget.textContent = 'Target: 0';
+
+        // Rework Rate
+        const reworkRate = document.getElementById('reworkRate');
+        if (reworkRate) reworkRate.textContent = '0.285%';
+        const reworkRateTarget = document.getElementById('reworkRateTarget');
+        if (reworkRateTarget) reworkRateTarget.textContent = 'Target: 2%';
+
+        // Scrap
+        const scrapWeight = document.getElementById('scrapWeight');
+        if (scrapWeight) scrapWeight.textContent = 'G/H : 410 / Kg : 1141';
+        const scrapWeightTarget = document.getElementById('scrapWeightTarget');
+        if (scrapWeightTarget) scrapWeightTarget.textContent = 'Target: 0.5 kg / 0.05 kg/h';
+
+        // Efficiency
+        const lineEfficiency = document.getElementById('lineEfficiency');
+        if (lineEfficiency) lineEfficiency.textContent = '52.6%';
+        const lineEfficiencyTarget = document.getElementById('lineEfficiencyTarget');
+        if (lineEfficiencyTarget) lineEfficiencyTarget.textContent = 'Target: 70%';
+
+        // AFP
+        const auditAFP = document.getElementById('auditAFP');
+        if (auditAFP) auditAFP.textContent = '91%';
+        const auditAFPTarget = document.getElementById('auditAFPTarget');
+        if (auditAFPTarget) auditAFPTarget.textContent = 'Target: 95%';
+
+        // 5S
+        const audit5S = document.getElementById('audit5S');
+        if (audit5S) audit5S.textContent = '92%';
+        const audit5STarget = document.getElementById('audit5STarget');
+        if (audit5STarget) audit5STarget.textContent = 'Target: 95%';
     }
 
     // Helper method to get element ID
