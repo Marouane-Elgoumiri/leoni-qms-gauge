@@ -106,39 +106,47 @@ const vceData = {
     // Top 5 Defects for VCE Line (Cable Engine specific)
     topDefects: [
         {
-            name: "Wire Insulation Damage",
-            count: Math.floor(Math.random() * 15) + 12,
-            severity: "high",
-            ppm: Math.floor(Math.random() * 8) + 5,
-            description: "Insulation cuts or abrasions on wire harness"
-        },
-        {
-            name: "Connector Misalignment",
-            count: Math.floor(Math.random() * 12) + 8,
-            severity: "medium",
-            ppm: Math.floor(Math.random() * 6) + 3,
-            description: "Electrical connectors not properly seated"
-        },
-        {
-            name: "Crimp Quality Issue",
-            count: Math.floor(Math.random() * 10) + 6,
-            severity: "high",
-            ppm: Math.floor(Math.random() * 5) + 2,
-            description: "Improper crimp force or positioning"
-        },
-        {
-            name: "Tape Wrapping Defect",
-            count: Math.floor(Math.random() * 8) + 4,
+            name: "Branche courte",
+            count: 3,
             severity: "low",
-            ppm: Math.floor(Math.random() * 4) + 1,
-            description: "Inadequate or excessive tape wrapping"
+            ppm: null,
+            description: "Branche courte détectée"
         },
         {
-            name: "Length Tolerance Issue",
-            count: Math.floor(Math.random() * 6) + 3,
+            name: "Inversion",
+            count: 120,
+            severity: "high",
+            ppm: null,
+            description: "Inversion détectée"
+        },
+        {
+            name: "Non verrouillé",
+            count: 11,
             severity: "medium",
-            ppm: Math.floor(Math.random() * 3) + 1,
-            description: "Cable length outside specified tolerance"
+            ppm: null,
+            description: "Non verrouillé détecté"
+        },
+        {
+            name: "Element endommagé",
+            count: 4,
+            severity: "low",
+            ppm: null,
+            description: "Element endommagé détecté"
+        },
+        {
+            name: "Manque element",
+            count: 3,
+            severity: "low",
+            ppm: null,
+            description: "Manque element détecté"
+        }
+        ,
+        {
+            name: "Erreur clip 2",
+            count: 1,
+            severity: "low",
+            ppm: null,
+            description: "Erreur clip 2 détectée"
         }
     ],
 
@@ -197,7 +205,8 @@ const vceData = {
             '#f59e0b', // Orange for medium severity
             '#10b981', // Green for low severity
             '#3b82f6', // Blue for info
-            '#8b5cf6'  // Purple for other
+            '#8b5cf6', // Purple for other
+            '#eab308'  // Gold for Erreur clip 2 (unique)
         ],
         lines: [
             '#1f77b4', // VCE (current line - blue)

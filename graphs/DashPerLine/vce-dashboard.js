@@ -122,12 +122,7 @@ class VCEDashboard {
                 } else if (kpiName === 'defectRate' || kpiName === 'externalPPM' || kpiName === 'internalPPM') {
                     valueElement.textContent = `${value} PPM`;
                 } else if (kpiName === 'customerComplaints') {
-                    const complaints = vceData.qualityKPIs.customerComplaints;
-                    if (complaints && typeof complaints === 'object' && 'j1' in complaints && 'year' in complaints) {
-                        valueElement.textContent = `${complaints.j1} / ${complaints.year}`;
-                    } else {
-                        valueElement.textContent = `${value}`;
-                    }
+                    valueElement.textContent = `${kpiData.year || value}`;
                 } else if (kpiName === 'defectCount') {
                     valueElement.textContent = `${value}`;
                 } else if (kpiName === 'scrapWeight') {

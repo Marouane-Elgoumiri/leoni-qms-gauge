@@ -162,7 +162,7 @@ class VCETVDashboard {
     updateKPICards() {
         // Customer Complaints
         const customerComplaints = document.getElementById('customerComplaints');
-        if (customerComplaints) customerComplaints.textContent = '0/5';
+        if (customerComplaints) customerComplaints.textContent = '5';
         const customerComplaintsTarget = document.getElementById('customerComplaintsTarget');
         if (customerComplaintsTarget) customerComplaintsTarget.textContent = 'Target: 0';
 
@@ -305,7 +305,6 @@ class VCETVDashboard {
                 </td>
                 <td><strong>${defect.count}</strong></td>
                 <td><span class="severity-badge severity-${defect.severity}">${defect.severity.toUpperCase()}</span></td>
-                <td><strong>${defect.ppm}</strong></td>
             `;
             tbody.appendChild(row);
         });
