@@ -679,8 +679,9 @@ class VCETVDashboard {
         }
 
         if (defectCountElement) {
-            // Set to NBR defects (should match the KPI card value)
-            defectCountElement.textContent = '145';
+            // Calculate total defect count from vceData
+            const totalDefects = vceData.topDefects.reduce((sum, defect) => sum + defect.count, 0);
+            defectCountElement.textContent = totalDefects;
         }
 
         if (defectRateElement) {
