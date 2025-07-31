@@ -295,12 +295,21 @@ class VCETVDashboard {
     updateDefectsTable() {
         const tbody = document.getElementById('defectsTableBody');
         tbody.innerHTML = '';
-        
+        // Define unique colors for each defect (must match chart)
+        const defectColors = [
+            '#ef4444', // Branche courte
+            '#f59e0b', // Inversion
+            '#10b981', // Non verrouillé
+            '#3b82f6', // Element endommagé
+            '#8b5cf6', // Manque element
+            '#da4bb8ff'  // Erreur clip (unique teal)
+        ];
         vceData.topDefects.forEach((defect, index) => {
+            const color = defectColors[index] || '#64748b';
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="defect-name-cell">
-                    <span class="defect-color-indicator defect-color-${index}"></span>
+                    <span class="defect-color-indicator" style="background:${color};"></span>
                     ${defect.name}
                 </td>
                 <td><strong>${defect.count}</strong></td>
@@ -319,17 +328,17 @@ class VCETVDashboard {
     // Create defects analysis chart
     createDefectsChart() {
         const ctx = document.getElementById('defectsChart').getContext('2d');
-        
         const labels = vceData.topDefects.map(defect => defect.name);
         const data = vceData.topDefects.map(defect => defect.count);
+        // Unique color for each defect (must match table)
         const colors = [
-            '#ef4444', // Red for high severity
-            '#f59e0b', // Orange for medium severity
-            '#10b981', // Green for low severity
-            '#3b82f6', // Blue for info
-            '#8b5cf6'  // Purple for other
+            '#ef4444', // Branche courte
+            '#f59e0b', // Inversion
+            '#10b981', // Non verrouillé
+            '#3b82f6', // Element endommagé
+            '#8b5cf6', // Manque element
+            '#da4bb8ff'  // Erreur clip (unique teal)
         ];
-
         this.defectsChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -352,7 +361,7 @@ class VCETVDashboard {
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        backgroundColor: 'rgba(194, 171, 171, 0.8)',
                         titleColor: '#fff',
                         bodyColor: '#fff',
                         cornerRadius: 12,
@@ -374,9 +383,9 @@ class VCETVDashboard {
                             lineWidth: 2
                         },
                         ticks: {
-                            color: '#64748b',
+                            color: '#000000ff',
                             font: {
-                                size: 12,
+                                size: 13,
                                 weight: 'bold'
                             }
                         }
@@ -386,9 +395,9 @@ class VCETVDashboard {
                             display: false
                         },
                         ticks: {
-                            color: '#64748b',
+                            color: '#000000ff',
                             font: {
-                                size: 11,
+                                size: 13,
                                 weight: 'bold'
                             },
                             maxRotation: 45
