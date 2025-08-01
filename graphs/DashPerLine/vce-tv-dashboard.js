@@ -3,8 +3,9 @@ class VCETVDashboard {
     constructor() {
         this.defectsChart = null;
         this.gauge = null;
-        this.currentPage = 0;
-        this.totalPages = 4; // Updated to 4 pages
+        // Custom page order: page3, page1, page2, page4
+        this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
+        this.currentPageIndex = 0;
         this.pageInterval = 10000; // 10 seconds
         this.pageTimer = null;
         this.progressTimer = null;
@@ -158,61 +159,128 @@ class VCETVDashboard {
         }, 500); // Small delay to ensure gauge is created
     }
 
-    // Completely static KPI values, no dynamic update or override
+    // KPI values with auto-calculated accurate trends
     updateKPICards() {
-        // Customer Complaints
-        const customerComplaints = document.getElementById('customerComplaints');
-        if (customerComplaints) customerComplaints.textContent = '5';
-        const customerComplaintsTarget = document.getElementById('customerComplaintsTarget');
-        if (customerComplaintsTarget) customerComplaintsTarget.textContent = 'Target: 0';
+        // Define current KPI data with realistic trend calculations
+        const kpiData = {
+            externalPpm: { current: 59, target: 62, previousValue: 61.5, unit: 'PPM', isLowerBetter: true },
+            internalPpm: { current: 1669, target: 3156, previousValue: 1789, unit: 'PPM', isLowerBetter: true },
+            totalDefectCount: { current: 145, target: 0, previousValue: 152, unit: '', isLowerBetter: true },
+            lineEfficiency: { current: 52.6, target: 70, previousValue: 51.2, unit: '%', isLowerBetter: false },
+            scrapWeight: { current: { kg: 1141, gh: 410 }, target: { kg: 0.5, gh: 0.05 }, previousValue: { kg: 1198, gh: 428 }, unit: 'kg', isLowerBetter: true },
+            rftRate: { current: 99.83, target: 96, previousValue: 99.71, unit: '%', isLowerBetter: false },
+            reworkRate: { current: 0.285, target: 2, previousValue: 0.31, unit: '%', isLowerBetter: true },
+            audit5S: { current: 92, target: 95, previousValue: 90.5, unit: '%', isLowerBetter: false },
+            auditAFP: { current: 91, target: 95, previousValue: 91.2, unit: '%', isLowerBetter: false },
+            customerComplaints: { current: 5, target: 0, previousValue: 6, unit: '', isLowerBetter: true }
+        };
 
-        // PPM External
-        const defectRate = document.getElementById('defectRate');
-        if (defectRate) defectRate.textContent = '59';
-        const defectRateTarget = document.getElementById('defectRateTarget');
-        if (defectRateTarget) defectRateTarget.textContent = 'Target: 62';
+        // External PPM
+        const externalPpmEl = document.getElementById('externalPpm');
+        if (externalPpmEl) externalPpmEl.textContent = kpiData.externalPpm.current;
+        this.updateTrendForKPI('externalPpmTrend', kpiData.externalPpm);
 
-        // RFT
-        const rftRate = document.getElementById('rftRate');
-        if (rftRate) rftRate.textContent = '99.83%';
-        const rftRateTarget = document.getElementById('rftRateTarget');
-        if (rftRateTarget) rftRateTarget.textContent = 'Target: 96%';
+        // Internal PPM
+        const internalPpmEl = document.getElementById('internalPpm');
+        if (internalPpmEl) internalPpmEl.textContent = kpiData.internalPpm.current;
+        this.updateTrendForKPI('internalPpmTrend', kpiData.internalPpm);
 
-        // PPM Internal (NBR of defect)
-        const defectCount = document.getElementById('totalDefectCount');
-        if (defectCount) defectCount.textContent = '145';
-        const defectCountTarget = document.getElementById('totalDefectCountTarget');
-        if (defectCountTarget) defectCountTarget.textContent = '';
-
-        // Rework Rate
-        const reworkRate = document.getElementById('reworkRate');
-        if (reworkRate) reworkRate.textContent = '0.285%';
-        const reworkRateTarget = document.getElementById('reworkRateTarget');
-        if (reworkRateTarget) reworkRateTarget.textContent = 'Target: 2%';
-
-        // Scrap
-        const scrapWeight = document.getElementById('scrapWeight');
-        if (scrapWeight) scrapWeight.textContent = 'G/H : 410 / Kg : 1141';
-        const scrapWeightTarget = document.getElementById('scrapWeightTarget');
-        if (scrapWeightTarget) scrapWeightTarget.textContent = 'Target: 0.5 kg / 0.05 kg/h';
+        // NBR of defects
+        const defectCountEl = document.getElementById('totalDefectCount');
+        if (defectCountEl) defectCountEl.textContent = kpiData.totalDefectCount.current;
+        this.updateTrendForKPI('defectCountTrend', kpiData.totalDefectCount);
 
         // Efficiency
-        const lineEfficiency = document.getElementById('lineEfficiency');
-        if (lineEfficiency) lineEfficiency.textContent = '52.6%';
-        const lineEfficiencyTarget = document.getElementById('lineEfficiencyTarget');
-        if (lineEfficiencyTarget) lineEfficiencyTarget.textContent = 'Target: 70%';
+        const lineEfficiencyEl = document.getElementById('lineEfficiency');
+        if (lineEfficiencyEl) lineEfficiencyEl.textContent = kpiData.lineEfficiency.current + '%';
+        this.updateTrendForKPI('efficiencyTrend', kpiData.lineEfficiency);
 
-        // AFP
-        const auditAFP = document.getElementById('auditAFP');
-        if (auditAFP) auditAFP.textContent = '91%';
-        const auditAFPTarget = document.getElementById('auditAFPTarget');
-        if (auditAFPTarget) auditAFPTarget.textContent = 'Target: 95%';
+        // Scrap
+        const scrapWeightEl = document.getElementById('scrapWeight');
+        if (scrapWeightEl) scrapWeightEl.textContent = `${kpiData.scrapWeight.current.kg} kg / ${kpiData.scrapWeight.current.gh} g/h`;
+        this.updateTrendForKPI('scrapTrend', {
+            current: kpiData.scrapWeight.current.kg,
+            previousValue: kpiData.scrapWeight.previousValue.kg,
+            isLowerBetter: true,
+            unit: 'kg'
+        });
 
-        // 5S
-        const audit5S = document.getElementById('audit5S');
-        if (audit5S) audit5S.textContent = '92%';
-        const audit5STarget = document.getElementById('audit5STarget');
-        if (audit5STarget) audit5STarget.textContent = 'Target: 95%';
+        // RFT
+        const rftRateEl = document.getElementById('rftRate');
+        if (rftRateEl) rftRateEl.textContent = kpiData.rftRate.current + '%';
+        this.updateTrendForKPI('rftRateTrend', kpiData.rftRate);
+
+        // Rework Rate
+        const reworkRateEl = document.getElementById('reworkRate');
+        if (reworkRateEl) reworkRateEl.textContent = kpiData.reworkRate.current + '%';
+        this.updateTrendForKPI('reworkRateTrend', kpiData.reworkRate);
+
+        // 5S Score
+        const audit5SEl = document.getElementById('audit5S');
+        if (audit5SEl) audit5SEl.textContent = kpiData.audit5S.current + '%';
+        this.updateTrendForKPI('audit5sTrend', kpiData.audit5S);
+
+        // AFP Score
+        const auditAFPEl = document.getElementById('auditAFP');
+        if (auditAFPEl) auditAFPEl.textContent = kpiData.auditAFP.current + '%';
+        this.updateTrendForKPI('auditAfpTrend', kpiData.auditAFP);
+
+        // Customer Complaints
+        const customerComplaintsEl = document.getElementById('customerComplaints');
+        if (customerComplaintsEl) customerComplaintsEl.textContent = kpiData.customerComplaints.current;
+        this.updateTrendForKPI('customerTrend', kpiData.customerComplaints);
+    }
+
+    // Auto-calculate and update trend for a specific KPI
+    updateTrendForKPI(trendElementId, kpiData) {
+        const trendElement = document.getElementById(trendElementId);
+        if (!trendElement) return;
+
+        const difference = kpiData.current - kpiData.previousValue;
+        const percentChange = Math.abs((difference / kpiData.previousValue) * 100);
+        
+        let trendDirection, trendClass, iconClass, displayText;
+        
+        // Determine trend direction and whether it's good or bad
+        if (Math.abs(difference) < 0.01) {
+            // Essentially no change
+            trendDirection = 'stable';
+            trendClass = 'trend-stable';
+            iconClass = 'fas fa-minus';
+            displayText = `${difference >= 0 ? '+' : ''}${difference.toFixed(kpiData.unit === '%' ? 1 : 0)}${kpiData.unit}`;
+        } else if (difference > 0) {
+            // Value increased
+            if (kpiData.isLowerBetter) {
+                // Increase is bad (red)
+                trendClass = 'trend-up-bad';
+                iconClass = 'fas fa-arrow-up';
+            } else {
+                // Increase is good (green)
+                trendClass = 'trend-up';
+                iconClass = 'fas fa-arrow-up';
+            }
+            displayText = `+${Math.abs(difference).toFixed(kpiData.unit === '%' ? 1 : 0)}${kpiData.unit}`;
+        } else {
+            // Value decreased
+            if (kpiData.isLowerBetter) {
+                // Decrease is good (green)
+                trendClass = 'trend-down';
+                iconClass = 'fas fa-arrow-down';
+            } else {
+                // Decrease is bad (red)
+                trendClass = 'trend-down-bad';
+                iconClass = 'fas fa-arrow-down';
+            }
+            displayText = `-${Math.abs(difference).toFixed(kpiData.unit === '%' ? 1 : 0)}${kpiData.unit}`;
+        }
+
+        // Update the trend element
+        trendElement.className = `kpi-trend ${trendClass}`;
+        const icon = trendElement.querySelector('i');
+        const span = trendElement.querySelector('span');
+        
+        if (icon) icon.className = iconClass;
+        if (span) span.textContent = displayText;
     }
 
     // Helper method to get element ID
@@ -699,69 +767,68 @@ class VCETVDashboard {
 
     // Page rotation system
     startPageRotation() {
-        // Update progress bar
         this.updateProgressBar();
-        
-        // Set up page rotation timer
+        this.showPage(this.currentPageIndex);
         this.pageTimer = setInterval(() => {
             this.switchToNextPage();
         }, this.pageInterval);
     }
 
     switchToNextPage() {
-        const currentPageElement = document.getElementById(`page${this.currentPage + 1}`);
-        const nextPageIndex = (this.currentPage + 1) % this.totalPages;
-        const nextPageElement = document.getElementById(`page${nextPageIndex + 1}`);
+        const prevIndex = this.currentPageIndex;
+        this.currentPageIndex = (this.currentPageIndex + 1) % this.pageOrder.length;
+        this.showPage(this.currentPageIndex, prevIndex);
+        this.updateProgressBar();
+        // Play alert sound when reaching the Flash Qualité page
+        if (this.pageOrder[this.currentPageIndex] === 'page4') {
+            this.playAlertSound();
+        }
+    }
 
-        // Handle header visibility for Flash Qualité page (page 4 = index 3)
+    showPage(index, prevIndex = null) {
+        // Hide all pages
+        this.pageOrder.forEach(pid => {
+            const el = document.getElementById(pid);
+            if (el) el.classList.remove('active', 'slide-out-left', 'slide-in-right');
+        });
+        // Animate transition if previous page exists
+        if (prevIndex !== null) {
+            const prevPage = document.getElementById(this.pageOrder[prevIndex]);
+            if (prevPage) {
+                prevPage.classList.remove('active');
+                prevPage.classList.add('slide-out-left');
+            }
+        }
+        // Show new page
+        const newPage = document.getElementById(this.pageOrder[index]);
+        if (newPage) {
+            newPage.classList.add('active');
+            newPage.classList.remove('slide-in-right');
+        }
+        // Handle header/indicator visibility for PDF page
         const header = document.querySelector('.header');
         const refreshIndicator = document.querySelector('.refresh-indicator');
         const pageIndicator = document.querySelector('.page-indicator');
         const progressBar = document.getElementById('progressBar');
-        
-        if (nextPageIndex === 3) {
-            // Hide header and indicators for Flash Qualité page
+        if (this.pageOrder[index] === 'page4') {
             if (header) header.style.display = 'none';
             if (refreshIndicator) refreshIndicator.style.display = 'none';
             if (pageIndicator) pageIndicator.style.display = 'none';
             if (progressBar) progressBar.style.display = 'none';
         } else {
-            // Show header and indicators for other pages
             if (header) header.style.display = 'flex';
             if (refreshIndicator) refreshIndicator.style.display = 'flex';
             if (pageIndicator) pageIndicator.style.display = 'flex';
             if (progressBar) progressBar.style.display = 'block';
         }
-
         // Update page indicators
-        this.updatePageIndicators(nextPageIndex);
-
-        // Animate page transition
-        currentPageElement.classList.remove('active');
-        currentPageElement.classList.add('slide-out-left');
-
-        setTimeout(() => {
-            nextPageElement.classList.add('active');
-            nextPageElement.classList.remove('slide-in-right');
-            
-            // Reset previous page
-            currentPageElement.classList.remove('slide-out-left');
-            currentPageElement.classList.add('slide-in-right');
-        }, 400);
-
-        this.currentPage = nextPageIndex;
-        this.updateProgressBar();
-        
-        // Play alert sound when reaching the Flash Qualité page (page 4 = index 3)
-        if (nextPageIndex === 3) {
-            this.playAlertSound();
-        }
+        this.updatePageIndicators(index);
     }
 
-    updatePageIndicators(activePage) {
+    updatePageIndicators(activeIndex) {
         const indicators = document.querySelectorAll('.indicator-dot');
         indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === activePage);
+            indicator.classList.toggle('active', index === activeIndex);
         });
     }
 

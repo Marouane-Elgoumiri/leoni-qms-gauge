@@ -105,13 +105,7 @@ const vceData = {
 
     // Top 5 Defects for VCE Line (Cable Engine specific)
     topDefects: [
-        {
-            name: "Branche courte",
-            count: 3,
-            severity: "low",
-            ppm: null,
-            description: "Branche courte détectée"
-        },
+        
         {
             name: "Inversion",
             count: 120,
@@ -139,8 +133,14 @@ const vceData = {
             severity: "low",
             ppm: null,
             description: "Manque element détecté"
-        }
-        ,
+        },
+        {
+            name: "Branche courte",
+            count: 3,
+            severity: "low",
+            ppm: null,
+            description: "Branche courte détectée"
+        },
         {
             name: "Erreur clip",
             count: 2,

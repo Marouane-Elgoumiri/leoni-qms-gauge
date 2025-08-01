@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iveco TV Dashboard - LEONI Production Monitor</title>
+    <title>Plant TV Dashboard - LEONI Production Monitor</title>
     <link rel="icon" type="image/png" href="../../assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -209,7 +209,9 @@
         }
 
         .trend-up { color: #069620; }
-        .trend-down { color: #ff0000; }
+        .trend-down { color: #069620; }
+        .trend-up-bad { color: #ff0000; }
+        .trend-down-bad { color: #ff0000; }
         .trend-stable { color: #444f60; }
 
         /* Page 2 - Charts */
@@ -1133,6 +1135,9 @@
                 <!-- Main Gauge -->
                 <div class="gauge-container" id="gaugeContainer">
                     <!-- Gauge will be rendered here by D3.js -->
+                     <div class="gauge-subtitle" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); font-size:1.5rem; color:#64748b; text-align:center; width:100%;">
+                        Plant Defect Status Overview
+                        </div>
                 </div>
 
                 <!-- Gauge Information Cards -->
@@ -1145,7 +1150,7 @@
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Total Defects</div>
                         <div class="gauge-info-value" id="currentDefectCount">0</div>
-                        <div class="gauge-info-subtitle">IVECO Line</div>
+                        <div class="gauge-info-subtitle">Plant</div>
                     </div>
                     <div class="gauge-info-card">
                         <div class="gauge-info-title">Defect Rate</div>
@@ -1155,77 +1160,10 @@
                 </div>
             </div>
 
-            <!-- Page 4: Flash Qualité - Critical Customer Alerts -->
-            <div class="page flash-page" id="page4">
-                <div class="flash-header">
-                    <div class="flash-title">⚠️ FLASH QUALITÉ</div>
-                    <div class="flash-subtitle">Dernier incident client</div>
-                </div>
 
-                <div class="alert-container">
-                    <!-- Alert Header -->
-                    <div class="alert-header">
-                        <div class="alert-id">REF: 23257177</div>
-                        <div class="alert-type">Pin not in position - A45A</div>
-                        <div class="alert-customer">HDEP</div>
-                    </div>
-
-                    <!-- Alert Details -->
-                    <div class="alert-details">
-                        <div class="alert-description">
-                            <h3>🔴 Incident Détecté</h3>
-                            <p>Problème détecté : Pin not in position.<br>Référence : A45A<br>Ref : 23257177 (HDEP)</p>
-                        </div>
-
-                        <!-- NOK vs OK Comparison -->
-                        <div class="comparison-container">
-                            <div class="comparison-item nok">
-                                <div class="comparison-image">
-                                    <img src="../../assets/NOTOK.png" alt="État NOK - Pin not in position" />
-                                </div>
-                                <div class="comparison-header">
-                                    <span class="status-badge nok-badge">NOK</span>
-                                    <h4 style="color:#b91c1c;">Non Conforme</h4>
-                                </div>
-                                <div class="comparison-description">
-                                    ❌ Pin not in position<br>
-                                    ❌ Mauvais verrouillage<br>
-                                    ❌ Manque continuité<br>
-                                    
-                                </div>
-                            </div>
-
-                            <div class="comparison-item ok">
-                                <div class="comparison-image">
-                                    <img src="../../assets/OK.png" alt="État OK - Pin in position" />
-                                </div>
-                                <div class="comparison-header">
-                                    <span class="status-badge ok-badge">OK</span>
-                                    <h4 style="color:#166534;">Conforme</h4>
-                                </div>
-                                <div class="comparison-description">
-                                    ✅ Pin bien positionné<br>
-                                    ✅ Verrouillage correct<br>
-                                    ✅ Présence de continuité
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Call to Action -->
-                    <div class="flash-footer">
-                        <div class="action-required">
-                            🚨 ACTION IMMÉDIATE REQUISE - Arrêt production
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Alert decorative elements -->
-                <!-- <div class="alert-decoration">
-                    <div class="warning-stripe"></div>
-                    <div class="warning-stripe"></div>
-                    <div class="warning-stripe"></div>
-                </div> -->
+            <div class="page flash-page" id="page4" style="padding:0; margin:0; height:100vh; width:100vw; overflow:hidden;">
+                <iframe src="/assets/page4.pdf" title="Page 4"
+                    style="border:none; width:100vw; height:100vh; display:block; transform:scale(1.15);"></iframe>
             </div>
         </div>
     </div>
