@@ -107,46 +107,46 @@ const vceData = {
     topDefects: [
         
         {
-            name: "Inversion",
+            name: "Reversed wiring",
             count: 120,
             severity: "high",
             ppm: null,
-            description: "Inversion détectée"
+            description: "Reversed wiring detected"
         },
         {
-            name: "Non verrouillé",
+            name: "Not locked",
             count: 11,
             severity: "medium",
             ppm: null,
-            description: "Non verrouillé détecté"
+            description: "Not locked detected"
         },
         {
-            name: "Element endommagé",
+            name: "Damaged part",
             count: 4,
             severity: "low",
             ppm: null,
-            description: "Element endommagé détecté"
+            description: "Damaged part detected"
         },
         {
-            name: "Manque element",
+            name: "Missing part",
             count: 3,
             severity: "low",
             ppm: null,
-            description: "Manque element détecté"
+            description: "Missing part detected"
         },
         {
-            name: "Branche courte",
+            name: "Short branch",
             count: 3,
             severity: "low",
             ppm: null,
-            description: "Branche courte détectée"
+            description: "Short branch detected"
         },
         {
-            name: "Erreur clip",
+            name: "Clip error",
             count: 2,
             severity: "low",
             ppm: null,
-            description: "Erreur clip détectée"
+            description: "Clip error detected"
         }
     ],
 
