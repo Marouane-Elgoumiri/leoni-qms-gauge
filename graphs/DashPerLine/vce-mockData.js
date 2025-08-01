@@ -148,6 +148,21 @@ const vceData = {
             ppm: null,
             description: "Clip error detected"
         }
+        ,
+        {
+            name: "Adapter misaligned",
+            count: 1,
+            severity: "low",
+            ppm: null,
+            description: "Adapter not properly oriented"
+        },
+        {
+            name: "Extra clip",
+            count: 1,
+            severity: "low",
+            ppm: null,
+            description: "Clip in excess detected"
+        }
     ],
 
     // VOLVO Production Lines Comparison Data
