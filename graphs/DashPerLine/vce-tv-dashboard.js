@@ -6,7 +6,7 @@ class VCETVDashboard {
         // Custom page order: page3, page1, page2, page4
         this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
         this.currentPageIndex = 0;
-        this.pageInterval = 20000; // 20 seconds
+        this.pageInterval = 5000; // 20 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;
@@ -370,7 +370,11 @@ class VCETVDashboard {
             '#10b981', // Non verrouillé
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
-            '#da4bb8ff'  // Erreur clip (unique teal)
+            '#da4bb8ff', // Erreur clip (unique teal)
+            '#746c55ff', // Adapter misaligned (brown)
+            '#1b08eaff', // Extra clip (deep blue)
+            '#e67e22', // Unique orange for Adapter misaligned
+            '#16a085'  // Unique teal-green for Extra clip
         ];
         vceData.topDefects.forEach((defect, index) => {
             const color = defectColors[index] || '#64748b';
@@ -405,7 +409,11 @@ class VCETVDashboard {
             '#10b981', // Non verrouillé
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
-            '#da4bb8ff'  // Erreur clip (unique teal)
+            '#da4bb8ff', // Erreur clip (unique teal)
+            '#746c55ff', // Adapter misaligned (brown)
+            '#1b08eaff', // Extra clip (deep blue)
+            '#e67e22', // Unique orange for Adapter misaligned
+            '#16a085'  // Unique teal-green for Extra clip
         ];
         this.defectsChart = new Chart(ctx, {
             type: 'bar',

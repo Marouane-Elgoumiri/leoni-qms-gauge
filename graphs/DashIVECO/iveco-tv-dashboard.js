@@ -303,6 +303,8 @@ class VCETVDashboard {
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
             '#da4bb8ff'  // Erreur clip (unique teal)
+            '#746c55ff',
+            '#1b08eaff'
         ];
         vceData.topDefects.forEach((defect, index) => {
             const color = defectColors[index] || '#64748b';
@@ -338,6 +340,8 @@ class VCETVDashboard {
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
             '#da4bb8ff'  // Erreur clip (unique teal)
+            '#746c55ff',
+            '#1b08eaff'
         ];
         this.defectsChart = new Chart(ctx, {
             type: 'bar',

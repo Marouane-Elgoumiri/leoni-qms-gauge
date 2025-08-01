@@ -216,12 +216,16 @@ const vceData = {
     // Color schemes for charts
     colorSchemes: {
         defects: [
-            '#ef4444', // Red for high severity
-            '#f59e0b', // Orange for medium severity
-            '#10b981', // Green for low severity
-            '#3b82f6', // Blue for info
-            '#8b5cf6', // Purple for other
-            '#eab308'  // Gold for Erreur clip 2 (unique)
+            '#ef4444', // Branche courte
+            '#f59e0b', // Inversion
+            '#10b981', // Non verrouillé
+            '#3b82f6', // Element endommagé
+            '#8b5cf6', // Manque element
+            '#da4bb8ff', // Erreur clip (unique teal)
+            '#746c55ff', // Adapter misaligned (brown)
+            '#1b08eaff', // Extra clip (deep blue)
+            '#e67e22', // Unique orange for Adapter misaligned
+            '#16a085'
         ],
         lines: [
             '#1f77b4', // VCE (current line - blue)
