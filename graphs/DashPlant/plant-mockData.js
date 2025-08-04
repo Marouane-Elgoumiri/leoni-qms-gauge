@@ -45,7 +45,7 @@ const vceData = {
             totalKg: 67.73,
             perHourKg: 1.20,
             unit: "kg",
-            target: 50,
+            target: 0,
         },
         externalPPM: {
             value: 10,

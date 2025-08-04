@@ -237,7 +237,7 @@ class VCETVDashboard {
 
         // Scrap Weight target
         const scrapWeightTargetEl = document.getElementById('scrapWeightTarget');
-        if (scrapWeightTargetEl) scrapWeightTargetEl.textContent = `Target: ${kpis.scrapWeight.target} kg / 0.05 kg/h`;
+        if (scrapWeightTargetEl) scrapWeightTargetEl.textContent = `Target: ${kpis.scrapWeight.target} kg / 0 kg/h`;
 
         // RFT Rate target
         const rftRateTargetEl = document.getElementById('rftRateTarget');
