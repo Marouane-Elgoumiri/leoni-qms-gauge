@@ -13,93 +13,47 @@ const vceData = {
 
     // Real-time Quality KPIs
     qualityKPIs: {
-        defectRate: {
-            value: 12,
-            target: 15,
-            trend: "down",
-            trendValue: -2.3
-        },
-        firstPassYield: {
-            value: 98.7,
-            target: 98.5,
-            trend: "up",
-            trendValue: 1.2
-        },
         defectCount: {
             value: 195,
             target: 237,
-            trend: "down",
-            trendValue: -42
         },
         rftRate: {
             value: 99.74,
             target: 99.7,
-            trend: "up",
-            trendValue: 0.04
         },
         reworkRate: {
             value: 0.26,
             target: 2,
-            trend: "down",
-            trendValue: -1.74
-        },
-        processCapability: {
-            value: 1.62,
-            target: 1.33,
-            trend: "up",
-            trendValue: 0.05
         },
         customerComplaints: {
-            j1: 1,
-            year: 1,
-            target: 0,
-            trend: "stable",
-            trendValue: 0
+            value: 1,
+            target: 8,
         },
         audit5S: {
             value: 96,
             target: 97,
-            trend: "down",
-            trendValue: -1
         },
         auditAFP: {
             value: 92,
             target: 95,
-            trend: "down",
-            trendValue: -3
         },
         lineEfficiency: {
             value: 70.7,
             target: 85,
-            trend: "down",
-            trendValue: -14.3
         },
         scrapWeight: {
             totalKg: 67.73,
             perHourKg: 1.20,
             unit: "kg",
             target: 50,
-            trend: "up",
-            trendValue: 17.73
-        },
-        reworkStatus: {
-            reworked: 12,
-            total: 19,
-            unit: "harnesses",
-            trend: "up",
-            trendValue: 2
         },
         externalPPM: {
             value: 10,
             target: 62,
-            trend: "down",
-            trendValue: -52
         },
         internalPPM: {
             value: 1918,
             target: 3156,
-            trend: "down",
-            trendValue: -2
         }
     },
 

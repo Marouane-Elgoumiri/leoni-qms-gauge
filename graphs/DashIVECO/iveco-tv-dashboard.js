@@ -7,7 +7,7 @@ class VCETVDashboard {
         this.totalPages = 4; // Updated to 4 pages
         // Custom page order: page3, page1, page2, page4
         this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
-        this.pageInterval = 20000; // 20 seconds
+        this.pageInterval = 22000; // 22 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;

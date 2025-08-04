@@ -6,7 +6,7 @@ class VCETVDashboard {
         // Custom page order: page3, page1, page2, page4
         this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
         this.currentPageIndex = 0;
-        this.pageInterval = 5000; // 20 seconds
+        this.pageInterval = 22000; // 22 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;
@@ -22,7 +22,8 @@ class VCETVDashboard {
         this.startPageRotation();
         this.startAutoRefresh();
         this.updateLastUpdateTime();
-        this.integrateQualityMetrics();
+        // DISABLED - Using only static qualityKPIs data
+        // this.integrateQualityMetrics();
     }
 
     // Integrate manually entered quality metrics
@@ -153,82 +154,110 @@ class VCETVDashboard {
         // Initialize gauge with initial quality score
         setTimeout(() => {
             if (this.gauge) {
-                const initialScore = this.calculateQualityScore();
-                this.updateGauge(initialScore);
+                // Use 12% low status directly from qualityKPIs data
+                this.updateGauge(12);
             }
         }, 500); // Small delay to ensure gauge is created
     }
 
-    // KPI values with auto-calculated accurate trends
+    // KPI values from qualityKPIs mock data
     updateKPICards() {
-        // Define current KPI data - HARDCODED STATIC VALUES (NO CHANGES)
-        const kpiData = {
-            externalPpm: { current: 10, target: 62, previousValue: 12, unit: 'PPM', isLowerBetter: true },
-            internalPpm: { current: 1918, target: 3156, previousValue: 2701, unit: 'PPM', isLowerBetter: true },
-            totalDefectCount: { current: 195, target: 237, previousValue: 237, unit: '', isLowerBetter: true },
-            lineEfficiency: { current: 70.7, target: 85, previousValue: 85.0, unit: '%', isLowerBetter: false },
-            scrapWeight: { current: { kg: 67.73, gh: 1.20 }, target: { kg: 50, gh: 0.05 }, previousValue: { kg: 50.0, gh: 1.1 }, unit: 'kg', isLowerBetter: true },
-            rftRate: { current: 99.74, target: 99.7, previousValue: 99.70, unit: '%', isLowerBetter: false },
-            reworkRate: { current: 0.26, target: 2, previousValue: 2.0, unit: '%', isLowerBetter: true },
-            audit5S: { current: 96, target: 97, previousValue: 97, unit: '%', isLowerBetter: false },
-            auditAFP: { current: 92, target: 95, previousValue: 95, unit: '%', isLowerBetter: false },
-            customerComplaints: { current: 1, target: 0, previousValue: 1, unit: '', isLowerBetter: true }
-        };
+        if (!vceData || !vceData.qualityKPIs) {
+            console.error('VCE data not available');
+            return;
+        }
+
+        const kpis = vceData.qualityKPIs;
 
         // External PPM
         const externalPpmEl = document.getElementById('externalPpm');
-        if (externalPpmEl) externalPpmEl.textContent = kpiData.externalPpm.current;
-        this.updateTrendForKPI('externalPpmTrend', kpiData.externalPpm);
+        if (externalPpmEl) externalPpmEl.textContent = kpis.externalPPM.value;
 
         // Internal PPM
         const internalPpmEl = document.getElementById('internalPpm');
-        if (internalPpmEl) internalPpmEl.textContent = kpiData.internalPpm.current;
-        this.updateTrendForKPI('internalPpmTrend', kpiData.internalPpm);
+        if (internalPpmEl) internalPpmEl.textContent = kpis.internalPPM.value;
 
-        // NBR of defects
+        // Defect Count
         const defectCountEl = document.getElementById('totalDefectCount');
-        if (defectCountEl) defectCountEl.textContent = kpiData.totalDefectCount.current;
-        this.updateTrendForKPI('defectCountTrend', kpiData.totalDefectCount);
+        if (defectCountEl) defectCountEl.textContent = kpis.defectCount.value;
 
-        // Efficiency
+        // Line Efficiency
         const lineEfficiencyEl = document.getElementById('lineEfficiency');
-        if (lineEfficiencyEl) lineEfficiencyEl.textContent = kpiData.lineEfficiency.current + '%';
-        this.updateTrendForKPI('efficiencyTrend', kpiData.lineEfficiency);
+        if (lineEfficiencyEl) lineEfficiencyEl.textContent = kpis.lineEfficiency.value + '%';
 
-        // Scrap
+        // Scrap Weight
         const scrapWeightEl = document.getElementById('scrapWeight');
-        if (scrapWeightEl) scrapWeightEl.textContent = `${kpiData.scrapWeight.current.kg} kg / ${kpiData.scrapWeight.current.gh} g/h`;
-        this.updateTrendForKPI('scrapTrend', {
-            current: kpiData.scrapWeight.current.kg,
-            previousValue: kpiData.scrapWeight.previousValue.kg,
-            isLowerBetter: true,
-            unit: 'kg'
-        });
+        if (scrapWeightEl) scrapWeightEl.textContent = `${kpis.scrapWeight.totalKg} kg / ${kpis.scrapWeight.perHourKg} kg/h`;
 
-        // RFT
+        // RFT Rate
         const rftRateEl = document.getElementById('rftRate');
-        if (rftRateEl) rftRateEl.textContent = kpiData.rftRate.current + '%';
-        this.updateTrendForKPI('rftRateTrend', kpiData.rftRate);
+        if (rftRateEl) rftRateEl.textContent = kpis.rftRate.value + '%';
 
         // Rework Rate
         const reworkRateEl = document.getElementById('reworkRate');
-        if (reworkRateEl) reworkRateEl.textContent = kpiData.reworkRate.current + '%';
-        this.updateTrendForKPI('reworkRateTrend', kpiData.reworkRate);
+        if (reworkRateEl) reworkRateEl.textContent = kpis.reworkRate.value + '%';
 
         // 5S Score
         const audit5SEl = document.getElementById('audit5S');
-        if (audit5SEl) audit5SEl.textContent = kpiData.audit5S.current + '%';
-        this.updateTrendForKPI('audit5sTrend', kpiData.audit5S);
+        if (audit5SEl) audit5SEl.textContent = kpis.audit5S.value + '%';
 
         // AFP Score
         const auditAFPEl = document.getElementById('auditAFP');
-        if (auditAFPEl) auditAFPEl.textContent = kpiData.auditAFP.current + '%';
-        this.updateTrendForKPI('auditAfpTrend', kpiData.auditAFP);
+        if (auditAFPEl) auditAFPEl.textContent = kpis.auditAFP.value + '%';
 
         // Customer Complaints
         const customerComplaintsEl = document.getElementById('customerComplaints');
-        if (customerComplaintsEl) customerComplaintsEl.textContent = kpiData.customerComplaints.current;
-        this.updateTrendForKPI('customerTrend', kpiData.customerComplaints);
+        if (customerComplaintsEl) customerComplaintsEl.textContent = kpis.customerComplaints.value;
+
+        // Update targets as well
+        this.updateKPITargets();
+    }
+
+    // Update KPI target values from qualityKPIs data
+    updateKPITargets() {
+        if (!vceData || !vceData.qualityKPIs) return;
+
+        const kpis = vceData.qualityKPIs;
+
+        // External PPM target
+        const externalPpmTargetEl = document.getElementById('externalPpmTarget');
+        if (externalPpmTargetEl) externalPpmTargetEl.textContent = `Target: ${kpis.externalPPM.target}`;
+
+        // Internal PPM target
+        const internalPpmTargetEl = document.getElementById('internalPpmTarget');
+        if (internalPpmTargetEl) internalPpmTargetEl.textContent = `Target: ${kpis.internalPPM.target}`;
+
+        // Defect Count target
+        const defectCountTargetEl = document.getElementById('totalDefectCountTarget');
+        if (defectCountTargetEl) defectCountTargetEl.textContent = `Target: ${kpis.defectCount.target}`;
+
+        // Line Efficiency target
+        const lineEfficiencyTargetEl = document.getElementById('lineEfficiencyTarget');
+        if (lineEfficiencyTargetEl) lineEfficiencyTargetEl.textContent = `Target: ${kpis.lineEfficiency.target}%`;
+
+        // Scrap Weight target
+        const scrapWeightTargetEl = document.getElementById('scrapWeightTarget');
+        if (scrapWeightTargetEl) scrapWeightTargetEl.textContent = `Target: ${kpis.scrapWeight.target} kg / 0.05 kg/h`;
+
+        // RFT Rate target
+        const rftRateTargetEl = document.getElementById('rftRateTarget');
+        if (rftRateTargetEl) rftRateTargetEl.textContent = `Target: ${kpis.rftRate.target}%`;
+
+        // Rework Rate target
+        const reworkRateTargetEl = document.getElementById('reworkRateTarget');
+        if (reworkRateTargetEl) reworkRateTargetEl.textContent = `Target: ${kpis.reworkRate.target}%`;
+
+        // 5S Score target
+        const audit5STargetEl = document.getElementById('audit5STarget');
+        if (audit5STargetEl) audit5STargetEl.textContent = `Target: ${kpis.audit5S.target}%`;
+
+        // AFP Score target
+        const auditAFPTargetEl = document.getElementById('auditAFPTarget');
+        if (auditAFPTargetEl) auditAFPTargetEl.textContent = `Target: ${kpis.auditAFP.target}%`;
+
+        // Customer Complaints target
+        const customerComplaintsTargetEl = document.getElementById('customerComplaintsTarget');
+        if (customerComplaintsTargetEl) customerComplaintsTargetEl.textContent = `Target: ${kpis.customerComplaints.target}`;
     }
 
     // Auto-calculate and update trend for a specific KPI
@@ -546,7 +575,7 @@ class VCETVDashboard {
             .attr("font-size", "36px")   // Increased from 20px - even bigger value display
             .attr("font-weight", "bold")
             .attr("fill", "#2d3748")
-            .text("0%");
+            .text("12%");
 
         // Add tick marks and labels
         this.createGaugeIndicators(svg, radius, config);
@@ -713,10 +742,8 @@ class VCETVDashboard {
     updateGauge(value) {
         if (!this.gauge) return;
 
-        // Calculate actual defect rate based on real data
-        // 195 defects out of 101,669 total production = 1,918 PPM
-        // This translates to medium defect status (around 45%)
-        let actualValue = 12; // Medium status (20-80 range)
+        // Use qualityKPIs data: 195 defects with 1918 PPM defect rate = 12% low status
+        let actualValue = 12; // Low status (0-20 range)
         
         // Scale value to angle
         const scaleValue = (val) => {
@@ -738,6 +765,10 @@ class VCETVDashboard {
     }
 
     updateGaugeInfo(value) {
+        if (!vceData || !vceData.qualityKPIs) return;
+
+        const kpis = vceData.qualityKPIs;
+        
         // Determine status based on actual defect data
         let status = "Medium";
         let statusColor = "#F39C12";
@@ -753,7 +784,7 @@ class VCETVDashboard {
             statusColor = "#27AE60";
         }
 
-        // Update status elements with real data
+        // Update status elements with qualityKPIs data
         const statusElement = document.getElementById('currentStatus');
         const defectCountElement = document.getElementById('currentDefectCount');
         const defectRateElement = document.getElementById('currentDefectRate');
@@ -764,13 +795,11 @@ class VCETVDashboard {
         }
 
         if (defectCountElement) {
-            // Set to actual total defects count
-            defectCountElement.textContent = '195';
+            defectCountElement.textContent = kpis.defectCount.value.toString();
         }
 
         if (defectRateElement) {
-            // Calculate and display actual defect rate: 195/101,669 * 1,000,000 = 1,918 PPM
-            defectRateElement.textContent = '1,918 PPM';
+            defectRateElement.textContent = `${kpis.internalPPM.value} PPM`;
         }
     }
 
