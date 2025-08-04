@@ -6,7 +6,7 @@ class VCETVDashboard {
         // Custom page order: page3, page1, page2, page4
         this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
         this.currentPageIndex = 0;
-        this.pageInterval = 22000; // 22 seconds
+        this.pageInterval = 5000; // 5 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;
@@ -905,8 +905,8 @@ class VCETVDashboard {
         // Re-integrate quality metrics on each refresh
         this.integrateQualityMetrics();
         
-        // Generate new variations
-        vceData.generateVariation();
+        // DISABLED - Keep qualityKPIs data fixed without variations
+        // vceData.generateVariation();
         
         // Update displays
         this.updateKPICards();
