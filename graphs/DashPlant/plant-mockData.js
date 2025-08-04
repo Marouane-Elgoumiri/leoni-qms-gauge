@@ -26,22 +26,22 @@ const vceData = {
             trendValue: 1.2
         },
         defectCount: {
-            value: 28,
-            target: 30,
+            value: 195,
+            target: 237,
             trend: "down",
-            trendValue: -3
+            trendValue: -42
         },
         rftRate: {
-            value: 96.2,
-            target: 95,
+            value: 99.74,
+            target: 99.7,
             trend: "up",
-            trendValue: 1.2
+            trendValue: 0.04
         },
         reworkRate: {
-            value: 2.8,
-            target: 3,
+            value: 0.26,
+            target: 2,
             trend: "down",
-            trendValue: -0.5
+            trendValue: -1.74
         },
         processCapability: {
             value: 1.62,
@@ -51,36 +51,36 @@ const vceData = {
         },
         customerComplaints: {
             j1: 1,
-            year: 7,
-            target: 5,
+            year: 1,
+            target: 0,
+            trend: "stable",
+            trendValue: 0
+        },
+        audit5S: {
+            value: 96,
+            target: 97,
             trend: "down",
             trendValue: -1
         },
-        audit5S: {
-            value: 97,
-            target: 95,
-            trend: "up",
-            trendValue: 2
-        },
         auditAFP: {
-            value: 98,
+            value: 92,
             target: 95,
-            trend: "stable",
-            trendValue: -0.5
+            trend: "down",
+            trendValue: -3
         },
         lineEfficiency: {
-            value: 96.5,
-            target: 95,
-            trend: "up",
-            trendValue: 1.8
+            value: 70.7,
+            target: 85,
+            trend: "down",
+            trendValue: -14.3
         },
         scrapWeight: {
-            totalKg: 0.045,
-            perHourKg: 0.008,
+            totalKg: 67.73,
+            perHourKg: 1.20,
             unit: "kg",
-            target: 0.06,
-            trend: "down",
-            trendValue: -0.005
+            target: 50,
+            trend: "up",
+            trendValue: 17.73
         },
         reworkStatus: {
             reworked: 12,
@@ -90,78 +90,76 @@ const vceData = {
             trendValue: 2
         },
         externalPPM: {
-            value: 8,
-            target: 10,
+            value: 10,
+            target: 62,
             trend: "down",
-            trendValue: -1
+            trendValue: -52
         },
         internalPPM: {
-            value: 14,
-            target: 20,
+            value: 1918,
+            target: 3156,
             trend: "down",
             trendValue: -2
         }
     },
 
-    // Top 5 Defects for VCE Line (Cable Engine specific)
+    // Top Defects for Plant (Total: 195) - Ordered by count (highest to lowest)
     topDefects: [
-        
         {
-            name: "Reversed wiring",
-            count: 120,
+            name: "Inversion",
+            count: 169,
             severity: "high",
             ppm: null,
-            description: "Reversed wiring detected"
+            description: "Inversion detected"
         },
         {
-            name: "Not locked",
-            count: 11,
+            name: "Branche courte",
+            count: 8,
             severity: "medium",
-            ppm: null,
-            description: "Not locked detected"
-        },
-        {
-            name: "Damaged part",
-            count: 4,
-            severity: "low",
-            ppm: null,
-            description: "Damaged part detected"
-        },
-        {
-            name: "Missing part",
-            count: 3,
-            severity: "low",
-            ppm: null,
-            description: "Missing part detected"
-        },
-        {
-            name: "Short branch",
-            count: 3,
-            severity: "low",
             ppm: null,
             description: "Short branch detected"
         },
         {
-            name: "Clip error",
-            count: 2,
-            severity: "low",
+            name: "Composant endommagé",
+            count: 6,
+            severity: "medium",
             ppm: null,
-            description: "Clip error detected"
-        }
-        ,
-        {
-            name: "Adapter misaligned",
-            count: 1,
-            severity: "low",
-            ppm: null,
-            description: "Adapter not properly oriented"
+            description: "Damaged component detected"
         },
         {
-            name: "Extra clip",
+            name: "Erreur composant",
+            count: 6,
+            severity: "medium",
+            ppm: null,
+            description: "Component error detected"
+        },
+        {
+            name: "Non verrouillé",
+            count: 3,
+            severity: "low",
+            ppm: null,
+            description: "Not locked detected"
+        },
+        {
+            name: "Branche longue",
             count: 1,
             severity: "low",
             ppm: null,
-            description: "Clip in excess detected"
+            description: "Long branch detected"
+        },
+        {
+            name: "Branche mal orienté",
+            count: 1,
+            severity: "low",
+            ppm: null,
+            description: "Branch wrongly oriented"
+        },
+        {
+            name: "Témoin exagéré",
+            count: 1,
+            severity: "low",
+            ppm: null,
+            description: "Exaggerated indicator detected"
         }
     ],
 
@@ -216,16 +214,14 @@ const vceData = {
     // Color schemes for charts
     colorSchemes: {
         defects: [
-            '#ef4444', // Branche courte
-            '#f59e0b', // Inversion
-            '#10b981', // Non verrouillé
-            '#3b82f6', // Element endommagé
-            '#8b5cf6', // Manque element
-            '#da4bb8ff', // Erreur clip (unique teal)
-            '#746c55ff', // Adapter misaligned (brown)
-            '#1b08eaff', // Extra clip (deep blue)
-            '#e67e22', // Unique orange for Adapter misaligned
-            '#16a085'
+            '#ef4444', // Inversion (red - highest count)
+            '#f59e0b', // Branche courte (orange)
+            '#10b981', // Composant endommagé (green)
+            '#3b82f6', // Erreur composant (blue)
+            '#8b5cf6', // Non verrouillé (purple)
+            '#ec4899', // Branche longue (pink)
+            '#06b6d4', // Branche mal orienté (cyan)
+            '#84cc16'  // Témoin exagéré (lime)
         ],
         lines: [
             '#1f77b4', // VCE (current line - blue)

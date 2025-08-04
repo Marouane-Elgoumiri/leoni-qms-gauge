@@ -5,7 +5,9 @@ class VCETVDashboard {
         this.gauge = null;
         this.currentPage = 0;
         this.totalPages = 4; // Updated to 4 pages
-        this.pageInterval = 10000; // 10 seconds
+        // Custom page order: page3, page1, page2, page4
+        this.pageOrder = ['page3', 'page1', 'page2', 'page4'];
+        this.pageInterval = 20000; // 20 seconds
         this.pageTimer = null;
         this.progressTimer = null;
         this.autoRefreshInterval = null;
@@ -16,16 +18,42 @@ class VCETVDashboard {
 
     init() {
         this.initializeAlertSound();
+        this.initializePageOrder();
         this.loadInitialData();
         this.setupCharts();
         this.startPageRotation();
         this.startAutoRefresh();
         this.updateLastUpdateTime();
-        this.integrateQualityMetrics();
+        // Disabled integration to use only hardcoded data
+        // this.integrateQualityMetrics();
     }
 
-    // Integrate manually entered quality metrics
+    // Initialize page order - set first page (page3) as active
+    initializePageOrder() {
+        // Hide all pages first
+        this.pageOrder.forEach(pageId => {
+            const pageElement = document.getElementById(pageId);
+            if (pageElement) {
+                pageElement.classList.remove('active');
+            }
+        });
+        
+        // Show the first page in custom order (page3 - gauge)
+        const firstPageId = this.pageOrder[0];
+        const firstPageElement = document.getElementById(firstPageId);
+        if (firstPageElement) {
+            firstPageElement.classList.add('active');
+        }
+        
+        // Update page indicators to reflect the correct active page
+        this.updatePageIndicators(0);
+    }
+
+    // Integrate manually entered quality metrics - DISABLED FOR HARDCODED DATA
     integrateQualityMetrics() {
+        // DISABLED - Using only hardcoded static values
+        console.log('TV Dashboard - Using hardcoded static data only');
+        return;
         try {
             // Check if quality metrics functions are available
             if (typeof getQualityMetricsForLine === 'function') {
@@ -160,47 +188,54 @@ class VCETVDashboard {
 
     // Completely static KPI values, no dynamic update or override
     updateKPICards() {
+        // HARDCODED STATIC VALUES - NO CHANGES ALLOWED
         // Customer Complaints
         const customerComplaints = document.getElementById('customerComplaints');
-        if (customerComplaints) customerComplaints.textContent = '5';
+        if (customerComplaints) customerComplaints.textContent = '0';
         const customerComplaintsTarget = document.getElementById('customerComplaintsTarget');
         if (customerComplaintsTarget) customerComplaintsTarget.textContent = 'Target: 0';
 
         // PPM External
-        const defectRate = document.getElementById('defectRate');
-        if (defectRate) defectRate.textContent = '59';
-        const defectRateTarget = document.getElementById('defectRateTarget');
-        if (defectRateTarget) defectRateTarget.textContent = 'Target: 62';
+        const externalPpm = document.getElementById('externalPpm');
+        if (externalPpm) externalPpm.textContent = '0';
+        const externalPpmTarget = document.getElementById('externalPpmTarget');
+        if (externalPpmTarget) externalPpmTarget.textContent = 'Target: 50';
+
+        // PPM Internal
+        const internalPpm = document.getElementById('internalPpm');
+        if (internalPpm) internalPpm.textContent = '0';
+        const internalPpmTarget = document.getElementById('internalPpmTarget');
+        if (internalPpmTarget) internalPpmTarget.textContent = 'Target: 1780';
 
         // RFT
         const rftRate = document.getElementById('rftRate');
-        if (rftRate) rftRate.textContent = '99.83%';
+        if (rftRate) rftRate.textContent = '0%';
         const rftRateTarget = document.getElementById('rftRateTarget');
-        if (rftRateTarget) rftRateTarget.textContent = 'Target: 96%';
+        if (rftRateTarget) rftRateTarget.textContent = 'Target: 96.34%';
 
         // PPM Internal (NBR of defect)
         const defectCount = document.getElementById('totalDefectCount');
-        if (defectCount) defectCount.textContent = '145';
+        if (defectCount) defectCount.textContent = '0';
         const defectCountTarget = document.getElementById('totalDefectCountTarget');
-        if (defectCountTarget) defectCountTarget.textContent = '';
+        if (defectCountTarget) defectCountTarget.textContent = 'Target: 0';
 
         // Rework Rate
         const reworkRate = document.getElementById('reworkRate');
-        if (reworkRate) reworkRate.textContent = '0.285%';
+        if (reworkRate) reworkRate.textContent = '0%';
         const reworkRateTarget = document.getElementById('reworkRateTarget');
         if (reworkRateTarget) reworkRateTarget.textContent = 'Target: 2%';
 
         // Scrap
         const scrapWeight = document.getElementById('scrapWeight');
-        if (scrapWeight) scrapWeight.textContent = 'G/H : 410 / Kg : 1141';
+        if (scrapWeight) scrapWeight.textContent = '0 kg / 0 g/h';
         const scrapWeightTarget = document.getElementById('scrapWeightTarget');
-        if (scrapWeightTarget) scrapWeightTarget.textContent = 'Target: 0.5 kg / 0.05 kg/h';
+        if (scrapWeightTarget) scrapWeightTarget.textContent = 'Target: 0 kg / 0 g/h';
 
         // Efficiency
         const lineEfficiency = document.getElementById('lineEfficiency');
-        if (lineEfficiency) lineEfficiency.textContent = '52.6%';
+        if (lineEfficiency) lineEfficiency.textContent = '55%';
         const lineEfficiencyTarget = document.getElementById('lineEfficiencyTarget');
-        if (lineEfficiencyTarget) lineEfficiencyTarget.textContent = 'Target: 70%';
+        if (lineEfficiencyTarget) lineEfficiencyTarget.textContent = 'Target: 85%';
 
         // AFP
         const auditAFP = document.getElementById('auditAFP');
@@ -210,9 +245,9 @@ class VCETVDashboard {
 
         // 5S
         const audit5S = document.getElementById('audit5S');
-        if (audit5S) audit5S.textContent = '92%';
+        if (audit5S) audit5S.textContent = '90%';
         const audit5STarget = document.getElementById('audit5STarget');
-        if (audit5STarget) audit5STarget.textContent = 'Target: 95%';
+        if (audit5STarget) audit5STarget.textContent = 'Target: 97%';
     }
 
     // Helper method to get element ID
@@ -302,7 +337,7 @@ class VCETVDashboard {
             '#10b981', // Non verrouillé
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
-            '#da4bb8ff'  // Erreur clip (unique teal)
+            '#da4bb8ff',  // Erreur clip (unique teal)
             '#746c55ff',
             '#1b08eaff'
         ];
@@ -339,7 +374,7 @@ class VCETVDashboard {
             '#10b981', // Non verrouillé
             '#3b82f6', // Element endommagé
             '#8b5cf6', // Manque element
-            '#da4bb8ff'  // Erreur clip (unique teal)
+            '#da4bb8ff',  // Erreur clip (unique teal)
             '#746c55ff',
             '#1b08eaff'
         ];
@@ -645,8 +680,8 @@ class VCETVDashboard {
     updateGauge(value) {
         if (!this.gauge) return;
 
-        // Force gauge value to be in 'Low' status (below 20)
-        let lowValue = 10; // Always below 20 for 'Low' status
+        // Set gauge value to 0% for Excellent status (no defects)
+        let excellentValue = 0; // 0% for Excellent status with no defects
         // Scale value to angle
         const scaleValue = (val) => {
             return d3.scaleLinear()
@@ -656,29 +691,36 @@ class VCETVDashboard {
         };
 
         // Update needle position
-        const angle = scaleValue(lowValue) - Math.PI / 2;
+        const angle = scaleValue(excellentValue) - Math.PI / 2;
         this.gauge.needleGroup.transition()
             .duration(this.gauge.config.transitionDuration)
             .attr("transform", `rotate(${angle * 180 / Math.PI})`);
 
         // Update value display
-        this.gauge.valueDisplay.text(lowValue + "%");
+        this.gauge.valueDisplay.text(excellentValue + "%");
 
         // Update status information
-        this.updateGaugeInfo(lowValue);
+        this.updateGaugeInfo(excellentValue);
     }
 
     updateGaugeInfo(value) {
-        // Determine status
-        let status = "Low";
+        // Determine status based on 0 defects = Excellent
+        let status = "Excellent";
         let statusColor = "#27AE60";
         
-        if (value >= 80) {
+        // Since we have 0 defects, always show Excellent status
+        if (value === 0) {
+            status = "Excellent";
+            statusColor = "#27AE60";
+        } else if (value >= 80) {
             status = "High";
             statusColor = "#E74C3C";
         } else if (value >= 20) {
             status = "Medium";
             statusColor = "#F39C12";
+        } else {
+            status = "Low";
+            statusColor = "#27AE60";
         }
 
         // Update status elements
@@ -692,12 +734,13 @@ class VCETVDashboard {
         }
 
         if (defectCountElement) {
-            // Set to NBR defects (should match the KPI card value)
-            defectCountElement.textContent = '145';
+            // Set to 0 defects for IVECO line
+            defectCountElement.textContent = '0';
         }
 
         if (defectRateElement) {
-            defectRateElement.textContent = `${Math.floor(value * 2)} PPM`;
+            // Set to 0 PPM since there are no defects
+            defectRateElement.textContent = '0 PPM';
         }
     }
 
@@ -713,17 +756,21 @@ class VCETVDashboard {
     }
 
     switchToNextPage() {
-        const currentPageElement = document.getElementById(`page${this.currentPage + 1}`);
+        // Get current and next page using custom page order
+        const currentPageId = this.pageOrder[this.currentPage];
         const nextPageIndex = (this.currentPage + 1) % this.totalPages;
-        const nextPageElement = document.getElementById(`page${nextPageIndex + 1}`);
+        const nextPageId = this.pageOrder[nextPageIndex];
+        
+        const currentPageElement = document.getElementById(currentPageId);
+        const nextPageElement = document.getElementById(nextPageId);
 
-        // Handle header visibility for Flash Qualité page (page 4 = index 3)
+        // Handle header visibility for Flash Qualité page (page4)
         const header = document.querySelector('.header');
         const refreshIndicator = document.querySelector('.refresh-indicator');
         const pageIndicator = document.querySelector('.page-indicator');
         const progressBar = document.getElementById('progressBar');
         
-        if (nextPageIndex === 3) {
+        if (nextPageId === 'page4') {
             // Hide header and indicators for Flash Qualité page
             if (header) header.style.display = 'none';
             if (refreshIndicator) refreshIndicator.style.display = 'none';
@@ -756,8 +803,8 @@ class VCETVDashboard {
         this.currentPage = nextPageIndex;
         this.updateProgressBar();
         
-        // Play alert sound when reaching the Flash Qualité page (page 4 = index 3)
-        if (nextPageIndex === 3) {
+        // Play alert sound when reaching the Flash Qualité page (page4)
+        if (nextPageId === 'page4') {
             this.playAlertSound();
         }
     }
@@ -801,16 +848,15 @@ class VCETVDashboard {
     }
 
     refreshData() {
-        // Re-integrate quality metrics on each refresh
-        this.integrateQualityMetrics();
+        // DISABLED - Using only hardcoded static data
+        // this.integrateQualityMetrics();
+        // vceData.generateVariation();
         
-        // Generate new variations
-        vceData.generateVariation();
-        
-        // Update displays
-        this.updateKPICards();
-        this.updateDefectsTable();
+        // Only update time and defects table
         this.updateLastUpdateTime();
+        this.updateDefectsTable();
+        
+        // NOTE: KPI cards are NOT refreshed to prevent data overwriting
         
         // Update chart if on charts page
         if (this.currentPage === 1 && this.defectsChart) {

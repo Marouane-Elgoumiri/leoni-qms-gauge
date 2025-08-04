@@ -26,22 +26,22 @@ const vceData = {
             trendValue: 1.2
         },
         defectCount: {
-            value: 28,
-            target: 30,
-            trend: "down",
-            trendValue: -3
+            value: 0,
+            target: 0,
+            trend: "stable",
+            trendValue: 0
         },
         rftRate: {
-            value: 96.2,
-            target: 95,
-            trend: "up",
-            trendValue: 1.2
+            value: 0,
+            target: 96.34,
+            trend: "down",
+            trendValue: -96.34
         },
         reworkRate: {
-            value: 2.8,
-            target: 3,
+            value: 0,
+            target: 2,
             trend: "down",
-            trendValue: -0.5
+            trendValue: -2
         },
         processCapability: {
             value: 1.62,
@@ -50,101 +50,95 @@ const vceData = {
             trendValue: 0.05
         },
         customerComplaints: {
-            j1: 1,
-            year: 7,
-            target: 5,
-            trend: "down",
-            trendValue: -1
+            j1: 0,
+            year: 0,
+            target: 0,
+            trend: "stable",
+            trendValue: 0
         },
         audit5S: {
-            value: 97,
-            target: 95,
-            trend: "up",
-            trendValue: 2
+            value: 90,
+            target: 97,
+            trend: "down",
+            trendValue: -7
         },
         auditAFP: {
-            value: 98,
+            value: 91,
             target: 95,
-            trend: "stable",
-            trendValue: -0.5
+            trend: "down",
+            trendValue: -4
         },
         lineEfficiency: {
-            value: 96.5,
-            target: 95,
-            trend: "up",
-            trendValue: 1.8
+            value: 55,
+            target: 85,
+            trend: "down",
+            trendValue: -30
         },
         scrapWeight: {
-            totalKg: 0.045,
-            perHourKg: 0.008,
+            totalKg: 0,
+            perHourKg: 0,
             unit: "kg",
-            target: 0.06,
-            trend: "down",
-            trendValue: -0.005
+            target: 0,
+            trend: "stable",
+            trendValue: 0
         },
         reworkStatus: {
-            reworked: 12,
-            total: 19,
+            reworked: 0,
+            total: 0,
             unit: "harnesses",
-            trend: "up",
-            trendValue: 2
+            trend: "stable",
+            trendValue: 0
         },
         externalPPM: {
-            value: 8,
-            target: 10,
+            value: 0,
+            target: 50,
             trend: "down",
-            trendValue: -1
+            trendValue: -50
         },
         internalPPM: {
-            value: 14,
-            target: 20,
+            value: 0,
+            target: 1780,
             trend: "down",
-            trendValue: -2
+            trendValue: -1780
         }
     },
 
     // Top 5 Defects for VCE Line (Cable Engine specific)
     topDefects: [
-        {
-            name: "Branche courte",
-            count: 3,
-            severity: "low",
-            ppm: null,
-            description: "Branche courte détectée"
-        },
+        
         {
             name: "Inversion",
-            count: 120,
-            severity: "high",
+            count: 0,
+            severity: "NA",
             ppm: null,
             description: "Inversion détectée"
         },
         {
             name: "Non verrouillé",
-            count: 11,
-            severity: "medium",
+            count:  0,
+            severity: "NA",
             ppm: null,
             description: "Non verrouillé détecté"
         },
         {
             name: "Element endommagé",
-            count: 4,
-            severity: "low",
+            count: 0,
+            severity: "NA",
             ppm: null,
             description: "Element endommagé détecté"
         },
         {
             name: "Manque element",
-            count: 3,
-            severity: "low",
+            count: 0,
+            severity: "NA",
             ppm: null,
             description: "Manque element détecté"
         }
         ,
         {
             name: "Erreur clip",
-            count: 2,
-            severity: "low",
+            count: 0,
+            severity: "NA",
             ppm: null,
             description: "Erreur clip détectée"
         }

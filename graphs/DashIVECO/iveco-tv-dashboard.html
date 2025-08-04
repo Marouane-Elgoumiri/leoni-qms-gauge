@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iveco TV Dashboard - LEONI Production Monitor</title>
     <link rel="icon" type="image/png" href="../../assets/logo.png">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="d3.v7.min.js"></script>
+    <script src="chart.js"></script>
+    <link rel="stylesheet" href="font-awesome.css">
     <style>
         * {
             margin: 0;
@@ -979,29 +980,23 @@
         <!-- Page Container -->
         <div class="page-container">
             <!-- Page 1: KPIs Overview -->
-            <div class="page kpi-page active" id="page1">
+            <div class="page kpi-page" id="page1">
                 <div class="kpi-grid">
 
                     <!-- External PPM -->
                     <div class="kpi-card excellent" id="externalPpmCard">
                         <div class="kpi-icon"><i class="fas fa-globe"></i></div>
                         <div class="kpi-title">External PPM</div>
-                        <div class="kpi-value" id="externalPpm">59</div>
+                        <div class="kpi-value" id="externalPpm"></div>
                         <div class="kpi-target" id="externalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 62</div>
-                        <div class="kpi-trend trend-down" id="externalPpmTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-1.2 PPM</span>
-                        </div>
                     </div>
 
                     <!-- Internal PPM -->
                     <div class="kpi-card good" id="internalPpmCard">
                         <div class="kpi-icon"><i class="fas fa-industry"></i></div>
                         <div class="kpi-title">Internal PPM</div>
-                        <div class="kpi-value" id="internalPpm">1669</div>
+                        <div class="kpi-value" id="internalPpm"></div>
                         <div class="kpi-target" id="internalPpmTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 3156</div>
-                        <div class="kpi-trend trend-down" id="internalPpmTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-2.3 PPM</span>
-                        </div>
                     </div>
 
                     <!-- Nbr defects -->
@@ -1010,9 +1005,6 @@
                         <div class="kpi-title">Nbr Defects</div>
                         <div class="kpi-value" id="totalDefectCount">0 / 5</div>
 <div class="kpi-target" id="totalDefectCountTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0</div>
-                        <div class="kpi-trend trend-down" id="defectCountTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-3</span>
-                        </div>
                     </div>
 
                     <!-- Efficiency -->
@@ -1021,9 +1013,6 @@
                         <div class="kpi-title">Efficiency</div>
                         <div class="kpi-value" id="lineEfficiency">52.6%</div>
 <div class="kpi-target" id="lineEfficiencyTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 70%</div>
-                        <div class="kpi-trend trend-up" id="efficiencyTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+1.8%</span>
-                        </div>
                     </div>
 
                     <!-- Scrap (kg tt, kg/h) -->
@@ -1032,9 +1021,6 @@
                         <div class="kpi-title" style="font-size:1.2rem;">Scrap (kg total, kg/h)</div>
                         <div class="kpi-value" id="scrapWeight" style="font-size:1.7rem;">1141 kg / 410 g/h</div>
 <div class="kpi-target" id="scrapWeightTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0.5 kg / 0.05 kg/h</div>
-                        <div class="kpi-trend trend-down" id="scrapTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-5.2kg</span>
-                        </div>
                     </div>
 
                     <!-- RFT -->
@@ -1043,9 +1029,6 @@
                         <div class="kpi-title">RFT</div>
                         <div class="kpi-value" id="rftRate">99.83%</div>
 <div class="kpi-target" id="rftRateTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 96%</div>
-                        <div class="kpi-trend trend-up" id="rftRateTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+1.2%</span>
-                        </div>
                     </div>
 
                     <!-- Rework Rate -->
@@ -1054,9 +1037,6 @@
                         <div class="kpi-title">Rework Rate</div>
                         <div class="kpi-value" id="reworkRate">0.285%</div>
 <div class="kpi-target" id="reworkRateTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 2%</div>
-                        <div class="kpi-trend trend-down" id="reworkRateTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-0.5%</span>
-                        </div>
                     </div>
 
                     <!-- 5S Score -->
@@ -1065,9 +1045,6 @@
                         <div class="kpi-title">5S Score</div>
                         <div class="kpi-value" id="audit5S">92%</div>
 <div class="kpi-target" id="audit5STarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 95%</div>
-                        <div class="kpi-trend trend-up" id="audit5sTrend">
-                            <i class="fas fa-arrow-up"></i> <span>+2%</span>
-                        </div>
                     </div>
 
                     <!-- AFP Score -->
@@ -1076,9 +1053,6 @@
                         <div class="kpi-title">AFP Score</div>
                         <div class="kpi-value" id="auditAFP">91%</div>
 <div class="kpi-target" id="auditAFPTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 95%</div>
-                        <div class="kpi-trend trend-stable" id="auditAfpTrend">
-                            <i class="fas fa-minus"></i> <span>-0.5%</span>
-                        </div>
                     </div>
 
                     <!-- Customer Complaints (last day/total year) -->
@@ -1087,9 +1061,6 @@
                         <div class="kpi-title">Customer Complaints</div>
                         <div class="kpi-value" id="customerComplaints">0 / 5</div>
 <div class="kpi-target" id="customerComplaintsTarget" style="font-size:1.5rem;color:#64748b;text-align:center;font-weight:bold;">Target: 0</div>
-                        <div class="kpi-trend trend-down" id="customerTrend">
-                            <i class="fas fa-arrow-down"></i> <span>-1</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1156,76 +1127,8 @@
             </div>
 
             <!-- Page 4: Flash Qualité - Critical Customer Alerts -->
-            <div class="page flash-page" id="page4">
-                <div class="flash-header">
-                    <div class="flash-title">⚠️ FLASH QUALITÉ</div>
-                    <div class="flash-subtitle">Dernier incident client</div>
-                </div>
-
-                <div class="alert-container">
-                    <!-- Alert Header -->
-                    <div class="alert-header">
-                        <div class="alert-id">REF: 23257177</div>
-                        <div class="alert-type">Pin not in position - A45A</div>
-                        <div class="alert-customer">HDEP</div>
-                    </div>
-
-                    <!-- Alert Details -->
-                    <div class="alert-details">
-                        <div class="alert-description">
-                            <h3>🔴 Incident Détecté</h3>
-                            <p>Problème détecté : Pin not in position.<br>Référence : A45A<br>Ref : 23257177 (HDEP)</p>
-                        </div>
-
-                        <!-- NOK vs OK Comparison -->
-                        <div class="comparison-container">
-                            <div class="comparison-item nok">
-                                <div class="comparison-image">
-                                    <img src="../../assets/NOTOK.png" alt="État NOK - Pin not in position" />
-                                </div>
-                                <div class="comparison-header">
-                                    <span class="status-badge nok-badge">NOK</span>
-                                    <h4 style="color:#b91c1c;">Non Conforme</h4>
-                                </div>
-                                <div class="comparison-description">
-                                    ❌ Pin not in position<br>
-                                    ❌ Mauvais verrouillage<br>
-                                    ❌ Manque continuité<br>
-                                    
-                                </div>
-                            </div>
-
-                            <div class="comparison-item ok">
-                                <div class="comparison-image">
-                                    <img src="../../assets/OK.png" alt="État OK - Pin in position" />
-                                </div>
-                                <div class="comparison-header">
-                                    <span class="status-badge ok-badge">OK</span>
-                                    <h4 style="color:#166534;">Conforme</h4>
-                                </div>
-                                <div class="comparison-description">
-                                    ✅ Pin bien positionné<br>
-                                    ✅ Verrouillage correct<br>
-                                    ✅ Présence de continuité
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Call to Action -->
-                    <div class="flash-footer">
-                        <div class="action-required">
-                            🚨 ACTION IMMÉDIATE REQUISE - Arrêt production
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Alert decorative elements -->
-                <!-- <div class="alert-decoration">
-                    <div class="warning-stripe"></div>
-                    <div class="warning-stripe"></div>
-                    <div class="warning-stripe"></div>
-                </div> -->
+            <div class="page flash-page" id="page4" style="padding:0; margin:0; height:100vh; width:100vw; display:flex; justify-content:center; align-items:center;">
+                <img src="../../assets/quality_message.png" alt="Page 4" style="width:100vw; height:100vh; object-fit:cover; display:block;">
             </div>
         </div>
     </div>
