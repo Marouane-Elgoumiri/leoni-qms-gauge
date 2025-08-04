@@ -106,58 +106,58 @@ const vceData = {
     // Top Defects for Plant (Total: 195) - Ordered by count (highest to lowest)
     topDefects: [
         {
-            name: "Inversion",
+            name: "Switched wire",
             count: 169,
-            severity: "high",
+            severity: "low",
             ppm: null,
-            description: "Inversion detected"
+            description: "Switched wire detected"
         },
         {
-            name: "Branche courte",
+            name: "Short branch",
             count: 8,
             severity: "medium",
             ppm: null,
             description: "Short branch detected"
         },
         {
-            name: "Composant endommagé",
+            name: "Damaged component",
             count: 6,
             severity: "medium",
             ppm: null,
             description: "Damaged component detected"
         },
         {
-            name: "Erreur composant",
+            name: "Wrong Component",
             count: 6,
             severity: "medium",
             ppm: null,
             description: "Component error detected"
         },
         {
-            name: "Non verrouillé",
+            name: "Unlocked terminal",
             count: 3,
-            severity: "low",
+            severity: "medium",
             ppm: null,
             description: "Not locked detected"
         },
         {
-            name: "Branche longue",
+            name: "Oversized witness",
             count: 1,
             severity: "low",
             ppm: null,
             description: "Long branch detected"
         },
         {
-            name: "Branche mal orienté",
+            name: "Misoriented branch",
             count: 1,
-            severity: "low",
+            severity: "medium",
             ppm: null,
             description: "Branch wrongly oriented"
         },
         {
-            name: "Témoin exagéré",
+            name: "Exaggerated indicator",
             count: 1,
-            severity: "low",
+            severity: "medium",
             ppm: null,
             description: "Exaggerated indicator detected"
         }

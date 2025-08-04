@@ -107,28 +107,28 @@ const vceData = {
     topDefects: [
         
         {
-            name: "Inversion",
+            name: "Switched wire",
             count: 0,
             severity: "NA",
             ppm: null,
             description: "Inversion détectée"
         },
         {
-            name: "Non verrouillé",
+            name: "Unlocked terminal",
             count:  0,
             severity: "NA",
             ppm: null,
-            description: "Non verrouillé détecté"
+            description: "Unlocked terminal detected"
         },
         {
-            name: "Element endommagé",
+            name: "Damaged component",
             count: 0,
             severity: "NA",
             ppm: null,
             description: "Element endommagé détecté"
         },
         {
-            name: "Manque element",
+            name: "Oversized witness",
             count: 0,
             severity: "NA",
             ppm: null,
@@ -136,11 +136,11 @@ const vceData = {
         }
         ,
         {
-            name: "Erreur clip",
+            name: "Clip Error",
             count: 0,
             severity: "NA",
             ppm: null,
-            description: "Erreur clip détectée"
+            description: "Clip Error detected"
         }
     ],
 
