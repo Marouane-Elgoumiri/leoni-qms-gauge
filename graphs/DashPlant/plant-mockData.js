@@ -27,7 +27,7 @@ const vceData = {
         },
         customerComplaints: {
             value: 1,
-            target: 8,
+            target: 5,
         },
         audit5S: {
             value: 96,
