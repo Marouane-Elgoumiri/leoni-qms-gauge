@@ -61,7 +61,7 @@ const vceData = {
     topDefects: [
         {
             name: "Switched wire",
-            count: 169,
+            count: 16,
             severity: "low",
             ppm: null,
             description: "Switched wire detected"
